@@ -12,6 +12,7 @@ import StitchBrandMarquee from "@/components/stitch/StitchBrandMarquee";
 import StitchFieldErp from "@/components/stitch/StitchFieldErp";
 import StitchFriction from "@/components/stitch/StitchFriction";
 import StitchBentoGrid from "@/components/stitch/StitchBentoGrid";
+import LogisticsRoadSection from "@/components/ui/LogisticsRoadSection";
 import StitchLifecycleStack from "@/components/stitch/StitchLifecycleStack";
 import StitchPillars from "@/components/stitch/StitchPillars";
 import StitchPricing from "@/components/stitch/StitchPricing";
@@ -57,14 +58,14 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-[#18181B] selection:bg-amber-400 selection:text-zinc-950 font-sans">
+    <div className="bg-white selection:bg-amber-400 min-h-screen font-sans text-[#18181B] selection:text-zinc-950">
       <div className="noise-overlay" aria-hidden="true" />
       <Toaster position="bottom-right" richColors />
       <DedicatedNavbar />
       <PageScrollProgress />
       
       {/* Container holding page content */}
-      <div id="page-content-wrapper" className="relative z-10 bg-white">
+      <div id="page-content-wrapper" className="z-10 relative bg-white">
         <main className="relative pt-[74px]">
           <SectionScrollFade isFirst>
             <StitchHero />
@@ -85,6 +86,11 @@ export default function Home() {
           {/* 5-Part Stakeholder Solutions */}
           <StitchBentoGrid />
 
+          {/* S-Curve Logistics Journey & Freight Telematics */}
+          <SectionScrollFade>
+            <LogisticsRoadSection />
+          </SectionScrollFade>
+
           <SectionScrollFade disableY={true}>
             <StitchLifecycleStack />
           </SectionScrollFade>
@@ -92,6 +98,7 @@ export default function Home() {
           <SectionScrollFade>
             <StitchPillars />
           </SectionScrollFade>
+
 
           <SectionScrollFade>
             <StitchPricing />

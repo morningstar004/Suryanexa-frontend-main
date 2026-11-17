@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { Play, ArrowRight, ShieldCheck, CheckCircle2, Lock, Zap } from "lucide-react";
+import { Play, ArrowRight, Shield, ShieldCheck, CheckCircle2, Lock, Zap } from "lucide-react";
 import SolarEngineModel from "./SolarEngineModel";
 
 const ROTATING_WORDS = [
@@ -24,7 +24,7 @@ function RotatingWord() {
 
   return (
     <span
-      className="relative inline-flex h-[1.25em] min-w-[12ch] overflow-hidden align-bottom"
+      className="inline-flex relative min-w-[12ch] h-[1.25em] overflow-hidden align-bottom"
       style={{
         maskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%)",
         WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%)",
@@ -38,7 +38,7 @@ function RotatingWord() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "-100%", opacity: 0, position: "absolute" }}
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="whitespace-nowrap text-emerald-400 font-extrabold"
+          className="font-extrabold text-emerald-400 whitespace-nowrap"
         >
           {ROTATING_WORDS[index]}
         </motion.span>
@@ -61,27 +61,27 @@ export default function StitchHero() {
     <section
       id="top"
       ref={ref}
-      className="relative overflow-hidden bg-[#02201d] min-h-[87vh] flex items-center py-10 lg:py-14 text-white"
+      className="relative flex items-center bg-[#02201d] py-10 lg:py-14 min-h-[87vh] overflow-hidden text-white"
     >
       {/* Background Image with Cinematic Solar Overlays */}
-      <div className="absolute inset-0 pointer-events-none z-0">
+      <div className="z-0 absolute inset-0 pointer-events-none">
         <img
-          src="/hero-solar-bg.jpg"
-          alt="Solar Rooftop Installation"
-          className="w-full h-full object-cover object-center scale-[1.02]"
+          src="/house-and-warehouse.png"
+          alt="SuryaNexa Solar Warehouse to Rooftop Ecosystem"
+          className="brightness-[0.95] w-full h-full object-center object-cover scale-[1.02] filter contrast-[1.05]"
         />
-        {/* Deep emerald gradient overlay ensuring crisp typography contrast on the left */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#02201d] via-[#02201d]/85 to-[#02201d]/60" />
+        {/* Deep emerald gradient overlay ensuring crisp typography contrast on the left while showcasing the sunset landscape on the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#02201d]/95 via-[#02201d]/75 to-[#02201d]/35" />
         {/* Vertical fades for seamless navbar and footer/marquee transitions */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#02201d] via-transparent to-[#02201d]/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#02201d] via-transparent to-[#02201d]/50" />
       </div>
 
       {/* Soft ambient solar emerald glow highlights */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[850px] h-[500px] rounded-full bg-emerald-500/10 blur-[140px] z-0" />
-      <div className="pointer-events-none absolute top-1/3 -right-20 w-[420px] h-[420px] rounded-full bg-teal-400/10 blur-[120px] z-0" />
+      <div className="-top-40 left-1/2 z-0 absolute bg-emerald-500/10 blur-[140px] rounded-full w-[850px] h-[500px] -translate-x-1/2 pointer-events-none" />
+      <div className="top-1/3 -right-20 z-0 absolute bg-teal-400/10 blur-[120px] rounded-full w-[420px] h-[420px] pointer-events-none" />
 
-      <div className="relative max-w-7xl 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] mx-auto px-6 sm:px-8 2xl:px-12 w-full z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 2xl:gap-14 items-center">
+      <div className="z-10 relative mx-auto px-6 sm:px-8 2xl:px-12 w-full 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] max-w-7xl">
+        <div className="items-center gap-12 lg:gap-8 2xl:gap-14 grid grid-cols-1 lg:grid-cols-12">
           {/* Left Column Content */}
           <motion.div
             style={{ y: textY }}
@@ -89,49 +89,31 @@ export default function StitchHero() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 flex flex-col justify-center"
+            className="flex flex-col justify-center items-center text-center lg:col-span-7"
           >
             {/* Editorial Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl 2xl:text-7xl 3xl:text-8xl font-extrabold font-display text-white tracking-tight leading-[1.08] mb-6">
-              From Bulk Warehouse <br />
-              to Rooftop Wattage — <br />
-              One Network, <RotatingWord />
+            <h1 className="mb-6 font-display font-extrabold text-white text-4xl sm:text-5xl lg:text-6xl 2xl:text-7xl 3xl:text-8xl text-center leading-[1.08] tracking-tight">
+              The B2B Platform <br />
+              for Solar Equipment<br />
+              {/* <RotatingWord /> */}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg 2xl:text-xl 3xl:text-2xl text-emerald-100/80 leading-relaxed font-sans max-w-2xl 2xl:max-w-3xl mb-8">
-              SuryaNexa is the dedicated B2B operating platform that connects bulk solar equipment traders, verified EPCs, and local installers with instant satellite sizing, Blind-Vault™ lead privacy, and dispute-proof ex-depot delivery.
+            <p className="mb-8 max-w-2xl 2xl:max-w-3xl mx-auto font-sans text-emerald-100/80 text-base sm:text-lg 2xl:text-xl 3xl:text-2xl text-center leading-relaxed">
+              Zero margin leakage. Direct depot allocation. Dispute-proof delivery. Instant kit matching — SuryaNexa connects bulk solar traders, verified EPCs, and local installers with Blind-Vault™ lead privacy and satellite-precise sizing.
             </p>
 
-            {/* Dual CTAs with active:scale-[0.97] and mask-color-shift */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-10">
-              <a
-                href="#dashboard-preview"
-                className="inline-flex items-center justify-center px-7 py-4 text-sm font-bold font-display rounded-full text-zinc-950 bg-emerald-400 hover:bg-emerald-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-400/30 transition-all duration-200 group active:scale-[0.97] mask-color-shift"
-              >
-                <Play className="w-4 h-4 mr-2 fill-zinc-950" />
-                Explore Operations ERP
-              </a>
-              <a
-                href="#pilot-cta"
-                className="inline-flex items-center justify-center px-7 py-4 text-sm font-bold font-display rounded-full text-emerald-200 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/30 shadow-xs transition-all duration-200 group backdrop-blur-sm active:scale-[0.97] mask-color-shift"
-              >
-                Request Verified Trader Access
-                <ArrowRight className="ml-2 w-4 h-4 text-emerald-400 transition-transform group-hover:translate-x-1" />
-              </a>
-            </div>
-
             {/* Value Highlights */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-emerald-800/50">
-              <div className="flex items-center space-x-2.5 text-xs font-sans font-semibold text-emerald-100/90">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <div className="gap-4 grid grid-cols-1 sm:grid-cols-3 pt-6 border-emerald-800/50 border-t w-full max-w-2xl mx-auto">
+              <div className="flex items-center justify-center space-x-2.5 font-sans font-semibold text-emerald-100/90 text-xs">
+                <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>KYB-Verified Traders Only</span>
               </div>
-              <div className="flex items-center space-x-2.5 text-xs font-sans font-semibold text-emerald-100/90">
+              <div className="flex items-center justify-center space-x-2.5 font-sans font-semibold text-emerald-100/90 text-xs">
                 <Lock className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Blind-Vault™ Lead Sealing</span>
               </div>
-              <div className="flex items-center space-x-2.5 text-xs font-sans font-semibold text-emerald-100/90">
+              <div className="flex items-center justify-center space-x-2.5 font-sans font-semibold text-emerald-100/90 text-xs">
                 <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>Transit Video Escrow</span>
               </div>
@@ -145,7 +127,7 @@ export default function StitchHero() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative flex items-center justify-center w-full"
+            className="relative flex justify-center items-center lg:col-span-5 w-full"
           >
             <SolarEngineModel />
           </motion.div>

@@ -6,11 +6,24 @@ import {
   Truck,
   Building2,
   Store,
+  Navigation,
+  Compass,
+  Layers,
+  ShieldCheck,
+  CheckCircle2,
+  Clock,
+  ArrowUpRight,
+  TrendingUp,
+  Wifi,
+  Battery,
+  MapPin,
+  Maximize2,
+  PhoneCall,
+  Signal,
 } from "lucide-react";
 
 export function LogisticsRoadSection() {
-  const [activeStop, setActiveStop] = useState<number>(1);
-
+  const [isTruckHovered, setIsTruckHovered] = useState(false);
   const stops = [
     {
       id: 0,
@@ -19,6 +32,7 @@ export function LogisticsRoadSection() {
       desc: "Massive inventory of TopCon, DCR Mono PERC panels, and hybrid inverters stored under strict barcode tracking.",
       badge: "Stock Verified",
       color: "#d97706",
+      icon: Building2,
     },
     {
       id: 1,
@@ -27,6 +41,7 @@ export function LogisticsRoadSection() {
       desc: "Trucks dispatched across national highways. GPS coordinates and milestone smart contracts ensure zero payment defaults.",
       badge: "Live Fleet Sync",
       color: "#15803d",
+      icon: Truck,
     },
     {
       id: 2,
@@ -35,171 +50,367 @@ export function LogisticsRoadSection() {
       desc: "Local EPC contractors and rooftop installers receive verified consignments with mandatory video unboxing proof.",
       badge: "Zero Damage Claims",
       color: "#261c14",
+      icon: Store,
     },
   ];
 
   return (
-    <section className="py-20 lg:py-28 px-6 bg-[#f7f4ed] border-y border-[#e8dfcf] relative overflow-hidden" id="logistics">
-      <div className="max-w-7xl 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] mx-auto">
+    <section className="relative bg-[#f8f6f0] px-4 sm:px-6 py-20 lg:py-28 border-[#e8dfcf] border-y overflow-hidden" id="logistics">
+      <div className="mx-auto 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] max-w-7xl">
+
         {/* Section Header */}
-        <div className="text-center max-w-3xl 2xl:max-w-4xl mx-auto mb-14 sm:mb-16">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#78644e] bg-[#ede5d5] px-3.5 py-1.5 rounded-full border border-[#dcd1be] inline-block mb-3 font-bold">
-            CLOSED-LOOP LOGISTICS ENGINE
-          </span>
-          <h2 className="text-3xl sm:text-5xl 2xl:text-6xl font-extrabold text-zinc-950 font-display tracking-tight leading-tight">
+        <div className="mx-auto mb-12 sm:mb-16 max-w-3xl 2xl:max-w-4xl text-center">
+          <h2 className="font-display font-extrabold text-zinc-950 text-3xl sm:text-5xl 2xl:text-6xl leading-tight tracking-tight">
             A Handshake Across India — <br className="hidden sm:block" />
             <span className="text-emerald-700">Our Logistics Journey</span>
           </h2>
-          <p className="mt-3 text-zinc-700 text-sm sm:text-base 2xl:text-lg font-sans leading-relaxed">
+          <p className="mt-3 font-sans text-zinc-700 text-sm sm:text-base 2xl:text-lg leading-relaxed">
             Watch how bulk solar equipment moves seamlessly from national manufacturer warehouses to local rooftop installers with video unboxing proof.
           </p>
         </div>
 
-        {/* 3 Interactive Milestone Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {stops.map((stop, idx) => (
-            <div
-              key={idx}
-              onClick={() => setActiveStop(idx)}
-              className={`p-6 rounded-3xl transition-all cursor-pointer border ${
-                activeStop === idx
-                  ? "bg-white border-[#d97706] shadow-xl shadow-[#d97706]/10 scale-[1.02]"
-                  : "bg-[#fbf9f4] border-[#e2d9c8] hover:border-[#1c1917]/20"
-              }`}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span
-                  className="text-xs font-mono font-bold px-2.5 py-1 rounded-full text-white"
-                  style={{ backgroundColor: stop.color }}
-                >
-                  STOP 0{idx + 1}
-                </span>
-                <span className="text-[11px] font-mono text-zinc-500 font-semibold">
-                  {stop.badge}
-                </span>
-              </div>
-              <h3 className="text-lg 2xl:text-xl font-bold text-zinc-900 font-display">
-                {stop.title}
-              </h3>
-              <p className="text-xs 2xl:text-sm font-semibold text-amber-700 font-sans mt-0.5">
-                {stop.subtitle}
-              </p>
-              <p className="text-xs 2xl:text-sm text-zinc-600 font-sans mt-2 leading-relaxed">
-                {stop.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* ILLUSTRATIVE S-CURVE LOGISTICS HIGHWAY CANVAS */}
-        <div className="relative rounded-[36px] bg-[#ffffff] border border-[#e2d9c8] p-6 sm:p-12 shadow-2xl shadow-[#261c14]/5 overflow-hidden">
-          {/* S-CURVE HIGHWAY VECTOR ROADWAY */}
-          <div className="relative w-full h-[280px] sm:h-[340px] 2xl:h-[380px] flex items-center justify-center">
-            <svg
-              className="w-full h-full"
-              viewBox="0 0 1000 320"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Outer Highway Bed */}
-              <path
-                d="M 50 160 C 200 40, 320 40, 500 160 C 680 280, 800 280, 950 160"
-                stroke="#e5ded2"
-                strokeWidth="56"
-                strokeLinecap="round"
-              />
-
-              {/* Asphalt Road Surface */}
-              <path
-                d="M 50 160 C 200 40, 320 40, 500 160 C 680 280, 800 280, 950 160"
-                stroke="#d3c9b9"
-                strokeWidth="42"
-                strokeLinecap="round"
-              />
-
-              {/* Animated Center Dashed Road Guideline */}
-              <path
-                d="M 50 160 C 200 40, 320 40, 500 160 C 680 280, 800 280, 950 160"
-                stroke="#ffffff"
-                strokeWidth="4"
-                strokeDasharray="12 12"
-                strokeLinecap="round"
-                className="animate-pulse"
-              />
-
-              {/* Logistics Waypoints */}
-              <circle cx="120" cy="130" r="14" fill="#d97706" />
-              <circle cx="120" cy="130" r="22" stroke="#d97706" strokeWidth="2" strokeDasharray="4 4" className="animate-spin" />
-
-              <circle cx="500" cy="160" r="14" fill="#15803d" />
-              <circle cx="500" cy="160" r="24" stroke="#15803d" strokeWidth="2" strokeDasharray="4 4" className="animate-spin" />
-
-              <circle cx="880" cy="190" r="14" fill="#261c14" />
-              <circle cx="880" cy="190" r="22" stroke="#261c14" strokeWidth="2" strokeDasharray="4 4" className="animate-spin" />
-            </svg>
-
-            {/* LEFT MILESTONE ICON */}
-            <div className="absolute left-4 sm:left-12 top-6 sm:top-10 flex flex-col items-center select-none">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#faf7f2] border-2 border-[#e2d9c8] shadow-lg flex items-center justify-center text-amber-600 mb-2 transform -rotate-2 hover:rotate-0 transition-transform">
-                <Building2 className="w-8 h-8 sm:w-10 sm:h-10" />
-              </div>
-              <span className="text-[11px] font-mono font-bold text-zinc-900 bg-[#fdfbf7] px-2 py-0.5 rounded border border-[#e8dfcf]">
-                1. Central Depot
-              </span>
-            </div>
-
-            {/* CENTER MOVING TRUCKS ON ROADWAY */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <motion.div
-                animate={{
-                  x: [-80, 80, -80],
-                  y: [10, -10, 10],
-                }}
-                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-                className="flex items-center gap-6"
+        {/* 3 Milestone Cards - Clean Uniform Normal Stage */}
+        <div className="gap-5 sm:gap-6 grid grid-cols-1 md:grid-cols-3 mb-12 sm:mb-16">
+          {stops.map((stop, idx) => {
+            const IconComponent = stop.icon;
+            return (
+              <div
+                key={idx}
+                className="relative bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-md p-6 border border-[#e4dcce] rounded-3xl overflow-hidden transition-shadow duration-300"
               >
-                {/* Green Solar Delivery Truck */}
-                <div className="p-3 rounded-2xl bg-emerald-700 text-white shadow-xl shadow-emerald-700/30 flex items-center gap-2 border border-white/20">
-                  <Truck className="w-6 h-6 text-white" />
-                  <div className="text-[10px] font-mono font-bold leading-tight hidden sm:block">
-                    <span>DISPATCH ACTIVE</span>
-                    <span className="block text-emerald-200">GPS: MH → DL</span>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="shadow-xs px-2.5 py-1 rounded-full font-mono font-bold text-white text-xs"
+                      style={{ backgroundColor: stop.color }}
+                    >
+                      STOP 0{idx + 1}
+                    </span>
+                    <span className="font-mono font-semibold text-[11px] text-zinc-500">
+                      {stop.badge}
+                    </span>
+                  </div>
+                  <div className="flex justify-center items-center bg-[#faf7f2] border border-[#ece4d6] rounded-xl w-8 h-8 text-zinc-700">
+                    <IconComponent className="w-4 h-4" />
                   </div>
                 </div>
-              </motion.div>
-            </div>
 
-            {/* RIGHT MILESTONE ICON */}
-            <div className="absolute right-4 sm:right-12 bottom-6 sm:bottom-10 flex flex-col items-center select-none">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#faf7f2] border-2 border-[#e2d9c8] shadow-lg flex items-center justify-center text-emerald-700 mb-2 transform rotate-2 hover:rotate-0 transition-transform">
-                <Store className="w-8 h-8 sm:w-10 sm:h-10" />
+                <h3 className="font-display font-bold text-zinc-900 text-lg 2xl:text-xl">
+                  {stop.title}
+                </h3>
+                <p className="mt-0.5 font-sans font-semibold text-amber-700 text-xs 2xl:text-sm">
+                  {stop.subtitle}
+                </p>
+                <p className="mt-2.5 font-sans text-zinc-600 text-xs 2xl:text-sm leading-relaxed">
+                  {stop.desc}
+                </p>
               </div>
-              <span className="text-[11px] font-mono font-bold text-zinc-900 bg-[#fdfbf7] px-2 py-0.5 rounded border border-[#e8dfcf]">
-                3. Local Installer
-              </span>
+            );
+          })}
+        </div>
+
+        {/* ULTRA-REALISTIC DUAL-DEVICE SHOWCASE (THIN-BEZEL TABLET + THIN-BEZEL SMARTPHONE) */}
+        <div className="relative pb-8 sm:pb-14">
+
+          {/* =========================================================================
+              DEVICE 1: IPAD PRO / MODERN FLAGSHIP TABLET (ULTRA-THIN BEZELS)
+             ========================================================================= */}
+          <div className="relative bg-[#0c0d12] shadow-[0_30px_90px_-15px_rgba(0,0,0,0.38),0_0_0_1px_rgba(255,255,255,0.12)] p-1.5 sm:p-2 lg:p-2.5 border border-[#23252d] rounded-[28px] sm:rounded-[36px] lg:rounded-[42px]">
+
+            {/* Precision Micro-Camera in Thin Top Bezel */}
+            <div className="top-1 left-1/2 z-30 absolute flex items-center gap-1.5 opacity-70 -translate-x-1/2">
+              <div className="flex justify-center items-center bg-[#030406] rounded-full ring-1 ring-zinc-700/60 w-1.5 h-1.5">
+                <div className="bg-blue-900 rounded-full w-0.5 h-0.5" />
+              </div>
+            </div>
+
+            {/* Tablet Edge-to-Edge OLED Display Screen */}
+            <div className="relative flex flex-col justify-between bg-[#eef1f4] border border-zinc-400/20 rounded-[22px] sm:rounded-[30px] lg:rounded-[34px] min-h-[540px] sm:min-h-[620px] lg:min-h-[680px] 2xl:min-h-[740px] overflow-hidden">
+
+              {/* REAL GOOGLE MAPS TELEMATICS IMAGE (Generated Route with Stockist Warehouse, Truck, and Vendor Rooftop) */}
+              <div className="absolute inset-0 select-none">
+                <img
+                  src="/logistics-telematics-map.jpg"
+                  alt="SuryaNexa Live Logistics Telematics GPS Route Map"
+                  className="brightness-[1.01] w-full h-full object-center object-cover filter contrast-[1.03]"
+                />
+
+                {/* Ultra-realistic Specular Diagonal Glass Glare across display */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.06] via-transparent to-white/[0.02] pointer-events-none" />
+
+                {/* Subtle Edge Vignette */}
+                <div className="absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.05)] pointer-events-none" />
+              </div>
+
+              {/* TOP TABLET TELEMATICS STATUS BAR */}
+              <div className="z-20 relative flex justify-between items-center px-4 sm:px-6 py-3.5">
+                {/* Left Live Badge */}
+                <div className="flex items-center gap-2 bg-white/95 shadow-[0_4px_16px_rgba(0,0,0,0.08)] backdrop-blur-md px-3.5 py-1.5 border border-zinc-200/90 rounded-full font-mono text-xs">
+                  <span className="bg-emerald-500 rounded-full w-2 h-2 animate-pulse" />
+                  <span className="font-bold text-zinc-900 tracking-tight">SURYA-TELEMATICS</span>
+                  <span className="hidden sm:inline text-zinc-500">| GPS-334A</span>
+                </div>
+              </div>
+
+              {/* FLOATING MAP TOOLS ON LEFT (Traffic light, 2D, Compass) */}
+              <div className="top-24 left-4 sm:left-6 z-20 absolute flex flex-col gap-2.5">
+                {/* Traffic Status Button */}
+                <button
+                  type="button"
+                  title="Traffic Status"
+                  className="flex justify-center items-center bg-white/95 hover:bg-zinc-50 shadow-md backdrop-blur-md border border-zinc-200/90 rounded-2xl w-10 sm:w-11 h-10 sm:h-11 active:scale-95 transition-all cursor-pointer"
+                >
+                  <div className="flex flex-col justify-center items-center gap-1 bg-zinc-900 p-1 rounded-md">
+                    <span className="bg-emerald-400 rounded-full w-1.5 h-1.5 animate-pulse" />
+                    <span className="bg-amber-400 rounded-full w-1.5 h-1.5" />
+                    <span className="bg-red-400 rounded-full w-1.5 h-1.5" />
+                  </div>
+                </button>
+
+                {/* 2D Perspective Toggle */}
+                <button
+                  type="button"
+                  title="2D View"
+                  className="flex justify-center items-center bg-white/95 hover:bg-zinc-50 shadow-md backdrop-blur-md border border-zinc-200/90 rounded-2xl w-10 sm:w-11 h-10 sm:h-11 font-mono font-bold text-zinc-800 text-xs active:scale-95 transition-all cursor-pointer"
+                >
+                  2D
+                </button>
+
+                {/* Re-center Compass */}
+                <button
+                  type="button"
+                  title="Re-center Navigation"
+                  className="flex justify-center items-center bg-white/95 hover:bg-zinc-50 shadow-md backdrop-blur-md border border-zinc-200/90 rounded-2xl w-10 sm:w-11 h-10 sm:h-11 text-zinc-700 active:scale-95 transition-all cursor-pointer"
+                >
+                  <Navigation className="fill-zinc-800 w-4 sm:w-5 h-4 sm:h-5 text-zinc-800 -rotate-45" />
+                </button>
+              </div>
+
+              {/* FLOATING HUD NAVIGATION CARD AT BOTTOM */}
+              <div className="z-20 relative m-3 sm:m-6 mt-auto">
+                <div className="bg-white/95 shadow-[0_15px_45px_rgba(0,0,0,0.14)] backdrop-blur-md p-4 sm:p-5 border border-zinc-200/90 rounded-2xl sm:rounded-3xl">
+                  <div className="items-center gap-4 grid grid-cols-1 md:grid-cols-12">
+
+                    {/* Left: Speed Limit Sign & Turn Prompt */}
+                    <div className="flex items-center gap-3.5 md:col-span-4 md:pr-4 pb-3 md:pb-0 border-zinc-100 md:border-r border-b md:border-b-0">
+                      {/* Realistic Speed Limit Shield */}
+                      <div className="flex flex-col justify-center items-center bg-white shadow-xs px-2.5 py-1.5 border-2 border-zinc-900 rounded-xl min-w-[56px]">
+                        <span className="font-mono font-black text-[9px] text-zinc-500 uppercase tracking-tighter">
+                          LIMIT
+                        </span>
+                        <span className="font-mono font-black text-zinc-950 text-sm leading-none">
+                          50
+                        </span>
+                        <span className="mt-0.5 font-mono font-black text-[11px] text-emerald-700 leading-none">
+                          42
+                        </span>
+                      </div>
+
+                      {/* Turn Instruction */}
+                      <div className="leading-tight">
+                        <div className="flex items-center gap-1.5 font-mono font-semibold text-zinc-500 text-xs">
+                          <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>In 350m</span>
+                        </div>
+                        <h4 className="mt-0.5 font-display font-bold text-zinc-900 text-xs sm:text-sm">
+                          Turn Right onto Highway 334 / Haridwar Main
+                        </h4>
+                        <span className="block font-sans text-[11px] text-zinc-500">
+                          Approaching Jagjeetpur Distribution Hub
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Center: Distance Left, ETA & Traffic Progress Track */}
+                    <div className="md:col-span-5 px-0 md:px-2">
+                      <div className="flex justify-between items-center mb-2 font-mono text-xs">
+                        <span className="font-bold text-zinc-900 text-sm">
+                          5.8 km <span className="font-normal text-zinc-500 text-xs">left</span>
+                        </span>
+                        <span className="flex items-center gap-1 font-bold text-zinc-900">
+                          <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                          13:22 <span className="font-semibold text-[11px] text-emerald-700">(14 min left)</span>
+                        </span>
+                      </div>
+
+                      {/* Segmented Traffic Route Bar */}
+                      <div className="relative flex items-center bg-zinc-100 rounded-full w-full h-2.5 overflow-hidden">
+                        <div className="bg-emerald-600 rounded-l-full w-[50%] h-full" />
+                        <div className="bg-amber-500 w-[30%] h-full" />
+                        <div className="bg-emerald-600 rounded-r-full w-[20%] h-full" />
+                      </div>
+
+                      {/* Navigation Arrow on Route Progress Track */}
+                      <div className="relative -mt-3.5 w-full h-4 pointer-events-none">
+                        <div className="-top-1 left-[45%] absolute flex justify-center items-center -translate-x-1/2">
+                          <div className="flex justify-center items-center bg-emerald-600 shadow-md border-2 border-white rounded-full w-7 h-7 text-white">
+                            <Navigation className="fill-white mr-1 w-3.5 h-3.5 text-white rotate-45" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right: Consignment Info & Escrow Release Status */}
+                    <div className="flex justify-between md:justify-end items-center gap-3 md:col-span-3 pt-3 md:pt-0 md:pl-4 border-zinc-100 border-t md:border-t-0 md:border-l">
+                      <div className="text-right">
+                        <span className="block font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+                          Consignment #SN-8924
+                        </span>
+                        <span className="block font-display font-bold text-zinc-900 text-xs">
+                          TopCon 580W Pallets
+                        </span>
+                        <div className="inline-flex items-center gap-1 mt-0.5 font-mono font-semibold text-[11px] text-emerald-700">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Escrow Locked</span>
+                        </div>
+                      </div>
+
+                      {/* Receiver Avatar Thumbnail */}
+                      <div className="flex justify-center items-center bg-[#faf7f2] shadow-xs border border-[#ece4d6] rounded-2xl w-10 h-10 text-zinc-700">
+                        <Store className="w-5 h-5 text-zinc-800" />
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
-          {/* S-Curve Highway Footer Summary Badges */}
-          <div className="mt-8 pt-6 border-t border-[#f0eae1] grid grid-cols-2 sm:grid-cols-4 gap-4 text-center font-mono text-xs">
-            <div className="p-3 bg-[#faf7f2] rounded-2xl border border-[#ece4d6]">
-              <span className="text-[10px] text-zinc-500 block">Verified Dispatch</span>
-              <span className="font-bold text-emerald-700">100% Barcode Tracked</span>
-            </div>
-            <div className="p-3 bg-[#faf7f2] rounded-2xl border border-[#ece4d6]">
-              <span className="text-[10px] text-zinc-500 block">Pricing Transparency</span>
-              <span className="font-bold text-amber-700">Direct Trader Negotiated</span>
-            </div>
-            <div className="p-3 bg-[#faf7f2] rounded-2xl border border-[#ece4d6]">
-              <span className="text-[10px] text-zinc-500 block">Intermediary Broker</span>
-              <span className="font-bold text-zinc-900">Zero Middlemen</span>
-            </div>
-            <div className="p-3 bg-[#faf7f2] rounded-2xl border border-[#ece4d6]">
-              <span className="text-[10px] text-zinc-500 block">Transit SLA</span>
-              <span className="font-bold text-emerald-700">Escrow-Protected</span>
+          {/* =========================================================================
+              DEVICE 2: IPHONE 16 PRO FLAGSHIP SMARTPHONE (ULTRA-SLIM TITANIUM BEZELS)
+              (Overlapping on Desktop/2K/4K screens, matching user reference image)
+             ========================================================================= */}
+          <div className="hidden lg:block -right-3 xl:-right-6 -bottom-5 xl:-bottom-7 z-30 absolute w-[270px] 2xl:w-[315px] xl:w-[295px]">
+
+            {/* Phone Titanium Outer Band with Ultra-Thin Bezel Padding */}
+            <div className="relative bg-[#0c0d12] shadow-[0_30px_80px_-10px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.15)] p-1.5 xl:p-2 border border-[#20222a] rounded-[42px] xl:rounded-[46px]">
+
+              {/* Ultra-slim Tactile Side Buttons */}
+              <div className="top-32 -left-[3px] absolute bg-zinc-600 rounded-l-xs w-[3px] h-10" />
+              <div className="top-44 -left-[3px] absolute bg-zinc-600 rounded-l-xs w-[3px] h-10" />
+              <div className="top-40 -right-[3px] absolute bg-zinc-600 rounded-r-xs w-[3px] h-12" />
+
+              {/* Phone Edge-to-Edge Screen Display */}
+              <div className="relative flex flex-col justify-between bg-[#0c1211] shadow-inner border border-zinc-700/40 rounded-[36px] xl:rounded-[40px] h-[490px] xl:h-[530px] overflow-hidden">
+
+                {/* VERTICAL MOBILE GOOGLE MAPS TELEMATICS IMAGE */}
+                <div className="z-10 absolute inset-0 select-none">
+                  <img
+                    src="/logistics-telematics-map-mobile.jpg"
+                    alt="Driver Smartphone Navigation Telematics"
+                    className="w-full h-full object-center object-cover filter contrast-[0.9]"
+                  />
+                  {/* Subtle Screen Glass Sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.05] via-transparent to-transparent pointer-events-none" />
+                </div>
+
+                {/* COMPACT DYNAMIC ISLAND & MOBILE STATUS BAR */}
+                <div className="z-20 relative flex justify-between items-center bg-white px-5 pt-2.5 w-full font-semibold text-[11px] text-zinc-900 select-none">
+                  {/* Left: Time */}
+                  <span className="w-12 font-semibold text-[11px] text-zinc-900 tracking-tight">9:41</span>
+
+                  {/* Center: Sleek Dynamic Island Pill Cutout */}
+                  <div className="flex justify-center items-center bg-[#030406] shadow-sm px-2.5 py-1 border border-zinc-800/60 rounded-full w-20 h-4 shrink-0">
+                    <div className="bg-[#0d0f18] mr-0.5 ml-auto rounded-full ring-1 ring-zinc-500 w-2 h-2" />
+                  </div>
+
+                  {/* Right: Telematics / Status Icons */}
+                  <div className="flex justify-end items-center gap-1.5 w-12 text-zinc-900">
+                    <Signal className="w-3 h-3" />
+                    <Wifi className="w-3 h-3" />
+                    <Battery className="fill-current w-3.5 h-3.5" />
+                  </div>
+                </div>
+
+                {/* Truck Interactive Hover Hotspot in the Phone (at exact truck coordinates on map) */}
+                <div
+                  onMouseEnter={() => setIsTruckHovered(true)}
+                  onMouseLeave={() => setIsTruckHovered(false)}
+                  className="group top-[61.3%] left-[46.7%] z-25 absolute flex justify-center items-center rounded-full w-14 h-14 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                  title="Hover truck to inspect live waypoint status"
+                >
+                  <div
+                    className={`rounded-full w-9 h-9 transition-all duration-300 ${isTruckHovered
+                        ? "bg-orange-500/35 ring-2 ring-orange-500/80 scale-110 shadow-lg shadow-orange-500/30"
+                        : "bg-transparent group-hover:bg-orange-500/20"
+                      }`}
+                  />
+                </div>
+
+                {/* TOP DRIVER TURN CARD (Decreased size by 20%, appears ONLY when hovered over the truck in the phone) */}
+                <div
+                  onMouseEnter={() => setIsTruckHovered(true)}
+                  onMouseLeave={() => setIsTruckHovered(false)}
+                  className={`z-20 relative bg-white/95 shadow-md backdrop-blur-md mx-3 mt-0.5 p-2.5 border border-zinc-200/90 rounded-2xl scale-[0.8] origin-top transition-all duration-300 ease-out ${isTruckHovered
+                      ? "opacity-100 translate-y-0 pointer-events-auto"
+                      : "opacity-0 -translate-y-2 pointer-events-none"
+                    }`}
+                >
+                  <div className="flex justify-between items-center font-mono text-[10px]">
+                    <div className="flex items-center gap-1.5 font-bold text-zinc-900">
+                      <ArrowUpRight className="w-3 h-3 text-emerald-600" />
+                      <span>Next Stop in 350m</span>
+                    </div>
+                    <span className="bg-emerald-50 px-2 py-0.5 border border-emerald-200/60 rounded-md font-bold text-emerald-700">
+                      Escrow Active
+                    </span>
+                  </div>
+                  <p className="mt-1 font-sans font-medium text-[10px] text-zinc-700">
+                    Jagjeetpur Vendor Storefront &amp; Rooftop Site
+                  </p>
+                  <p className="mt-0.5 font-mono text-[9px] text-zinc-500">
+                    Mandatory 180s Unboxing Video Shield
+                  </p>
+                </div>
+
+                {/* FLOATING MINI MAP BUTTONS ON PHONE RIGHT EDGE */}
+                <div className="top-20 right-3 z-20 absolute flex flex-col gap-2">
+                  <div className="flex justify-center items-center bg-white/95 shadow-sm backdrop-blur-md border border-zinc-200/90 rounded-xl w-8 h-8 text-zinc-800">
+                    <Navigation className="fill-zinc-800 w-3.5 h-3.5 -rotate-45" />
+                  </div>
+                  <div className="flex justify-center items-center bg-white/95 shadow-sm backdrop-blur-md border border-zinc-200/90 rounded-xl w-8 h-8 font-mono font-bold text-[10px] text-zinc-800">
+                    2D
+                  </div>
+                </div>
+
+                {/* BOTTOM DRIVER HUD & ESCROW RELEASE BAR */}
+                <div className="z-20 relative flex flex-col gap-2 mx-1.5 mb-0.5">
+                  <div className="bg-white/95 shadow-md backdrop-blur-md p-1.5 border border-zinc-200/90 rounded-2xl">
+                    <div className="flex justify-between items-center mb-0.5 px-1 font-mono text-[10px]">
+                      <span className="font-bold text-zinc-900">5.8 km</span>
+                      <span className="font-bold text-zinc-900">13:22 ETA</span>
+                      <span className="font-bold text-emerald-700">14 min</span>
+                    </div>
+
+                    {/* Driver Progress Bar */}
+                    <div className="flex bg-zinc-100 mb-1.5 rounded-full w-full h-1 overflow-hidden">
+                      <div className="bg-emerald-600 w-1/2 h-full" />
+                      <div className="bg-amber-500 w-1/3 h-full" />
+                      <div className="bg-emerald-600 w-1/6 h-full" />
+                    </div>
+
+                    {/* Escrow Release CTA */}
+                    <button
+                      type="button"
+                      className="flex justify-center items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 shadow-sm py-2 rounded-xl w-full font-mono font-bold text-white text-xs transition-colors cursor-pointer"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>Confirm Video Unboxing</span>
+                    </button>
+                  </div>
+
+                  {/* Home Bar Gesture Indicator */}
+                  <div className="bg-zinc-400 opacity-60 mx-auto mt-0.5 rounded-full w-24 h-1" />
+                </div>
+
+              </div>
             </div>
           </div>
+
         </div>
+
       </div>
     </section>
   );

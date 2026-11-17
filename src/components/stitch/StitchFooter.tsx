@@ -18,7 +18,7 @@ export default function StitchFooter() {
       <div className="-top-24 left-1/2 absolute bg-emerald-500/10 blur-[130px] rounded-full w-[700px] h-[300px] -translate-x-1/2 pointer-events-none" />
       <div className="right-0 bottom-0 absolute bg-teal-400/5 blur-[120px] rounded-full w-[400px] h-[300px] pointer-events-none" />
 
-      <div className="z-10 relative flex flex-col flex-1 justify-between gap-8 mx-auto px-6 sm:px-8 2xl:px-12 w-full max-w-7xl 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px]">
+      <div className="z-10 relative flex flex-col flex-1 justify-between gap-8 mx-auto px-6 sm:px-8 2xl:px-12 w-full 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] max-w-7xl">
         {/* Main 4-Column Grid with proportional column allocation (Column 4 widened for email) */}
         <div className="gap-8 lg:gap-8 xl:gap-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 pt-2">
 
@@ -37,7 +37,7 @@ export default function StitchFooter() {
                 <div className="flex flex-col">
                   <div className="flex items-baseline gap-1">
                     <span className="font-display font-black text-white sm:text-[26px] text-2xl leading-none tracking-tight">
-                      SURYANEXA
+                      Surya<span className="text-[#047857]">NEXA</span>
                     </span>
                     <span className="font-bold text-amber-400 text-xs sm:text-sm leading-none">
                       ™
