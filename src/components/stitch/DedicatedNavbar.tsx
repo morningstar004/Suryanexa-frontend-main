@@ -178,10 +178,10 @@ export default function DedicatedNavbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[9999] w-full bg-[#faf8f3] transition-all duration-300 border-b ${
+      className={`fixed top-0 left-0 right-0 z-[9999] w-full transition-all duration-500 border-b ${
         scrolled
           ? "border-[#e5e1d4] shadow-[0_4px_20px_rgba(0,0,0,0.04)] bg-[#faf8f3]/95 backdrop-blur-md"
-          : "border-[#ece8dc] shadow-none"
+          : "border-transparent bg-gradient-to-b from-[#02201d]/90 via-[#02201d]/40 to-transparent shadow-none"
       }`}
     >
       <div
@@ -202,34 +202,37 @@ export default function DedicatedNavbar() {
                 className="drop-shadow-sm w-full h-full object-contain"
               />
             </div>
-            <span className="font-display font-black text-zinc-950 text-xl leading-none tracking-tight">
-              Surya<span className="text-emerald-700">NEXA</span>
+            <span
+              className={`font-display font-black text-xl leading-none tracking-tight transition-colors duration-300 ${
+                scrolled ? "text-zinc-950" : "text-white"
+              }`}
+            >
+              Surya<span className={scrolled ? "text-emerald-700" : "text-emerald-400"}>NEXA</span>
             </span>
           </Link>
         </div>
 
         {/* =========================================================================
             2. CENTER: NAVIGATION ITEMS WITH IOS ROUNDED CORNERS & MORPHING DROPDOWN
-               - iOS rounded rectangle hover (rounded-xl)
-               - Active state is simply font-bold
-               - No orange bar under the options
-               - Popup appears 10px lower and moves to position
-               - When switching between options, the popup transforms with ease
            ========================================================================= */}
         <div
           ref={navContainerRef}
           className="hidden relative lg:flex items-center"
           onMouseLeave={handleMouseLeave}
         >
-          <nav className="flex items-center gap-1.5 xl:gap-2 font-sans font-medium text-[13px] text-zinc-700 xl:text-sm">
+          <nav className="flex items-center gap-1.5 xl:gap-2 font-sans font-medium text-[13px] xl:text-sm">
             {/* Active "Home" Option */}
             <Link
               href="/"
               onClick={() => setActiveLink("home")}
               className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer ${
                 activeLink === "home"
-                  ? "text-zinc-950 font-bold"
-                  : "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  ? scrolled
+                    ? "text-zinc-950 font-bold"
+                    : "text-white font-bold bg-white/15 backdrop-blur-sm"
+                  : scrolled
+                  ? "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  : "text-emerald-100/85 hover:text-white hover:bg-white/10 font-medium"
               }`}
             >
               <span>Home</span>
@@ -241,8 +244,12 @@ export default function DedicatedNavbar() {
               onClick={() => setActiveLink("pricing")}
               className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer ${
                 activeLink === "pricing"
-                  ? "text-zinc-950 font-bold"
-                  : "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  ? scrolled
+                    ? "text-zinc-950 font-bold"
+                    : "text-white font-bold bg-white/15 backdrop-blur-sm"
+                  : scrolled
+                  ? "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  : "text-emerald-100/85 hover:text-white hover:bg-white/10 font-medium"
               }`}
             >
               <span>Pricing</span>
@@ -255,15 +262,19 @@ export default function DedicatedNavbar() {
               onMouseEnter={() => handleMouseEnter("policies")}
               className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1 transition-all duration-200 cursor-pointer ${
                 activeDropdown === "policies" || activeLink === "policies"
-                  ? "text-zinc-950 font-bold bg-[#f2ecdf]/60"
-                  : "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  ? scrolled
+                    ? "text-zinc-950 font-bold bg-[#f2ecdf]/60"
+                    : "text-white font-bold bg-white/15 backdrop-blur-sm"
+                  : scrolled
+                  ? "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  : "text-emerald-100/85 hover:text-white hover:bg-white/10 font-medium"
               }`}
             >
               <span>Policies</span>
               <ChevronDown
-                className={`w-3.5 h-3.5 text-zinc-500 transition-transform duration-200 ${
-                  activeDropdown === "policies" ? "rotate-180 text-zinc-950" : ""
-                }`}
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                  scrolled ? "text-zinc-500" : "text-emerald-200"
+                } ${activeDropdown === "policies" ? "rotate-180" : ""}`}
               />
             </button>
 
@@ -274,15 +285,19 @@ export default function DedicatedNavbar() {
               onMouseEnter={() => handleMouseEnter("company")}
               className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1 transition-all duration-200 cursor-pointer ${
                 activeDropdown === "company" || activeLink === "company"
-                  ? "text-zinc-950 font-bold bg-[#f2ecdf]/60"
-                  : "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  ? scrolled
+                    ? "text-zinc-950 font-bold bg-[#f2ecdf]/60"
+                    : "text-white font-bold bg-white/15 backdrop-blur-sm"
+                  : scrolled
+                  ? "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  : "text-emerald-100/85 hover:text-white hover:bg-white/10 font-medium"
               }`}
             >
               <span>About Us</span>
               <ChevronDown
-                className={`w-3.5 h-3.5 text-zinc-500 transition-transform duration-200 ${
-                  activeDropdown === "company" ? "rotate-180 text-zinc-950" : ""
-                }`}
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                  scrolled ? "text-zinc-500" : "text-emerald-200"
+                } ${activeDropdown === "company" ? "rotate-180" : ""}`}
               />
             </button>
 
@@ -293,8 +308,12 @@ export default function DedicatedNavbar() {
               onMouseEnter={() => handleMouseEnter("contact")}
               className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1 transition-all duration-200 cursor-pointer ${
                 activeDropdown === "contact" || activeLink === "contact"
-                  ? "text-zinc-950 font-bold bg-[#f2ecdf]/60"
-                  : "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  ? scrolled
+                    ? "text-zinc-950 font-bold bg-[#f2ecdf]/60"
+                    : "text-white font-bold bg-white/15 backdrop-blur-sm"
+                  : scrolled
+                  ? "text-zinc-600 hover:text-zinc-950 hover:bg-[#f2ecdf]/70 font-medium"
+                  : "text-emerald-100/85 hover:text-white hover:bg-white/10 font-medium"
               }`}
             >
               <span>Contact Us</span>
@@ -521,7 +540,11 @@ export default function DedicatedNavbar() {
                 <Link
                   key="login-btn"
                   href="/login"
-                  className="flex justify-center items-center bg-white/80 hover:bg-[#f2ecdf] shadow-2xs hover:shadow-xs px-3.5 sm:px-4 py-2 border border-[#dcd6c8] hover:border-zinc-400 rounded-xl font-bold text-zinc-800 hover:text-zinc-950 text-xs sm:text-sm leading-none active:scale-[0.97] transition-all duration-200 cursor-pointer"
+                  className={`flex justify-center items-center shadow-2xs hover:shadow-xs px-3.5 sm:px-4 py-2 border rounded-xl font-bold text-xs sm:text-sm leading-none active:scale-[0.97] transition-all duration-200 cursor-pointer ${
+                    scrolled
+                      ? "bg-white/80 hover:bg-[#f2ecdf] border-[#dcd6c8] hover:border-zinc-400 text-zinc-800 hover:text-zinc-950"
+                      : "bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm shadow-none"
+                  }`}
                 >
                   <span>Log In</span>
                 </Link>
@@ -530,7 +553,11 @@ export default function DedicatedNavbar() {
                 <Link
                   key="signup-btn"
                   href="/login?tab=signup"
-                  className="group flex justify-center items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 shadow-emerald-950/20 shadow-sm hover:shadow-emerald-900/30 hover:shadow-md px-4 sm:px-5 py-2 rounded-xl font-bold text-white text-xs sm:text-sm leading-none active:scale-[0.97] transition-all duration-200 cursor-pointer"
+                  className={`group flex justify-center items-center gap-1.5 shadow-sm hover:shadow-md px-4 sm:px-5 py-2 rounded-xl font-bold text-white text-xs sm:text-sm leading-none active:scale-[0.97] transition-all duration-200 cursor-pointer ${
+                    scrolled
+                      ? "bg-emerald-700 hover:bg-emerald-800 shadow-emerald-950/20"
+                      : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40"
+                  }`}
                 >
                   <span>Sign Up</span>
                   <ArrowRight className="w-3.5 h-3.5 text-emerald-200 group-hover:text-white transition-all group-hover:translate-x-0.5 duration-200 shrink-0" />
@@ -626,7 +653,11 @@ export default function DedicatedNavbar() {
           {/* Mobile Hamburger Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden flex justify-center items-center bg-white/90 hover:bg-white border border-[#e2ddd0] rounded-full w-10 h-10 text-zinc-800 transition-colors cursor-pointer"
+            className={`lg:hidden flex justify-center items-center rounded-full w-10 h-10 transition-colors cursor-pointer border ${
+              scrolled
+                ? "bg-white/90 hover:bg-white border-[#e2ddd0] text-zinc-800"
+                : "bg-white/10 hover:bg-white/20 border-white/20 text-white"
+            }`}
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

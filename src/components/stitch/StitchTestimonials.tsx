@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Quote, CheckCircle2 } from "lucide-react";
+import { Quote, CheckCircle2, Star } from "lucide-react";
 
 interface Testimonial {
   id: string;
@@ -81,7 +81,7 @@ export default function StitchTestimonials() {
             Trusted by Over 500+ Verified <br />
             <span className="text-emerald-700">Solar EPCs, Traders &amp; Installers</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-lg 2xl:max-w-xl text-zinc-700 text-sm sm:text-base 2xl:text-lg text-pretty leading-relaxed">
+          <p className="mx-auto mt-3 max-w-lg 2xl:max-w-xl font-sans text-zinc-700 text-sm sm:text-base 2xl:text-lg text-pretty leading-relaxed">
             Real feedback from verified leaders running on the cryptographic solar operating system.
           </p>
         </div>
@@ -94,7 +94,7 @@ export default function StitchTestimonials() {
               className="relative flex flex-col bg-white shadow-xl shadow-zinc-950/5 hover:shadow-2xl hover:shadow-zinc-950/10 border border-zinc-200/90 rounded-[32px] transition-all hover:-translate-y-1.5 duration-300"
             >
               {/* Top Avatar Circle on the bigger card background */}
-              <div className="top-3 z-20 relative flex justify-center pt-3">
+              <div className="top-5 z-20 relative flex justify-center pt-3">
                 <div className="relative flex justify-center items-center bg-zinc-100 shadow-md border-[4px] border-white rounded-full ring-1 ring-zinc-200/60 w-20 sm:w-22 h-20 sm:h-22 overflow-hidden">
                   <img
                     src={item.image}
@@ -111,47 +111,46 @@ export default function StitchTestimonials() {
 
               {/* Inner Green Testimonial Card sitting on the bigger card background */}
               <div className="relative flex flex-col flex-1 justify-between bg-[#1B8049] shadow-[0_12px_28px_rgba(10,50,28,0.22)] px-5 sm:px-6 pt-4 pb-5 border border-emerald-400/30 rounded-[24px] text-white">
-                {/* Rating + Review Status: moved between Top Avatar Circle and Card Body Content */}
-                <div className="flex justify-center mb-3">
-                  <div className="flex flex-col justify-center items-center bg-white/95 shadow-xs px-1 py-0.25 pb-0.5 border border-white/90 rounded-2xl hover:scale-105 transition-transform duration-2000">
-                    {/* Stars: Increased size by 30% */}
-                    <div className="flex items-center gap-0.5 text-[16px] text-amber-400 sm:text-[17px] leading-none cursor-pointer">
+                {/* Rating + Review Status */}
+                <div className="flex flex-col items-center gap-1.5 mb-2.5">
+                  <div className="flex items-center gap-1 bg-white/95 shadow-xs px-2.5 py-1 border border-white/90 rounded-full">
+                    <div className="flex items-center gap-0.5">
                       {Array.from({ length: item.rating }).map((_, i) => (
-                        <span key={i}>★</span>
+                        <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                       ))}
                     </div>
+                    <span className="font-sans font-bold text-xs text-zinc-900 ml-1">5.0</span>
                   </div>
-                  
+                  {/* Review Type badge with high-contrast emerald text */}
+                  <span className="font-sans font-semibold text-[10px] sm:text-[11px] text-emerald-100/90 tracking-wider uppercase whitespace-nowrap">
+                    {item.reviewType}
+                  </span>
                 </div>
-                {/* Review Type: on other line with decreased visibility */}
-                    <span className="-mt-2 font-sans font-medium text-[9.5px] text-zinc-400 text-center uppercase tracking-wider whitespace-nowrap">
-                      {item.reviewType}
-                    </span>
 
                 {/* Card Body Content */}
                 <div className="flex flex-col flex-1 justify-between">
                   {/* Double Open Quote */}
                   <div className="flex justify-start mb-1">
-                    <Quote className="opacity-95 fill-white w-6 sm:w-7 h-6 sm:h-7 text-white rotate-180 shrink-0" />
+                    <Quote className="opacity-90 fill-white/80 w-5 sm:w-6 h-5 sm:h-6 text-white rotate-180 shrink-0" />
                   </div>
 
-                  {/* Testimonial Quote Text */}
-                  <p className="my-1.5 px-0.5 font-medium text-white sm:text-[13.5px] text-xs text-pretty leading-relaxed">
-                    {item.quote}
+                  {/* Testimonial Quote Text with High-Legibility Typography */}
+                  <p className="font-sans font-medium text-white/95 text-[14px] sm:text-[15px] 2xl:text-[16px] leading-[1.68] tracking-[-0.01em] text-pretty px-0.5 my-2">
+                    “{item.quote}”
                   </p>
 
                   {/* Double Close Quote */}
-                  <div className="flex justify-end mt-1 mb-3">
-                    <Quote className="opacity-95 fill-white w-6 sm:w-7 h-6 sm:h-7 text-white shrink-0" />
+                  <div className="flex justify-end mt-1 mb-2.5">
+                    <Quote className="opacity-90 fill-white/80 w-5 sm:w-6 h-5 sm:h-6 text-white shrink-0" />
                   </div>
 
                   {/* Author Name and Designation */}
-                  <div className="pt-2.5 border-white/20 border-t text-center">
-                    <h3 className="font-display font-bold text-white sm:text-[15px] text-sm uppercase tracking-wider">
+                  <div className="pt-3 border-white/20 border-t text-center">
+                    <h3 className="font-display font-bold text-white text-base sm:text-[17px] tracking-tight">
                       {item.name}
                     </h3>
-                    <p className="mt-0.5 font-semibold text-[11px] text-emerald-100 sm:text-xs">
-                      {item.role}, {item.company} · {item.location}
+                    <p className="mt-1 font-sans font-medium text-xs sm:text-[13px] text-emerald-100/90 leading-snug">
+                      {item.role}, <span className="font-semibold text-white">{item.company}</span> · {item.location}
                     </p>
                   </div>
                 </div>

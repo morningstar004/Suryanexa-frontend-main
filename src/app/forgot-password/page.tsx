@@ -30,14 +30,33 @@ export default function ForgotPasswordPage() {
   return (
     <div className="relative min-h-screen w-full bg-[#071311] text-white overflow-x-hidden flex flex-col justify-between selection:bg-emerald-500 selection:text-zinc-950 font-sans">
       
-      {/* Static Background Atmosphere */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-emerald-600/10 blur-[150px]" />
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-teal-500/8 blur-[180px]" />
-        <div className="absolute -bottom-32 right-1/4 w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[160px]" />
+      {/* =========================================================================
+          BACKGROUND VIDEO IN LOOP WITH CINEMATIC EMERALD ATMOSPHERE FILTER
+         ========================================================================= */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Looping Background Solar Work Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover filter brightness-[0.38] contrast-[1.15] saturate-[1.15]"
+        >
+          <source src="/solarWork.mp4" type="video/mp4" />
+        </video>
 
+        {/* Deep Emerald Tint & Darkening Overlay Filters */}
+        <div className="absolute inset-0 bg-[#071311]/75 backdrop-brightness-90" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#071311] via-[#071311]/50 to-[#071311]/80" />
+
+        {/* Static Radial Gradients */}
+        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-emerald-600/15 blur-[150px]" />
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-teal-500/10 blur-[180px]" />
+        <div className="absolute -bottom-32 right-1/4 w-[500px] h-[500px] rounded-full bg-emerald-500/15 blur-[160px]" />
+
+        {/* Static Subtle Tech Grid Lines */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.035]"
           style={{
             backgroundImage:
               "linear-gradient(#10b981 1px, transparent 1px), linear-gradient(90deg, #10b981 1px, transparent 1px)",
@@ -49,24 +68,12 @@ export default function ForgotPasswordPage() {
       {/* Header */}
       <header className="relative z-20 w-full px-6 sm:px-10 lg:px-14 py-6 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative w-10 h-10 transition-transform duration-300 group-hover:scale-105 shrink-0 flex items-center justify-center">
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_12px_rgba(16,185,129,0.45)]">
-              <defs>
-                <linearGradient id="poly-grad-fp" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#eab308" />
-                  <stop offset="50%" stopColor="#84cc16" />
-                  <stop offset="100%" stopColor="#10b981" />
-                </linearGradient>
-              </defs>
-              <polygon
-                points="50,6 88,27 88,73 50,94 12,73 12,27"
-                fill="none"
-                stroke="url(#poly-grad-fp)"
-                strokeWidth="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+          <div className="relative flex justify-center items-center w-10 h-10 group-hover:scale-105 transition-transform duration-300 shrink-0">
+            <img
+              src="/suryanexa-logo.png"
+              alt="SuryaNexa Logo"
+              className="drop-shadow-[0_0_12px_rgba(16,185,129,0.5)] w-full h-full object-contain"
+            />
           </div>
           <span className="text-2xl font-black font-display tracking-tight text-white">
             Surya<span className="text-[#10b981]">NEXA</span>

@@ -218,10 +218,10 @@ function AuthCard() {
       initial={{ opacity: 0, y: 22, scale: 0.99 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full max-w-[480px] rounded-[32px] bg-[#0c1816]/92 backdrop-blur-2xl border border-[#1c3832] p-7 sm:p-9 shadow-[0_30px_80px_rgba(0,0,0,0.65)] relative overflow-hidden"
+      className="relative bg-[#0c1816]/92 shadow-[0_30px_80px_rgba(0,0,0,0.65)] backdrop-blur-2xl p-7 sm:p-9 border border-[#1c3832] rounded-[32px] w-full max-w-[480px] overflow-hidden"
     >
       {/* Subtle top emerald glow line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-[#10b981] to-transparent pointer-events-none" />
+      <div className="top-0 left-1/2 absolute bg-gradient-to-r from-transparent via-[#10b981] to-transparent w-48 h-[2px] -translate-x-1/2 pointer-events-none" />
 
       <AnimatePresence mode="wait" initial={false}>
         {view === "forgot" ? (
@@ -235,25 +235,25 @@ function AuthCard() {
             exit={{ opacity: 0, x: 16, filter: "blur(4px)" }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="pb-4 mb-4 border-b border-[#1c3832] flex items-center justify-between">
+            <div className="flex justify-between items-center mb-4 pb-4 border-[#1c3832] border-b">
               <button
                 type="button"
                 onClick={() => setView("auth")}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 font-semibold text-zinc-400 hover:text-white text-xs transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to Login</span>
               </button>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#134e43] text-emerald-300 border border-emerald-500/30">
+              <span className="bg-[#134e43] px-2.5 py-0.5 border border-emerald-500/30 rounded-full font-mono font-bold text-[10px] text-emerald-300">
                 Reset Security
               </span>
             </div>
 
-            <div className="mb-6 space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-white tracking-tight">
+            <div className="space-y-2 mb-6">
+              <h2 className="font-display font-extrabold text-white text-2xl sm:text-3xl tracking-tight">
                 Reset Password
               </h2>
-              <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
+              <p className="font-sans text-zinc-400 text-xs sm:text-sm leading-relaxed">
                 Enter the work email associated with your SuryaNexa business account to receive a reset token.
               </p>
             </div>
@@ -262,7 +262,7 @@ function AuthCard() {
               <motion.div
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-5 p-3.5 rounded-2xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 text-xs flex items-center gap-2"
+                className="flex items-center gap-2 bg-emerald-950/80 mb-5 p-3.5 border border-emerald-500/50 rounded-2xl text-emerald-300 text-xs"
               >
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Password reset link sent! Please check your email inbox.</span>
@@ -271,11 +271,11 @@ function AuthCard() {
 
             <form onSubmit={handleForgotSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-zinc-300 font-sans">
+                <label className="block font-sans font-semibold text-zinc-300 text-xs">
                   Work Email
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-500">
+                  <div className="left-0 absolute inset-y-0 flex items-center pl-4 text-zinc-500 pointer-events-none">
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
@@ -284,7 +284,7 @@ function AuthCard() {
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
                     placeholder="name@company.com"
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[#091614] border border-[#193a32] text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-sans"
+                    className="bg-[#091614] py-3.5 pr-4 pl-11 border border-[#193a32] focus:border-emerald-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full font-sans text-white text-sm transition-all placeholder-zinc-500"
                   />
                 </div>
               </div>
@@ -294,10 +294,10 @@ function AuthCard() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm shadow-[0_10px_25px_rgba(16,185,129,0.3)] transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer group"
+                  className="group flex justify-center items-center gap-2 bg-emerald-500 hover:bg-emerald-400 shadow-[0_10px_25px_rgba(16,185,129,0.3)] px-6 py-3.5 rounded-xl w-full font-bold text-zinc-950 text-sm transition-colors duration-200 cursor-pointer"
                 >
                   <span>Send Reset Link</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
                 </motion.button>
               </div>
             </form>
@@ -314,7 +314,7 @@ function AuthCard() {
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Top Animated Segmented Switcher: Sign Up vs Login */}
-            <div className="p-1 rounded-2xl bg-[#071311] border border-[#16352e] flex items-center mb-7 relative select-none">
+            <div className="relative flex items-center bg-[#071311] opacity-none mb-7 p-1 border border-[#16352e] rounded-2xl select-none">
               <button
                 type="button"
                 onClick={() => setAuthTab("signup")}
@@ -326,7 +326,7 @@ function AuthCard() {
                   <motion.div
                     layoutId="activeAuthTabPill"
                     transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                    className="absolute inset-0 bg-[#143e34] rounded-xl shadow-sm border border-[#1e584a] -z-10"
+                    className="-z-10 absolute inset-0 bg-[#143e34] shadow-sm border border-[#1e584a] rounded-xl"
                   />
                 )}
                 Sign Up
@@ -343,7 +343,7 @@ function AuthCard() {
                   <motion.div
                     layoutId="activeAuthTabPill"
                     transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                    className="absolute inset-0 bg-[#143e34] rounded-xl shadow-sm border border-[#1e584a] -z-10"
+                    className="-z-10 absolute inset-0 bg-[#143e34] shadow-sm border border-[#1e584a] rounded-xl"
                   />
                 )}
                 Login
@@ -360,11 +360,11 @@ function AuthCard() {
                 transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
               >
                 {/* Heading & Subtitle */}
-                <div className="mb-6 space-y-1 text-center">
-                  <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-white tracking-tight">
+                <div className="space-y-1 mb-6 text-center">
+                  <h2 className="font-display font-extrabold text-white text-2xl sm:text-3xl tracking-tight">
                     {authTab === "signup" ? "Join the B2B Solar Network" : "Welcome Back"}
                   </h2>
-                  <p className="text-xs sm:text-sm text-zinc-400 font-sans">
+                  <p className="font-sans text-zinc-400 text-xs sm:text-sm">
                     {authTab === "signup"
                       ? "Create your business account to get started"
                       : "Sign in to access your trader terminal & orders"}
@@ -373,7 +373,7 @@ function AuthCard() {
 
                 {/* Redirect info alert */}
                 {searchParams.get("redirect") && !isLoginSubmitted && !isSignupSubmitted && (
-                  <div className="mb-5 p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
+                  <div className="flex items-center gap-2 bg-emerald-950/60 mb-5 p-3 border border-emerald-500/40 rounded-xl text-emerald-300 text-xs">
                     <Lock className="w-3.5 h-3.5 shrink-0" />
                     <span>Please authenticate to access your dashboard.</span>
                   </div>
@@ -387,7 +387,7 @@ function AuthCard() {
                   <form onSubmit={handleSignupSubmit} className="space-y-3.5">
                     {/* Company Name */}
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                      <div className="left-0 absolute inset-y-0 flex items-center pl-3.5 text-zinc-500 pointer-events-none">
                         <Building2 className="w-4 h-4" />
                       </div>
                       <input
@@ -396,13 +396,13 @@ function AuthCard() {
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
                         placeholder="Company Name"
-                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#081513] border border-[#1a3832] text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-sans"
+                        className="bg-[#081513] py-3 pr-4 pl-10 border border-[#1a3832] focus:border-emerald-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full font-sans text-white text-sm transition-all placeholder-zinc-500"
                       />
                     </div>
 
                     {/* Work Email */}
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                      <div className="left-0 absolute inset-y-0 flex items-center pl-3.5 text-zinc-500 pointer-events-none">
                         <Mail className="w-4 h-4" />
                       </div>
                       <input
@@ -411,20 +411,20 @@ function AuthCard() {
                         value={signupEmail}
                         onChange={(e) => setSignupEmail(e.target.value)}
                         placeholder="Work Email"
-                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#081513] border border-[#1a3832] text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-sans"
+                        className="bg-[#081513] py-3 pr-4 pl-10 border border-[#1a3832] focus:border-emerald-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full font-sans text-white text-sm transition-all placeholder-zinc-500"
                       />
                     </div>
 
                     {/* Business Type Select */}
-                    <div className="grid grid-cols-12 gap-2">
-                      <div className="col-span-5 flex items-center px-3.5 py-3 rounded-xl bg-[#081513] border border-[#1a3832] text-zinc-400 text-xs font-sans font-medium">
+                    <div className="gap-2 grid grid-cols-12">
+                      <div className="flex items-center col-span-5 bg-[#081513] px-3.5 py-3 border border-[#1a3832] rounded-xl font-sans font-medium text-zinc-400 text-xs">
                         Select Business Type
                       </div>
-                      <div className="col-span-7 relative">
+                      <div className="relative col-span-7">
                         <select
                           value={businessType}
                           onChange={(e) => setBusinessType(e.target.value as BusinessType)}
-                          className="w-full px-3.5 py-3 rounded-xl bg-[#081513] border border-[#1a3832] text-white text-xs sm:text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all appearance-none cursor-pointer"
+                          className="bg-[#081513] px-3.5 py-3 border border-[#1a3832] focus:border-emerald-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full font-semibold text-white text-xs sm:text-sm transition-all appearance-none cursor-pointer"
                         >
                           <option value="EPC" className="bg-[#0c1816] text-white">
                             EPC
@@ -439,7 +439,7 @@ function AuthCard() {
                             Solar Consultant / CAD
                           </option>
                         </select>
-                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-zinc-400">
+                        <div className="right-0 absolute inset-y-0 flex items-center pr-3 text-zinc-400 pointer-events-none">
                           <ChevronDown className="w-4 h-4" />
                         </div>
                       </div>
@@ -447,7 +447,7 @@ function AuthCard() {
 
                     {/* Password */}
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                      <div className="left-0 absolute inset-y-0 flex items-center pl-3.5 text-zinc-500 pointer-events-none">
                         <Lock className="w-4 h-4" />
                       </div>
                       <input
@@ -456,12 +456,12 @@ function AuthCard() {
                         value={signupPassword}
                         onChange={(e) => setSignupPassword(e.target.value)}
                         placeholder="Password"
-                        className="w-full pl-10 pr-10 py-3 rounded-xl bg-[#081513] border border-[#1a3832] text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-sans"
+                        className="bg-[#081513] py-3 pr-10 pl-10 border border-[#1a3832] focus:border-emerald-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full font-sans text-white text-sm transition-all placeholder-zinc-500"
                       />
                       <button
                         type="button"
                         onClick={() => setShowSignupPassword(!showSignupPassword)}
-                        className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+                        className="right-0 absolute inset-y-0 flex items-center pr-3.5 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
                         aria-label={showSignupPassword ? "Hide password" : "Show password"}
                       >
                         {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -470,7 +470,7 @@ function AuthCard() {
 
                     {/* Terms Checkbox */}
                     <div className="pt-1">
-                      <label className="flex items-start gap-2.5 text-xs text-zinc-400 font-sans cursor-pointer select-none leading-tight">
+                      <label className="flex items-start gap-2.5 font-sans text-zinc-400 text-xs leading-tight cursor-pointer select-none">
                         <div
                           onClick={() => setAgreeTerms(!agreeTerms)}
                           className={`w-4 h-4 rounded mt-0.5 border flex items-center justify-center transition-colors shrink-0 ${
@@ -479,15 +479,15 @@ function AuthCard() {
                               : "border-[#21433b] bg-[#081513]"
                           }`}
                         >
-                          {agreeTerms && <Check className="w-3 h-3 stroke-[3]" />}
+                          {agreeTerms && <Check className="stroke-[3] w-3 h-3" />}
                         </div>
                         <span>
                           I agree to the{" "}
-                          <span className="text-zinc-300 underline underline-offset-2 hover:text-white">
+                          <span className="text-zinc-300 hover:text-white underline underline-offset-2">
                             Terms of Service
                           </span>{" "}
                           &amp;{" "}
-                          <span className="text-zinc-300 underline underline-offset-2 hover:text-white">
+                          <span className="text-zinc-300 hover:text-white underline underline-offset-2">
                             Privacy Policy
                           </span>
                         </span>
@@ -501,10 +501,10 @@ function AuthCard() {
                         whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={isSignupSubmitted}
-                        className="w-full py-3.5 px-6 rounded-xl bg-[#10b981] hover:bg-[#059669] text-zinc-950 font-bold text-sm sm:text-base shadow-[0_10px_25px_rgba(16,185,129,0.3)] transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer group"
+                        className="group flex justify-center items-center gap-2 bg-[#10b981] hover:bg-[#059669] shadow-[0_10px_25px_rgba(16,185,129,0.3)] px-6 py-3.5 rounded-xl w-full font-bold text-zinc-950 text-sm sm:text-base transition-colors duration-200 cursor-pointer"
                       >
                         <span>{isSignupSubmitted ? "Creating Account..." : "Create Free Account"}</span>
-                        <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
                       </motion.button>
                     </div>
                   </form>
@@ -513,7 +513,7 @@ function AuthCard() {
                   <form onSubmit={handleLoginSubmit} className="space-y-3.5">
                     {/* Work Email */}
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                      <div className="left-0 absolute inset-y-0 flex items-center pl-3.5 text-zinc-500 pointer-events-none">
                         <Mail className="w-4 h-4" />
                       </div>
                       <input
@@ -522,13 +522,13 @@ function AuthCard() {
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
                         placeholder="Work Email"
-                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#081513] border border-[#1a3832] text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-sans"
+                        className="bg-[#081513] py-3 pr-4 pl-10 border border-[#1a3832] focus:border-emerald-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full font-sans text-white text-sm transition-all placeholder-zinc-500"
                       />
                     </div>
 
                     {/* Password */}
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                      <div className="left-0 absolute inset-y-0 flex items-center pl-3.5 text-zinc-500 pointer-events-none">
                         <Lock className="w-4 h-4" />
                       </div>
                       <input
@@ -537,12 +537,12 @@ function AuthCard() {
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
                         placeholder="Password"
-                        className="w-full pl-10 pr-10 py-3 rounded-xl bg-[#081513] border border-[#1a3832] text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-sans"
+                        className="bg-[#081513] py-3 pr-10 pl-10 border border-[#1a3832] focus:border-emerald-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full font-sans text-white text-sm transition-all placeholder-zinc-500"
                       />
                       <button
                         type="button"
                         onClick={() => setShowLoginPassword(!showLoginPassword)}
-                        className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+                        className="right-0 absolute inset-y-0 flex items-center pr-3.5 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
                         aria-label={showLoginPassword ? "Hide password" : "Show password"}
                       >
                         {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -550,8 +550,8 @@ function AuthCard() {
                     </div>
 
                     {/* Helper Row: Remember me + Forgot password */}
-                    <div className="flex items-center justify-between text-xs pt-1">
-                      <label className="flex items-center gap-2 text-zinc-400 font-sans cursor-pointer select-none">
+                    <div className="flex justify-between items-center pt-1 text-xs">
+                      <label className="flex items-center gap-2 font-sans text-zinc-400 cursor-pointer select-none">
                         <div
                           onClick={() => setRememberMe(!rememberMe)}
                           className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
@@ -560,7 +560,7 @@ function AuthCard() {
                               : "border-[#21433b] bg-[#081513]"
                           }`}
                         >
-                          {rememberMe && <Check className="w-3 h-3 stroke-[3]" />}
+                          {rememberMe && <Check className="stroke-[3] w-3 h-3" />}
                         </div>
                         <span>Remember me</span>
                       </label>
@@ -568,7 +568,7 @@ function AuthCard() {
                       <button
                         type="button"
                         onClick={() => setView("forgot")}
-                        className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors cursor-pointer"
+                        className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
                       >
                         Forgot Password?
                       </button>
@@ -581,33 +581,33 @@ function AuthCard() {
                         whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={isLoginSubmitted}
-                        className="w-full py-3.5 px-6 rounded-xl bg-[#10b981] hover:bg-[#059669] text-zinc-950 font-bold text-sm sm:text-base shadow-[0_10px_25px_rgba(16,185,129,0.3)] transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer group"
+                        className="group flex justify-center items-center gap-2 bg-[#10b981] hover:bg-[#059669] shadow-[0_10px_25px_rgba(16,185,129,0.3)] px-6 py-3.5 rounded-xl w-full font-bold text-zinc-950 text-sm sm:text-base transition-colors duration-200 cursor-pointer"
                       >
                         <span>{isLoginSubmitted ? "Authenticating..." : "Sign In to Terminal"}</span>
-                        <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
                       </motion.button>
                     </div>
                   </form>
                 )}
 
                 {/* Social Auth Divider */}
-                <div className="pt-5 pb-4 flex items-center">
-                  <div className="flex-1 border-t border-[#173831]" />
-                  <span className="px-3 text-xs text-zinc-400 font-sans">
+                <div className="flex items-center pt-5 pb-4">
+                  <div className="flex-1 border-[#173831] border-t" />
+                  <span className="px-3 font-sans text-zinc-400 text-xs">
                     Or continue with
                   </span>
-                  <div className="flex-1 border-t border-[#173831]" />
+                  <div className="flex-1 border-[#173831] border-t" />
                 </div>
 
-                {/* 3 Social Buttons in a Row (Google, Facebook, Instagram) */}
-                <div className="grid grid-cols-3 gap-2.5">
+                {/* 3 Social Buttons in a Row (Google, Facebook, Apple) */}
+                <div className="gap-2.5 grid grid-cols-3">
                   {/* Google */}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
                     type="button"
                     onClick={() => handleSocialAuth("Google")}
-                    className="py-2.5 px-2 rounded-xl bg-[#091714] hover:bg-[#102722] border border-[#193a32] flex items-center justify-center gap-2 transition-colors cursor-pointer text-xs font-semibold text-zinc-200"
+                    className="flex justify-center items-center gap-2 bg-[#091714] hover:bg-[#102722] px-2 py-2.5 border border-[#193a32] rounded-xl font-semibold text-zinc-200 text-xs transition-colors cursor-pointer"
                   >
                     <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
                       <path
@@ -636,41 +636,31 @@ function AuthCard() {
                     whileTap={{ scale: 0.97 }}
                     type="button"
                     onClick={() => handleSocialAuth("Facebook")}
-                    className="py-2.5 px-2 rounded-xl bg-[#091714] hover:bg-[#102722] border border-[#193a32] flex items-center justify-center gap-2 transition-colors cursor-pointer text-xs font-semibold text-zinc-200"
+                    className="flex justify-center items-center gap-2 bg-[#091714] hover:bg-[#102722] px-2 py-2.5 border border-[#193a32] rounded-xl font-semibold text-zinc-200 text-xs transition-colors cursor-pointer"
                   >
-                    <svg className="w-3.5 h-3.5 shrink-0 fill-[#1877F2]" viewBox="0 0 24 24">
+                    <svg className="fill-[#1877F2] w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                     </svg>
                     <span>Facebook</span>
                   </motion.button>
 
-                  {/* Instagram */}
+                  {/* Apple */}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
                     type="button"
-                    onClick={() => handleSocialAuth("Instagram")}
-                    className="py-2.5 px-2 rounded-xl bg-[#091714] hover:bg-[#102722] border border-[#193a32] flex items-center justify-center gap-2 transition-colors cursor-pointer text-xs font-semibold text-zinc-200"
+                    onClick={() => handleSocialAuth("Apple")}
+                    className="flex justify-center items-center gap-2 bg-[#091714] hover:bg-[#102722] px-2 py-2.5 border border-[#193a32] rounded-xl font-semibold text-zinc-200 text-xs transition-colors cursor-pointer"
                   >
-                    <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
-                      <radialGradient id="ig-grad" cx="0.2" cy="1" r="1">
-                        <stop offset="0%" stopColor="#fdf497" />
-                        <stop offset="5%" stopColor="#fdf497" />
-                        <stop offset="45%" stopColor="#fd5949" />
-                        <stop offset="60%" stopColor="#d6249f" />
-                        <stop offset="90%" stopColor="#285AEB" />
-                      </radialGradient>
-                      <path
-                        fill="url(#ig-grad)"
-                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                      />
+                    <svg className="fill-current w-3.5 h-3.5 shrink-0 text-white" viewBox="0 0 24 24">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.63-.78 1.06-1.85.94-2.94-.92.04-2.02.61-2.67 1.38-.57.66-.99 1.76-.86 2.83 1.03.08 1.96-.49 2.59-1.27z" />
                     </svg>
-                    <span>Instagram</span>
+                    <span>Apple</span>
                   </motion.button>
                 </div>
 
                 {/* Bottom Switch Prompt & Decorative Star Accent */}
-                <div className="mt-7 flex items-center justify-between text-xs sm:text-sm text-zinc-400 font-sans">
+                <div className="flex justify-between items-center mt-7 font-sans text-zinc-400 text-xs sm:text-sm">
                   <div>
                     {authTab === "signup" ? (
                       <span>
@@ -678,7 +668,7 @@ function AuthCard() {
                         <button
                           type="button"
                           onClick={() => setAuthTab("login")}
-                          className="text-emerald-400 hover:text-emerald-300 font-bold underline underline-offset-2 cursor-pointer transition-colors"
+                          className="font-bold text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors cursor-pointer"
                         >
                           Log In
                         </button>
@@ -689,7 +679,7 @@ function AuthCard() {
                         <button
                           type="button"
                           onClick={() => setAuthTab("signup")}
-                          className="text-emerald-400 hover:text-emerald-300 font-bold underline underline-offset-2 cursor-pointer transition-colors"
+                          className="font-bold text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors cursor-pointer"
                         >
                           Sign Up
                         </button>
@@ -699,7 +689,7 @@ function AuthCard() {
 
                   {/* Decorative Sparkle Accent */}
                   <div className="text-emerald-400/80">
-                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    <svg className="fill-current w-5 h-5" viewBox="0 0 24 24">
                       <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
                     </svg>
                   </div>
@@ -715,20 +705,35 @@ function AuthCard() {
 
 export default function LoginPage() {
   return (
-    <div className="relative min-h-screen w-full bg-[#071311] text-white overflow-x-hidden flex flex-col justify-between selection:bg-emerald-500 selection:text-zinc-950 font-sans">
+    <div className="relative flex flex-col justify-between bg-[#071311] selection:bg-emerald-500 w-full min-h-screen overflow-x-hidden font-sans text-white selection:text-zinc-950">
       
       {/* =========================================================================
-          STATIC BACKGROUND ATMOSPHERE: NO MOVING/ROTATING AMBIENT LOOPS
+          BACKGROUND VIDEO IN LOOP WITH CINEMATIC EMERALD ATMOSPHERE FILTER
          ========================================================================= */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="z-0 fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Looping Background Solar Work Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 brightness-[0.38] saturate-[1.15] w-full h-full object-cover filter contrast-[1.15]"
+        >
+          <source src="/solarWork.mp4" type="video/mp4" />
+        </video>
+
+        {/* Deep Emerald Tint & Darkening Overlay Filters */}
+        <div className="absolute inset-0 bg-[#071311]/75 backdrop-brightness-100" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#071311] via-[#071311]/50 to-[#071311]/80 opacity-0" />
+
         {/* Static Radial Gradients */}
-        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-emerald-600/10 blur-[150px]" />
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-teal-500/8 blur-[180px]" />
-        <div className="absolute -bottom-32 right-1/4 w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[160px]" />
+        <div className="-top-32 -left-32 absolute bg-emerald-600/15 blur-[150px] rounded-full w-[600px] h-[600px]" />
+        <div className="top-1/2 left-1/4 absolute bg-teal-500/10 blur-[180px] rounded-full w-[700px] h-[700px] -translate-y-1/2" />
+        <div className="right-1/4 -bottom-32 absolute bg-emerald-500/15 blur-[160px] rounded-full w-[500px] h-[500px]" />
 
         {/* Static Subtle Tech Grid Lines */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.035]"
           style={{
             backgroundImage:
               "linear-gradient(#10b981 1px, transparent 1px), linear-gradient(90deg, #10b981 1px, transparent 1px)",
@@ -740,44 +745,18 @@ export default function LoginPage() {
       {/* =========================================================================
           TOP NAVIGATION BAR
          ========================================================================= */}
-      <header className="relative z-20 w-full px-6 sm:px-10 lg:px-14 py-6 flex items-center justify-between">
+      <header className="z-20 relative flex justify-between items-center px-6 sm:px-10 lg:px-14 py-6 w-full">
         {/* Left: Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-3 group cursor-pointer">
-          {/* Custom Vibrant SuryaNexa Hexagon Emblem */}
-          <div className="relative w-10 h-10 transition-transform duration-300 group-hover:scale-105 shrink-0 flex items-center justify-center">
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_12px_rgba(16,185,129,0.45)]">
-              <defs>
-                <linearGradient id="poly-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#eab308" />
-                  <stop offset="50%" stopColor="#84cc16" />
-                  <stop offset="100%" stopColor="#10b981" />
-                </linearGradient>
-                <linearGradient id="poly-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#06b6d4" />
-                  <stop offset="50%" stopColor="#10b981" />
-                  <stop offset="100%" stopColor="#eab308" />
-                </linearGradient>
-              </defs>
-              <polygon
-                points="50,6 88,27 88,73 50,94 12,73 12,27"
-                fill="none"
-                stroke="url(#poly-grad-1)"
-                strokeWidth="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <polygon
-                points="50,22 75,37 75,63 50,78 25,63 25,37"
-                fill="none"
-                stroke="url(#poly-grad-2)"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="0.8"
-              />
-            </svg>
+        <Link href="/" className="group flex items-center gap-3 cursor-pointer">
+          {/* Custom Vibrant SuryaNexa Ribbon Loop Emblem */}
+          <div className="relative flex justify-center items-center w-10 h-10 group-hover:scale-105 transition-transform duration-300 shrink-0">
+            <img
+              src="/suryanexa-logo.png"
+              alt="SuryaNexa Logo"
+              className="drop-shadow-[0_0_12px_rgba(16,185,129,0.5)] w-full h-full object-contain"
+            />
           </div>
-          <span className="text-2xl font-black font-display tracking-tight text-white">
+          <span className="font-display font-black text-white text-2xl tracking-tight">
             Surya<span className="text-[#10b981]">NEXA</span>
           </span>
         </Link>
@@ -785,7 +764,7 @@ export default function LoginPage() {
         {/* Right: Back to Home link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0c1816] hover:bg-[#122824] border border-[#1b3d35] text-xs sm:text-sm text-zinc-300 hover:text-white transition-all cursor-pointer shadow-sm"
+          className="inline-flex items-center gap-2 bg-[#0c1816] hover:bg-[#122824] shadow-sm px-4 py-2 border border-[#1b3d35] rounded-full text-zinc-300 hover:text-white text-xs sm:text-sm transition-all cursor-pointer"
         >
           <span>← Back to Home</span>
         </Link>
@@ -794,8 +773,8 @@ export default function LoginPage() {
       {/* =========================================================================
           MAIN BODY: TWO-COLUMN LAYOUT (BRAND SHOWCASE & AUTH CARD)
          ========================================================================= */}
-      <main className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-8 lg:px-14 py-8 lg:py-12">
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <main className="z-10 relative flex flex-1 justify-center items-center px-4 sm:px-8 lg:px-14 py-8 lg:py-12">
+        <div className="items-center gap-12 lg:gap-16 grid grid-cols-1 lg:grid-cols-12 mx-auto w-full max-w-7xl">
           
           {/* =====================================================================
               LEFT COLUMN: BRAND SHOWCASE & VALUE PROPOSITION
@@ -804,11 +783,11 @@ export default function LoginPage() {
             initial={{ opacity: 0, x: -18 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-6 xl:col-span-7 space-y-8 lg:pr-6 relative"
+            className="relative space-y-8 lg:col-span-6 xl:col-span-7 lg:pr-6"
           >
             
             {/* STATIC TECHNICAL RADAR / HUD GRAPHIC IN BACKGROUND (NO SPIN) */}
-            <div className="pointer-events-none absolute -left-20 -top-24 w-[500px] h-[500px] opacity-35 select-none -z-10">
+            <div className="-top-24 -left-20 -z-10 absolute opacity-35 w-[500px] h-[500px] pointer-events-none select-none">
               <svg viewBox="0 0 500 500" fill="none" className="w-full h-full text-emerald-500">
                 <circle cx="250" cy="250" r="220" stroke="currentColor" strokeWidth="1" strokeDasharray="6 8" opacity="0.4" />
                 <circle cx="250" cy="250" r="170" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
@@ -821,48 +800,26 @@ export default function LoginPage() {
             {/* Glowing Logo & Brand Title */}
             <div className="space-y-4">
               <div className="flex items-center gap-3.5">
-                <div className="w-14 h-14 relative flex items-center justify-center">
-                  <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_20px_rgba(16,185,129,0.6)]">
-                    <defs>
-                      <linearGradient id="hero-poly-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#eab308" />
-                        <stop offset="40%" stopColor="#84cc16" />
-                        <stop offset="80%" stopColor="#10b981" />
-                        <stop offset="100%" stopColor="#06b6d4" />
-                      </linearGradient>
-                    </defs>
-                    <polygon
-                      points="50,6 88,27 88,73 50,94 12,73 12,27"
-                      fill="none"
-                      stroke="url(#hero-poly-grad)"
-                      strokeWidth="11"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <polygon
-                      points="50,22 75,37 75,63 50,78 25,63 25,37"
-                      fill="none"
-                      stroke="url(#hero-poly-grad)"
-                      strokeWidth="6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      opacity="0.7"
-                    />
-                  </svg>
+                <div className="relative flex justify-center items-center w-16 h-16 shrink-0">
+                  <img
+                    src="/suryanexa-logo.png"
+                    alt="SuryaNexa Logo"
+                    className="drop-shadow-[0_0_24px_rgba(16,185,129,0.65)] w-full h-full object-contain"
+                  />
                 </div>
-                <span className="text-3xl sm:text-4xl font-black font-display tracking-tight text-white">
+                <span className="font-display font-black text-white text-3xl sm:text-4xl tracking-tight">
                   Surya<span className="text-[#10b981]">NEXA</span>
                 </span>
               </div>
 
               {/* Main Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-display text-white tracking-tight leading-[1.12]">
+              <h1 className="font-display font-extrabold text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.12] tracking-tight">
                 Empowering Solar <br />
                 Businesses
               </h1>
 
               {/* Subtitle */}
-              <p className="text-base sm:text-lg text-zinc-300 font-sans max-w-xl leading-relaxed">
+              <p className="max-w-xl font-sans text-zinc-300 text-base sm:text-lg leading-relaxed">
                 Manage operations, trade, and scale seamlessly on one platform.
               </p>
             </div>
@@ -870,51 +827,51 @@ export default function LoginPage() {
             {/* 3 Core Value Propositions with Green Checkmarks */}
             <div className="space-y-4 pt-2">
               <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
-                  <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                <div className="flex justify-center items-center bg-emerald-500/20 border border-emerald-500/30 rounded-full w-6 h-6 text-emerald-400 shrink-0">
+                  <Check className="stroke-[2.5] w-3.5 h-3.5" />
                 </div>
-                <span className="text-sm sm:text-base font-medium text-zinc-200">
+                <span className="font-medium text-zinc-200 text-sm sm:text-base">
                   Direct access to verified EPCs &amp; installers
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
-                  <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                <div className="flex justify-center items-center bg-emerald-500/20 border border-emerald-500/30 rounded-full w-6 h-6 text-emerald-400 shrink-0">
+                  <Check className="stroke-[2.5] w-3.5 h-3.5" />
                 </div>
-                <span className="text-sm sm:text-base font-medium text-zinc-200">
+                <span className="font-medium text-zinc-200 text-sm sm:text-base">
                   Seamless B2B solar equipment supply chains
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
-                  <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                <div className="flex justify-center items-center bg-emerald-500/20 border border-emerald-500/30 rounded-full w-6 h-6 text-emerald-400 shrink-0">
+                  <Check className="stroke-[2.5] w-3.5 h-3.5" />
                 </div>
-                <span className="text-sm sm:text-base font-medium text-zinc-200">
+                <span className="font-medium text-zinc-200 text-sm sm:text-base">
                   Safe trade with escrow &amp; verification
                 </span>
               </div>
             </div>
 
             {/* Bottom Trust Badge Pills */}
-            <div className="pt-6 flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0a1815]/90 border border-[#173831] text-xs font-mono text-zinc-300 shadow-xs">
-                <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                  <Check className="w-2.5 h-2.5 stroke-[3]" />
+            <div className="flex flex-wrap items-center gap-3 pt-6">
+              <div className="inline-flex items-center gap-2 bg-[#0a1815]/90 shadow-xs px-3 py-1.5 border border-[#173831] rounded-full font-mono text-zinc-300 text-xs">
+                <div className="flex justify-center items-center bg-emerald-500/20 rounded-full w-4 h-4 text-emerald-400">
+                  <Check className="stroke-[3] w-2.5 h-2.5" />
                 </div>
                 <span>KYB-Verified Traders Only</span>
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0a1815]/90 border border-[#173831] text-xs font-mono text-zinc-300 shadow-xs">
-                <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <div className="inline-flex items-center gap-2 bg-[#0a1815]/90 shadow-xs px-3 py-1.5 border border-[#173831] rounded-full font-mono text-zinc-300 text-xs">
+                <div className="flex justify-center items-center bg-emerald-500/20 rounded-full w-4 h-4 text-emerald-400">
                   <Lock className="w-2.5 h-2.5" />
                 </div>
                 <span>Blind-Vault™ Lead Sealing</span>
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0a1815]/90 border border-[#173831] text-xs font-mono text-zinc-300 shadow-xs">
-                <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <div className="inline-flex items-center gap-2 bg-[#0a1815]/90 shadow-xs px-3 py-1.5 border border-[#173831] rounded-full font-mono text-zinc-300 text-xs">
+                <div className="flex justify-center items-center bg-emerald-500/20 rounded-full w-4 h-4 text-emerald-400">
                   <ShieldCheck className="w-2.5 h-2.5" />
                 </div>
                 <span>Transit Video Escrow</span>
@@ -926,8 +883,8 @@ export default function LoginPage() {
           {/* =====================================================================
               RIGHT COLUMN: AUTH CARD WITH SMOOTH TRANSITIONS
              ===================================================================== */}
-          <div className="lg:col-span-6 xl:col-span-5 w-full flex justify-center lg:justify-end">
-            <Suspense fallback={<div className="w-full max-w-[480px] h-[580px] rounded-[32px] bg-[#0c1816]/90 animate-pulse border border-[#1c3832]" />}>
+          <div className="flex justify-center lg:justify-end lg:col-span-6 xl:col-span-5 w-full">
+            <Suspense fallback={<div className="bg-[#0c1816]/90 border border-[#1c3832] rounded-[32px] w-full max-w-[480px] h-[580px] animate-pulse" />}>
               <AuthCard />
             </Suspense>
           </div>
@@ -936,7 +893,7 @@ export default function LoginPage() {
       </main>
 
       {/* Static Footer */}
-      <footer className="relative z-20 py-4 text-center text-xs text-zinc-500 border-t border-[#132824]">
+      <footer className="z-20 relative py-4 border-[#132824] border-t text-zinc-500 text-xs text-center">
         © {new Date().getFullYear()} SuryaNexa B2B Solar Intelligence. All rights reserved.
       </footer>
     </div>

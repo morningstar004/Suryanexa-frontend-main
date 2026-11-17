@@ -59,61 +59,21 @@ export function LogisticsRoadSection() {
       <div className="mx-auto 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] max-w-7xl">
 
         {/* Section Header */}
-        <div className="mx-auto mb-12 sm:mb-16 max-w-3xl 2xl:max-w-4xl text-center">
+        <div className="mx-auto mb-12 sm:mb-16 lg:pt-5 lg:pb-10 max-w-3xl 2xl:max-w-4xl text-center">
           <h2 className="font-display font-extrabold text-zinc-950 text-3xl sm:text-5xl 2xl:text-6xl leading-tight tracking-tight">
-            A Handshake Across India — <br className="hidden sm:block" />
-            <span className="text-emerald-700">Our Logistics Journey</span>
+            Live Fleet Telematics — <br className="hidden sm:block" />
+            <span className="text-emerald-700">Escrow-Locked Delivery</span>
           </h2>
           <p className="mt-3 font-sans text-zinc-700 text-sm sm:text-base 2xl:text-lg leading-relaxed">
-            Watch how bulk solar equipment moves seamlessly from national manufacturer warehouses to local rooftop installers with video unboxing proof.
+            Every consignment is GPS-tracked in real time from trader warehouse to vendor storefront. Payments stay escrow-locked until the installer confirms receipt with a mandatory video unboxing — zero disputes, zero damage claims.
           </p>
         </div>
 
-        {/* 3 Milestone Cards - Clean Uniform Normal Stage */}
-        <div className="gap-5 sm:gap-6 grid grid-cols-1 md:grid-cols-3 mb-12 sm:mb-16">
-          {stops.map((stop, idx) => {
-            const IconComponent = stop.icon;
-            return (
-              <div
-                key={idx}
-                className="relative bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-md p-6 border border-[#e4dcce] rounded-3xl overflow-hidden transition-shadow duration-300"
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="shadow-xs px-2.5 py-1 rounded-full font-mono font-bold text-white text-xs"
-                      style={{ backgroundColor: stop.color }}
-                    >
-                      STOP 0{idx + 1}
-                    </span>
-                    <span className="font-mono font-semibold text-[11px] text-zinc-500">
-                      {stop.badge}
-                    </span>
-                  </div>
-                  <div className="flex justify-center items-center bg-[#faf7f2] border border-[#ece4d6] rounded-xl w-8 h-8 text-zinc-700">
-                    <IconComponent className="w-4 h-4" />
-                  </div>
-                </div>
-
-                <h3 className="font-display font-bold text-zinc-900 text-lg 2xl:text-xl">
-                  {stop.title}
-                </h3>
-                <p className="mt-0.5 font-sans font-semibold text-amber-700 text-xs 2xl:text-sm">
-                  {stop.subtitle}
-                </p>
-                <p className="mt-2.5 font-sans text-zinc-600 text-xs 2xl:text-sm leading-relaxed">
-                  {stop.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* ULTRA-REALISTIC DUAL-DEVICE SHOWCASE (THIN-BEZEL TABLET + THIN-BEZEL SMARTPHONE) */}
-        <div className="relative pb-8 sm:pb-14">
+        {/* ULTRA-REALISTIC DUAL-DEVICE SHOWCASE (DYNAMIC TABLET + SMARTPHONE ACROSS ALL RESOLUTIONS) */}
+        <div className="relative pb-6 sm:pb-8 md:pb-14 lg:pb-16 xl:pb-20 2xl:pb-24">
 
           {/* =========================================================================
-              DEVICE 1: IPAD PRO / MODERN FLAGSHIP TABLET (ULTRA-THIN BEZELS)
+              DEVICE 1: IPAD PRO / MODERN FLAGSHIP TABLET (DYNAMIC 16:10 / 16:9.5)
              ========================================================================= */}
           <div className="relative bg-[#0c0d12] shadow-[0_30px_90px_-15px_rgba(0,0,0,0.38),0_0_0_1px_rgba(255,255,255,0.12)] p-1.5 sm:p-2 lg:p-2.5 border border-[#23252d] rounded-[28px] sm:rounded-[36px] lg:rounded-[42px]">
 
@@ -124,8 +84,8 @@ export function LogisticsRoadSection() {
               </div>
             </div>
 
-            {/* Tablet Edge-to-Edge OLED Display Screen */}
-            <div className="relative flex flex-col justify-between bg-[#eef1f4] border border-zinc-400/20 rounded-[22px] sm:rounded-[30px] lg:rounded-[34px] min-h-[540px] sm:min-h-[620px] lg:min-h-[680px] 2xl:min-h-[740px] overflow-hidden">
+            {/* Tablet Edge-to-Edge OLED Display Screen (Dynamic Proportions for Mobile, Tablet, Laptop, 2K & 4K) */}
+            <div className="relative flex flex-col justify-between bg-[#eef1f4] border border-zinc-400/20 rounded-[22px] sm:rounded-[30px] lg:rounded-[34px] w-full min-h-[440px] sm:min-h-[500px] md:min-h-0 aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9.5] overflow-hidden">
 
               {/* REAL GOOGLE MAPS TELEMATICS IMAGE (Generated Route with Stockist Warehouse, Truck, and Vendor Rooftop) */}
               <div className="absolute inset-0 select-none">
@@ -187,7 +147,7 @@ export function LogisticsRoadSection() {
               </div>
 
               {/* FLOATING HUD NAVIGATION CARD AT BOTTOM */}
-              <div className="z-20 relative m-3 sm:m-6 mt-auto">
+              <div className="z-20 relative m-3 sm:m-5 lg:m-6 mt-auto md:max-w-[calc(100%-250px)] lg:max-w-[calc(100%-270px)] xl:max-w-[calc(100%-310px)] 2xl:max-w-[calc(100%-360px)]">
                 <div className="bg-white/95 shadow-[0_15px_45px_rgba(0,0,0,0.14)] backdrop-blur-md p-4 sm:p-5 border border-zinc-200/90 rounded-2xl sm:rounded-3xl">
                   <div className="items-center gap-4 grid grid-cols-1 md:grid-cols-12">
 
@@ -280,20 +240,20 @@ export function LogisticsRoadSection() {
 
           {/* =========================================================================
               DEVICE 2: IPHONE 16 PRO FLAGSHIP SMARTPHONE (ULTRA-SLIM TITANIUM BEZELS)
-              (Overlapping on Desktop/2K/4K screens, matching user reference image)
+              (Fully Dynamic & Responsive across Mobile, Tablet, Laptop, 2K & 4K)
              ========================================================================= */}
-          <div className="hidden lg:block -right-3 xl:-right-6 -bottom-5 xl:-bottom-7 z-30 absolute w-[270px] 2xl:w-[315px] xl:w-[295px]">
+          <div className="relative mx-auto mt-8 md:mt-0 md:absolute md:-right-2 lg:-right-4 xl:-right-6 2xl:-right-8 md:-bottom-6 lg:-bottom-8 xl:-bottom-10 2xl:-bottom-12 z-30 w-[260px] sm:w-[280px] md:w-[26%] lg:w-[24%] xl:w-[22%] 2xl:w-[20%] min-w-[220px] max-w-[420px]">
 
             {/* Phone Titanium Outer Band with Ultra-Thin Bezel Padding */}
-            <div className="relative bg-[#0c0d12] shadow-[0_30px_80px_-10px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.15)] p-1.5 xl:p-2 border border-[#20222a] rounded-[42px] xl:rounded-[46px]">
+            <div className="relative bg-[#0c0d12] shadow-[0_30px_80px_-10px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.15)] p-1.5 sm:p-2 border border-[#20222a] rounded-[38px] sm:rounded-[42px] lg:rounded-[46px]">
 
               {/* Ultra-slim Tactile Side Buttons */}
-              <div className="top-32 -left-[3px] absolute bg-zinc-600 rounded-l-xs w-[3px] h-10" />
-              <div className="top-44 -left-[3px] absolute bg-zinc-600 rounded-l-xs w-[3px] h-10" />
-              <div className="top-40 -right-[3px] absolute bg-zinc-600 rounded-r-xs w-[3px] h-12" />
+              <div className="top-24 sm:top-28 md:top-32 -left-[3px] absolute bg-zinc-600 rounded-l-xs w-[3px] h-8 sm:h-10" />
+              <div className="top-36 sm:top-40 md:top-44 -left-[3px] absolute bg-zinc-600 rounded-l-xs w-[3px] h-8 sm:h-10" />
+              <div className="top-32 sm:top-36 md:top-40 -right-[3px] absolute bg-zinc-600 rounded-r-xs w-[3px] h-10 sm:h-12" />
 
-              {/* Phone Edge-to-Edge Screen Display */}
-              <div className="relative flex flex-col justify-between bg-[#0c1211] shadow-inner border border-zinc-700/40 rounded-[36px] xl:rounded-[40px] h-[490px] xl:h-[530px] overflow-hidden">
+              {/* Phone Edge-to-Edge Screen Display (Dynamic 9:17.5 Smartphone Aspect Ratio) */}
+              <div className="relative flex flex-col justify-between bg-[#0c1211] shadow-inner border border-zinc-700/40 rounded-[32px] sm:rounded-[36px] lg:rounded-[40px] w-full aspect-[9/17.5] overflow-hidden">
 
                 {/* VERTICAL MOBILE GOOGLE MAPS TELEMATICS IMAGE */}
                 <div className="z-10 absolute inset-0 select-none">

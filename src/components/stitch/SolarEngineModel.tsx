@@ -15,13 +15,13 @@ const BADGES = [
 
 export default function SolarEngineModel() {
   return (
-    <div className="relative w-full max-w-[540px] aspect-square mx-auto flex items-center justify-center select-none">
+    <div className="relative flex justify-center items-center mx-auto w-full max-w-[540px] aspect-square select-none">
       {/* Deep ambient radial glow directly onto the hero background */}
       <div className="absolute inset-0 bg-emerald-500/15 blur-[90px] rounded-full pointer-events-none" />
-      <div className="absolute w-56 h-56 bg-amber-400/10 blur-[60px] rounded-full pointer-events-none" />
+      <div className="absolute bg-amber-400/10 blur-[60px] rounded-full w-56 h-56 pointer-events-none" />
 
       {/* SVG Animated Moving Dashed Orbits */}
-      <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
+      <div className="absolute inset-0 flex justify-center items-center w-full h-full pointer-events-none">
         <svg
           viewBox="0 0 600 600"
           className="w-full h-full"
@@ -51,25 +51,6 @@ export default function SolarEngineModel() {
             </filter>
           </defs>
 
-          {/* Orbit 1: Innermost Faint Dashed Ring (Counter-Clockwise) */}
-          <motion.g
-            animate={{ rotate: -360 }}
-            transition={{ duration: 36, repeat: Infinity, ease: "linear" }}
-            style={{ transformOrigin: "300px 300px" }}
-          >
-            <circle
-              cx="300"
-              cy="300"
-              r="95"
-              fill="none"
-              stroke="#10b981"
-              strokeWidth="1.2"
-              strokeDasharray="4 8"
-              strokeOpacity="0.4"
-            />
-            {/* Small subtle traveling dot */}
-            <circle cx="395" cy="300" r="2.5" fill="#34d399" filter="url(#glow-green)" />
-          </motion.g>
 
           {/* Orbit 2: Dual Yellow-Emerald Dashed Ring (Clockwise) */}
           <motion.g
@@ -192,31 +173,8 @@ export default function SolarEngineModel() {
         </svg>
       </div>
 
-      {/* Floating Interactive Pill Badges Along Orbits */}
-      {BADGES.map((b) => (
-        <motion.div
-          key={b.label}
-          style={{ left: b.x, top: b.y }}
-          animate={{
-            y: [0, -4, 0],
-          }}
-          transition={{
-            duration: 3.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: b.delay,
-          }}
-          className="absolute -translate-x-1/2 -translate-y-1/2 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#042420]/85 border border-emerald-500/40 text-white font-sans text-[11px] font-bold tracking-wide shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md hover:border-emerald-400 hover:scale-105 active:scale-[0.97] transition-all cursor-pointer group"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
-          <span className="text-zinc-100 group-hover:text-emerald-300 transition-colors">
-            {b.label}
-          </span>
-        </motion.div>
-      ))}
-
       {/* CENTER: Solar Operating System Engine Core */}
-      <div className="relative flex flex-col items-center justify-center z-10 pointer-events-auto">
+      <div className="z-10 relative flex flex-col justify-center items-center pointer-events-auto">
         <motion.div
           animate={{
             scale: [1, 1.025, 1],
@@ -226,23 +184,14 @@ export default function SolarEngineModel() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="relative rounded-2xl overflow-hidden p-2 flex items-center justify-center shadow-[0_0_50px_rgba(16,185,129,0.35)]"
+          className="relative flex justify-center items-center p-2 rounded-2xl overflow-hidden"
         >
           <img
             src="/suryanexa-logo.png"
             alt="SuryaNexa Engine Emblem"
-            className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-xl"
+            className="w-24 sm:w-28 h-24 sm:h-28 object-contain"
           />
         </motion.div>
-
-        <div className="mt-4 text-center">
-          <div className="text-[11px] sm:text-xs font-sans font-extrabold tracking-[0.2em] text-white uppercase drop-shadow-sm">
-            SOLAR OPERATING SYSTEM
-          </div>
-          <div className="text-[9px] sm:text-[10px] font-sans font-bold tracking-[0.18em] text-emerald-400 uppercase mt-1">
-            SURYANEXA ENGINE
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -334,10 +334,10 @@ export default function StitchFieldErp() {
 
           {/* Interactive Role Switcher Pills */}
           <div className="flex flex-col items-center gap-2.5 mt-6 w-full">
-            <span className="font-sans font-bold text-[11px] 2xl:text-xs text-zinc-500 uppercase tracking-wider">
+            <span className="font-sans font-bold text-[11px] text-zinc-500 2xl:text-xs uppercase tracking-wider">
               Switch Persona:
             </span>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200/90 shadow-xs w-full max-w-3xl 2xl:max-w-4xl relative">
+            <div className="relative gap-1.5 grid grid-cols-2 sm:grid-cols-4 bg-zinc-100 shadow-xs p-1.5 border border-zinc-200/90 rounded-2xl w-full max-w-3xl 2xl:max-w-4xl">
               {ROLE_OPTIONS.map(({ id, label, icon: Icon }) => {
                 const isActive = activeRole === id;
                 const isLoading = isRoleLoading && isActive;
@@ -354,11 +354,11 @@ export default function StitchFieldErp() {
                     {isActive && (
                       <motion.div
                         layoutId="activeRolePill"
-                        className="absolute inset-0 bg-[#18222D] rounded-xl shadow-xs z-0"
+                        className="z-0 absolute inset-0 bg-[#18222D] shadow-xs rounded-xl"
                         transition={{ type: "spring", stiffness: 450, damping: 32 }}
                       />
                     )}
-                    <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="z-10 relative flex justify-center items-center gap-2">
                       {isLoading ? (
                         <span className="border-2 border-emerald-400 border-t-transparent rounded-full w-3.5 h-3.5 animate-spin shrink-0" />
                       ) : (
@@ -377,12 +377,12 @@ export default function StitchFieldErp() {
           </div>
         </div>
 
-        {/* DESKTOP MONITOR FRAME WITHOUT FORCED SCROLLER */}
-        <div className="relative flex flex-col bg-[#E8EEF4] shadow-[0_25px_80px_rgba(15,23,42,0.14)] border border-zinc-300 rounded-3xl w-full overflow-hidden">
+        {/* DESKTOP MONITOR FRAME (16:9 Widescreen) */}
+        <div className="relative flex flex-col bg-[#E8EEF4] shadow-[0_25px_80px_rgba(15,23,42,0.14)] border border-zinc-300 rounded-3xl w-full aspect-[16/9] overflow-hidden">
           {/* 1. TOP BROWSER CHROME FRAME (Compact h-9) */}
           <div className="relative flex justify-between items-center bg-[#1A232C] px-4 py-2 border-zinc-800 border-b font-sans text-[11px] text-zinc-300 shrink-0">
             {/* Window Controls + Left-aligned Tab (moved left right next to dots) */}
-            <div className="flex items-center gap-3 z-10">
+            <div className="z-10 flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <span className="inline-block bg-[#FF5F56] shadow-xs rounded-full w-2.5 h-2.5" />
                 <span className="inline-block bg-[#FFBD2E] shadow-xs rounded-full w-2.5 h-2.5" />
@@ -390,22 +390,22 @@ export default function StitchFieldErp() {
               </div>
 
               {/* Browser Tabs Simulation - Moved left next to window controls */}
-              <div className="hidden sm:flex items-center gap-1.5 bg-[#121A22] px-3 py-1 border-x border-zinc-700/60 border-t rounded-t-md font-sans text-[11px] text-zinc-200">
-                <span className="bg-emerald-500 rounded-full w-2 h-2 shrink-0 animate-pulse" />
+              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 border-x border-zinc-700/60 border-t rounded-t-md h-full font-sans text-[11px] text-zinc-200">
+                <span className="bg-emerald-500 rounded-full w-2 h-2 animate-pulse shrink-0" />
                 <span className="max-w-[180px] font-semibold truncate">Project Dashboard · SuryaNexa</span>
-                <span className="ml-1.5 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer text-xs">×</span>
+                <span className="ml-1.5 text-zinc-500 hover:text-zinc-300 text-xs transition-colors cursor-pointer">×</span>
               </div>
             </div>
 
             {/* URL Search Bar - Centered */}
-            <div className="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex justify-center items-center gap-2 bg-[#0F161E] px-3.5 py-1 border border-zinc-700/60 rounded-md w-60 sm:w-80 md:w-96 font-sans text-[10px] text-zinc-400 shadow-inner z-10">
+            <div className="sm:left-1/2 z-10 sm:absolute flex justify-center items-center gap-2 bg-[#0F161E] shadow-inner px-3.5 py-1 border border-zinc-700/60 rounded-md w-60 sm:w-80 md:w-96 font-sans text-[10px] text-zinc-400 sm:-translate-x-1/2">
               <span className="text-emerald-400 text-xs">🔒</span>
               <span className="font-semibold text-zinc-300">demo.suryanexa.com</span>
               <span className="text-zinc-500 truncate">/#/dashboard/{activeRole}</span>
             </div>
 
             {/* Spacer on right to ensure balance */}
-            <div className="w-16 hidden sm:block z-0" />
+            <div className="hidden sm:block z-0 w-16" />
           </div>
 
           {/* 2. INNER APPLICATION SHELL (Dock + App Body, flex-1 min-h-0) */}
@@ -438,7 +438,7 @@ export default function StitchFieldErp() {
               </div>
 
               {/* Bottom Dock Status */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 mt-auto">
                 <div className="font-sans font-bold text-[8px] text-zinc-500 text-center leading-tight">
                   Fri 6 <br />
                   <span className="text-zinc-400">12:37</span>
@@ -543,8 +543,8 @@ export default function StitchFieldErp() {
                 </div>
               </div>
 
-              {/* Main Canvas Body: Natural full display without forced internal scrollbar */}
-              <div className="flex-1 p-3 sm:p-4 lg:p-4.5 min-h-0 overflow-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              {/* Main Canvas Body: 16:9 responsive display with hidden scrollbar */}
+              <div className="[&::-webkit-scrollbar]:hidden flex-1 p-3 sm:p-4 lg:p-4.5 min-h-0 [-ms-overflow-style:none] overflow-y-auto [scrollbar-width:none]">
                 {/* High-quality cinematic transitions between role dashboards */}
                 <AnimatePresence mode="wait">
                   <motion.div

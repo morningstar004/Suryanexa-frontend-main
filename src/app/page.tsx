@@ -66,7 +66,7 @@ export default function Home() {
       
       {/* Container holding page content */}
       <div id="page-content-wrapper" className="z-10 relative bg-white">
-        <main className="relative pt-[74px]">
+        <main className="relative pt-0">
           <SectionScrollFade isFirst>
             <StitchHero />
           </SectionScrollFade>

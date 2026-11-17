@@ -1,7 +1,65 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Users,
+  Award,
+  Zap,
+  Lock,
+  Layers,
+  Truck,
+  Video,
+  CheckCircle2,
+  Check,
+  Star,
+  ShieldCheck,
+} from "lucide-react";
+
+const STAGES = [
+  { id: "stage-01", num: "01", name: "Supply Listing", tag: "Trader" },
+  { id: "stage-02", num: "02", name: "Squad Building", tag: "Vendor" },
+  { id: "stage-03", num: "03", name: "Private CRM", tag: "Lead" },
+  { id: "stage-04", num: "04", name: "Kit Engineering", tag: "CAD" },
+  { id: "stage-05", num: "05", name: "Consolidated PO", tag: "Transit" },
+  { id: "stage-06", num: "06", name: "Video Unloading", tag: "Escrow" },
+  { id: "stage-07", num: "07", name: "Commission & Rank", tag: "Live", isHighlight: true },
+];
 
 export default function StitchLifecycleStack() {
+  const [activeStage, setActiveStage] = useState("stage-01");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const stageIds = [
+        "stage-01",
+        "stage-02",
+        "stage-03",
+        "stage-04",
+        "stage-05",
+        "stage-06",
+        "stage-07",
+      ];
+      // Trigger threshold: card top reaches near sticky line (~210px from top of viewport)
+      const triggerOffset = 210;
+      let currentActive = "stage-01";
+
+      for (let i = stageIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(stageIds[i]);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= triggerOffset) {
+            currentActive = stageIds[i];
+            break;
+          }
+        }
+      }
+      setActiveStage(currentActive);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <section className="py-24 lg:py-32 bg-white relative border-b border-zinc-200/80" id="lifecycle">
@@ -23,55 +81,59 @@ export default function StitchLifecycleStack() {
                   <span className="text-xs font-sans font-bold text-zinc-700 uppercase tracking-wider">Stage Scrubber</span>
                 </div>
                 <nav aria-label="Lifecycle stages" className="space-y-1.5 font-sans text-xs" id="stage-nav">
-                  <a className="stage-nav-item flex items-center justify-between p-2.5 rounded-xl border border-zinc-200 bg-zinc-100 text-zinc-900 transition group" href="#stage-01">
-                    <span className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-zinc-900 text-white font-bold flex items-center justify-center text-[11px] group-hover:scale-105 transition">01</span>
-                      <span className="font-sans font-semibold text-zinc-900">Supply Listing</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-600 uppercase font-sans font-bold">Trader</span>
-                  </a>
-                  <a className="stage-nav-item flex items-center justify-between p-2.5 rounded-xl border border-transparent hover:border-zinc-200 hover:bg-zinc-50 text-zinc-700 transition group" href="#stage-02">
-                    <span className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-800 font-bold flex items-center justify-center text-[11px] group-hover:scale-105 transition">02</span>
-                      <span className="font-sans font-semibold text-zinc-900">Squad Building</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-600 uppercase font-sans font-bold">Vendor</span>
-                  </a>
-                  <a className="stage-nav-item flex items-center justify-between p-2.5 rounded-xl border border-transparent hover:border-zinc-200 hover:bg-zinc-50 text-zinc-700 transition group" href="#stage-03">
-                    <span className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-800 font-bold flex items-center justify-center text-[11px] group-hover:scale-105 transition">03</span>
-                      <span className="font-sans font-semibold text-zinc-900">Private CRM</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-600 uppercase font-sans font-bold">Lead</span>
-                  </a>
-                  <a className="stage-nav-item flex items-center justify-between p-2.5 rounded-xl border border-transparent hover:border-zinc-200 hover:bg-zinc-50 text-zinc-700 transition group" href="#stage-04">
-                    <span className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-800 font-bold flex items-center justify-center text-[11px] group-hover:scale-105 transition">04</span>
-                      <span className="font-sans font-semibold text-zinc-900">Kit Engineering</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-600 uppercase font-sans font-bold">CAD</span>
-                  </a>
-                  <a className="stage-nav-item flex items-center justify-between p-2.5 rounded-xl border border-transparent hover:border-zinc-200 hover:bg-zinc-50 text-zinc-700 transition group" href="#stage-05">
-                    <span className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-800 font-bold flex items-center justify-center text-[11px] group-hover:scale-105 transition">05</span>
-                      <span className="font-sans font-semibold text-zinc-900">Consolidated PO</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-600 uppercase font-sans font-bold">Transit</span>
-                  </a>
-                  <a className="stage-nav-item flex items-center justify-between p-2.5 rounded-xl border border-transparent hover:border-zinc-200 hover:bg-zinc-50 text-zinc-700 transition group" href="#stage-06">
-                    <span className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-zinc-100 text-zinc-800 font-bold flex items-center justify-center text-[11px] group-hover:scale-105 transition">06</span>
-                      <span className="font-sans font-semibold text-zinc-900">Video Unloading</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-600 uppercase font-sans font-bold">Escrow</span>
-                  </a>
-                  <a className="stage-nav-item flex items-center justify-between p-2.5 rounded-xl border border-transparent hover:border-zinc-200 hover:bg-zinc-50 text-zinc-700 transition group" href="#stage-07">
-                    <span className="flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-emerald-600 text-white font-bold flex items-center justify-center text-[11px] group-hover:scale-105 transition">07</span>
-                      <span className="font-sans font-semibold text-zinc-900">Commission &amp; Rank</span>
-                    </span>
-                    <span className="text-[10px] text-emerald-700 uppercase font-sans font-bold">Live</span>
-                  </a>
+                  {STAGES.map((stage) => {
+                    const isActive = activeStage === stage.id;
+                    return (
+                      <a
+                        key={stage.id}
+                        href={`#${stage.id}`}
+                        onClick={() => setActiveStage(stage.id)}
+                        className={`stage-nav-item flex items-center justify-between p-2.5 rounded-xl border transition-all duration-200 group ${
+                          isActive
+                            ? "border-zinc-300 bg-zinc-100 text-zinc-950 shadow-xs"
+                            : "border-transparent hover:border-zinc-200 hover:bg-zinc-50 text-zinc-600"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <span
+                            className={`w-6 h-6 rounded-md font-bold flex items-center justify-center text-[11px] transition-all duration-200 ${
+                              isActive
+                                ? stage.isHighlight
+                                  ? "bg-emerald-600 text-white scale-105 shadow-xs"
+                                  : "bg-zinc-900 text-white scale-105 shadow-xs"
+                                : stage.isHighlight
+                                ? "bg-emerald-100 text-emerald-800"
+                                : "bg-zinc-100 text-zinc-700 group-hover:bg-zinc-200"
+                            }`}
+                          >
+                            {stage.num}
+                          </span>
+                          <span
+                            className={`font-sans transition-colors duration-200 ${
+                              isActive
+                                ? "font-bold text-zinc-950"
+                                : "font-medium text-zinc-700 group-hover:text-zinc-950"
+                            }`}
+                          >
+                            {stage.name}
+                          </span>
+                        </span>
+                        <span
+                          className={`text-[10px] uppercase font-sans font-bold transition-colors duration-200 ${
+                            isActive
+                              ? stage.isHighlight
+                                ? "text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60"
+                                : "text-zinc-800 bg-zinc-200/80 px-1.5 py-0.5 rounded"
+                              : stage.isHighlight
+                              ? "text-emerald-700"
+                              : "text-zinc-500"
+                          }`}
+                        >
+                          {stage.tag}
+                        </span>
+                      </a>
+                    );
+                  })}
                 </nav>
               </div>
             </aside>
@@ -81,7 +143,7 @@ export default function StitchLifecycleStack() {
               <article className="stack-card sticky top-28 z-10 rounded-3xl bg-white/95 backdrop-blur-md border border-zinc-200/90 p-6 sm:p-8 shadow-xl transition-all duration-300" id="stage-01">
                 <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-zinc-100">
                   <span className="w-9 h-9 rounded-xl bg-zinc-900 text-white font-display font-extrabold flex items-center justify-center text-sm shadow-sm">01</span>
-                  <span className="text-xs font-sans font-bold text-zinc-700 uppercase tracking-wider">STAGE 01 // SOLAR TRADER</span>
+                  <span className="text-xs font-sans font-bold text-zinc-700 uppercase tracking-wider">SOLAR TRADER</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                   <div className="md:col-span-7">
@@ -90,8 +152,14 @@ export default function StitchLifecycleStack() {
                       Every tier-1 vendor capitalizes and lists panels, inverters, batteries, BOS, and structures on a live, searchable wholesale catalog for every vendor on the network.
                     </p>
                     <div className="flex flex-wrap gap-2 text-xs font-sans">
-                      <span className="px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">⚡ Live Warehouse Feeds</span>
-                      <span className="px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">🔒 Bonded Depot Verification</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span>Live Warehouse Feeds</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Bonded Depot Verification</span>
+                      </span>
                     </div>
                   </div>
                   {/* Inner quadrilateral: inner radius (12px / rounded-xl) = outer radius (24px) - padding (12px on inner container) */}
@@ -119,7 +187,7 @@ export default function StitchLifecycleStack() {
               <article className="stack-card sticky top-32 z-20 rounded-3xl bg-white/95 backdrop-blur-md border border-zinc-200/90 p-6 sm:p-8 shadow-xl transition-all duration-300" id="stage-02">
                 <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-zinc-100">
                   <span className="w-9 h-9 rounded-xl bg-blue-600 text-white font-display font-extrabold flex items-center justify-center text-sm shadow-sm">02</span>
-                  <span className="text-xs font-sans font-bold text-blue-800 uppercase tracking-wider">STAGE 02 // SOLAR VENDOR</span>
+                  <span className="text-xs font-sans font-bold text-blue-800 uppercase tracking-wider">SOLAR VENDOR</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                   <div className="md:col-span-7">
@@ -128,8 +196,14 @@ export default function StitchLifecycleStack() {
                       Vendor assembles a 6-member squad (up to 4 certified installers and 2 consultants) hired from the verified platform pool and onboarded to their own crew.
                     </p>
                     <div className="flex flex-wrap gap-2 text-xs font-sans">
-                      <span className="px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">👥 6-Person Authorized Unit</span>
-                      <span className="px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">📜 Skill Verification Token</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <Users className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                        <span>6-Person Authorized Unit</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <Award className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Skill Verification Token</span>
+                      </span>
                     </div>
                   </div>
                   <div className="md:col-span-5 bg-[#F6F8FA] rounded-xl p-4 font-sans text-xs border border-zinc-200/90 shadow-sm">
@@ -157,7 +231,7 @@ export default function StitchLifecycleStack() {
               <article className="stack-card sticky top-36 z-30 rounded-3xl bg-white/95 backdrop-blur-md border border-zinc-200/90 p-6 sm:p-8 shadow-xl transition-all duration-300" id="stage-03">
                 <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-zinc-100">
                   <span className="w-9 h-9 rounded-xl bg-emerald-600 text-white font-display font-extrabold flex items-center justify-center text-sm shadow-sm">03</span>
-                  <span className="text-xs font-sans font-bold text-emerald-800 uppercase tracking-wider">STAGE 03 // VENDOR &amp; CONSULTANT</span>
+                  <span className="text-xs font-sans font-bold text-emerald-800 uppercase tracking-wider">VENDOR &amp; CONSULTANT</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                   <div className="md:col-span-7">
@@ -166,8 +240,14 @@ export default function StitchLifecycleStack() {
                       Residential, MSME or commercial leads are tokenized and captured inside the Blind-Vault CRM — 100% private, invisible even to SuryaNexa administrators.
                     </p>
                     <div className="flex flex-wrap gap-2 text-xs font-sans">
-                      <span className="px-3 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">🔒 PROPRIETARY PRIVACY VAULT Asymmetric Key</span>
-                      <span className="px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">Zero Admin Visibility</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <Lock className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                        <span>PROPRIETARY PRIVACY VAULT Asymmetric Key</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <ShieldCheck className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                        <span>Zero Admin Visibility</span>
+                      </span>
                     </div>
                   </div>
                   <div className="md:col-span-5 bg-zinc-900 text-zinc-100 rounded-xl p-4 font-sans text-xs border border-zinc-800 shadow-md">
@@ -191,7 +271,7 @@ export default function StitchLifecycleStack() {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-zinc-100">
                   <div className="flex items-center space-x-3">
                     <span className="w-9 h-9 rounded-xl bg-zinc-900 text-white font-display font-extrabold flex items-center justify-center text-sm shadow-sm">04</span>
-                    <span className="text-xs font-sans font-bold text-zinc-700 uppercase tracking-wider">STAGE 04 // VENDOR / CONSULTANT</span>
+                    <span className="text-xs font-sans font-bold text-zinc-700 uppercase tracking-wider">VENDOR / CONSULTANT</span>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="px-2.5 py-1 rounded-full text-[11px] font-sans font-semibold bg-zinc-100 text-zinc-800 border border-zinc-200">Vendor</span>
@@ -205,8 +285,14 @@ export default function StitchLifecycleStack() {
                       Consultant configures exact balance of systems across multiple traders — pairing Adani bifacial panels from Mundra with Sungrow inverters from Surat in a single order.
                     </p>
                     <div className="flex flex-wrap gap-2 text-xs font-sans">
-                      <span className="px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">⚡ Cross-Stockist Sourcing</span>
-                      <span className="px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">1-Click BOM Dossier</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span>Cross-Stockist Sourcing</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <Layers className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+                        <span>1-Click BOM Dossier</span>
+                      </span>
                     </div>
                   </div>
                   <div className="md:col-span-5 bg-zinc-50 rounded-xl p-4 font-sans text-xs border border-zinc-200 shadow-sm">
@@ -237,7 +323,7 @@ export default function StitchLifecycleStack() {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-zinc-100">
                   <div className="flex items-center space-x-3">
                     <span className="w-9 h-9 rounded-xl bg-sky-600 text-white font-display font-extrabold flex items-center justify-center text-sm shadow-sm">05</span>
-                    <span className="text-xs font-sans font-bold text-sky-800 uppercase tracking-wider">STAGE 05 // LOGISTICS &amp; TELEMETRICS</span>
+                    <span className="text-xs font-sans font-bold text-sky-800 uppercase tracking-wider">LOGISTICS &amp; TELEMETRICS</span>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="px-2.5 py-1 rounded-full text-[11px] font-sans font-semibold bg-sky-50 text-sky-900 border border-sky-200/80">Carrier</span>
@@ -250,8 +336,14 @@ export default function StitchLifecycleStack() {
                       Multi-trader kit is bundled into a single secure dispatch. GPS telematics track the shipment from Mundra port to site gate with live insurance protection.
                     </p>
                     <div className="flex flex-wrap gap-2 text-xs font-sans">
-                      <span className="px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">🚛 Real-Time Freight Telemetry</span>
-                      <span className="px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">Transit Insurance Shield</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <Truck className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                        <span>Real-Time Freight Telemetry</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Transit Insurance Shield</span>
+                      </span>
                     </div>
                   </div>
                   <div className="md:col-span-5 bg-zinc-950 text-white rounded-xl p-4 font-sans text-xs border border-zinc-800 shadow-md">
@@ -275,7 +367,7 @@ export default function StitchLifecycleStack() {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-zinc-100">
                   <div className="flex items-center space-x-3">
                     <span className="w-9 h-9 rounded-xl bg-zinc-900 text-white font-display font-extrabold flex items-center justify-center text-sm shadow-sm">06</span>
-                    <span className="text-xs font-sans font-bold text-zinc-700 uppercase tracking-wider">STAGE 06 // INSTALLER</span>
+                    <span className="text-xs font-sans font-bold text-zinc-700 uppercase tracking-wider">INSTALLER</span>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="px-2.5 py-1 rounded-full text-[11px] font-sans font-semibold bg-zinc-100 text-zinc-800 border border-zinc-200">Trader</span>
@@ -289,8 +381,14 @@ export default function StitchLifecycleStack() {
                       At the truck, the field team completes an interactive unloading checklist and records a timestamped unboxing video — 100% protection against transit damage disputes and 180s escrow unlock.
                     </p>
                     <div className="flex flex-wrap gap-2 text-xs font-sans">
-                      <span className="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">🎥 180s Video Shield</span>
-                      <span className="px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">0% Micro-Crack Disputes</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <Video className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                        <span>180s Video Shield</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>0% Micro-Crack Disputes</span>
+                      </span>
                     </div>
                   </div>
                   <div className="md:col-span-5 bg-zinc-50 rounded-xl p-4 font-sans text-xs border border-zinc-200 shadow-sm">
@@ -300,15 +398,21 @@ export default function StitchLifecycleStack() {
                     </div>
                     <div className="space-y-2 text-[11px] text-zinc-900">
                       <div className="flex items-start gap-2">
-                        <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">✓</span>
+                        <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">
+                          <Check className="w-2.5 h-2.5 stroke-[3]" />
+                        </span>
                         <span className="leading-tight">42 Pallets Barcode-Scanned</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">✓</span>
+                        <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">
+                          <Check className="w-2.5 h-2.5 stroke-[3]" />
+                        </span>
                         <span className="leading-tight">180s 4K Video Upload Complete</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">✓</span>
+                        <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">
+                          <Check className="w-2.5 h-2.5 stroke-[3]" />
+                        </span>
                         <span className="leading-tight">Trader Hardware Escrow Released</span>
                       </div>
                     </div>
@@ -321,7 +425,7 @@ export default function StitchLifecycleStack() {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-zinc-100">
                   <div className="flex items-center space-x-3">
                     <span className="w-9 h-9 rounded-xl bg-emerald-600 text-white font-display font-extrabold flex items-center justify-center text-sm shadow-sm">07</span>
-                    <span className="text-xs font-sans font-bold text-emerald-800 uppercase tracking-wider">STAGE 07 // FULL SQUAD &amp; CONSUMER</span>
+                    <span className="text-xs font-sans font-bold text-emerald-800 uppercase tracking-wider">FULL SQUAD &amp; CONSUMER</span>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="px-2.5 py-1 rounded-full text-[11px] font-sans font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200/80">Vendor</span>
@@ -336,8 +440,14 @@ export default function StitchLifecycleStack() {
                       The rooftop is commissioned, the consumer rates the experience, and the vendor's area, city, and state ranking climbs — verified trust that wins the next deal.
                     </p>
                     <div className="flex flex-wrap gap-2 text-xs font-sans">
-                      <span className="px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">★ Rank Score +42 pts</span>
-                      <span className="px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">Verified Consumer Proof</span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
+                        <Star className="w-3.5 h-3.5 text-emerald-700 fill-emerald-600 shrink-0" />
+                        <span>Rank Score +42 pts</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-zinc-50 border border-zinc-200/80 text-zinc-800">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Verified Consumer Proof</span>
+                      </span>
                     </div>
                   </div>
                   <div className="md:col-span-5 bg-zinc-950 text-white rounded-xl p-5 font-sans text-xs border border-zinc-800 shadow-xl">
@@ -346,9 +456,16 @@ export default function StitchLifecycleStack() {
                       <span className="text-emerald-400 font-bold">100% SUCCESS</span>
                     </div>
                     <div className="space-y-2">
-                      <div className="flex justify-between text-zinc-200 text-xs font-sans font-semibold">
+                      <div className="flex justify-between items-center text-zinc-200 text-xs font-sans font-semibold">
                         <span>Consumer Rating:</span>
-                        <span className="text-emerald-400">★★★★★ 5.0</span>
+                        <span className="flex items-center gap-1 text-amber-400">
+                          <span className="flex gap-0.5">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                            ))}
+                          </span>
+                          <span className="text-emerald-400 ml-1 font-bold">5.0</span>
+                        </span>
                       </div>
                       <div className="flex justify-between text-zinc-300 text-[11px]">
                         <span>DISCOM Meter Sync:</span>

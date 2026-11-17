@@ -30,10 +30,10 @@ const Navbar = () => {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-      className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 border-b ${
         scrolled
-          ? "bg-white/85 backdrop-blur-xl border-b border-slate-200 shadow-[0_8px_40px_rgba(15,23,42,0.06)]"
-          : "bg-transparent border-b border-transparent"
+          ? "bg-white/90 backdrop-blur-xl border-slate-200/80 shadow-[0_8px_30px_rgba(15,23,42,0.08)]"
+          : "border-transparent bg-gradient-to-b from-[#02201d]/90 via-[#02201d]/40 to-transparent shadow-none"
       }`}
     >
       <div
@@ -41,10 +41,14 @@ const Navbar = () => {
           scrolled ? "h-[61px]" : "h-[72px]"
         }`}
       >
-        <a href="#top" data-testid={LANDING.logo} className="flex items-center">
+        <a href="#top" data-testid={LANDING.logo} className="flex items-center gap-2">
           <LogoMark size={36} />
-          <span className="font-display font-extrabold text-slate-900 text-lg tracking-tight">
-            Surya<span className="text-emerald-700">Nexa</span>
+          <span
+            className={`font-display font-extrabold text-lg tracking-tight transition-colors duration-300 ${
+              scrolled ? "text-slate-900" : "text-white"
+            }`}
+          >
+            Surya<span className={scrolled ? "text-emerald-700" : "text-emerald-400"}>Nexa</span>
           </span>
         </a>
 
@@ -54,10 +58,20 @@ const Navbar = () => {
               key={l.id}
               data-testid={l.id}
               href={l.href}
-              className="group relative font-medium text-slate-600 hover:text-slate-900 text-sm transition-colors duration-300"
+              className={`group relative font-medium text-sm transition-colors duration-300 ${
+                scrolled
+                  ? "text-slate-600 hover:text-slate-900"
+                  : "text-emerald-100/90 hover:text-white"
+              }`}
             >
               {l.label}
-              <span className="-bottom-1.5 left-0 absolute bg-gradient-to-r from-emerald-600 to-teal-500 w-0 group-hover:w-full h-px transition-all duration-300" />
+              <span
+                className={`-bottom-1.5 left-0 absolute h-px transition-all duration-300 ${
+                  scrolled
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-500 w-0 group-hover:w-full"
+                    : "bg-gradient-to-r from-emerald-400 to-teal-300 w-0 group-hover:w-full"
+                }`}
+              />
             </a>
           ))}
         </nav>
@@ -65,14 +79,22 @@ const Navbar = () => {
         <div className="hidden lg:flex items-center gap-2.5">
           <a
             href="/login"
-            className="bg-white/60 hover:bg-slate-100 px-4 py-2 border border-slate-200 rounded-xl font-bold text-slate-800 hover:text-slate-950 text-sm active:scale-[0.97] transition-all duration-200"
+            className={`px-4 py-2 rounded-xl font-bold text-sm active:scale-[0.97] transition-all duration-200 border ${
+              scrolled
+                ? "bg-white/60 hover:bg-slate-100 border-slate-200 text-slate-800 hover:text-slate-950"
+                : "bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm"
+            }`}
           >
             Log In
           </a>
           <a
             data-testid={LANDING.ctaAccess}
             href="/login?tab=signup"
-            className="group inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 shadow-[0_4px_16px_rgba(46,125,50,0.25)] hover:shadow-md px-5 py-2 rounded-xl font-bold text-white text-sm active:scale-[0.97] transition-all duration-200"
+            className={`group inline-flex items-center gap-2 px-5 py-2 rounded-xl font-bold text-white text-sm active:scale-[0.97] transition-all duration-200 shadow-md ${
+              scrolled
+                ? "bg-emerald-700 hover:bg-emerald-800 shadow-emerald-700/25"
+                : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-950/40"
+            }`}
           >
             <span>Sign Up</span>
             <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5 duration-200" />
@@ -82,7 +104,11 @@ const Navbar = () => {
         <button
           data-testid={LANDING.mobileMenuToggle}
           onClick={() => setOpen((v) => !v)}
-          className="lg:hidden bg-white/80 p-2 border border-slate-200 rounded-lg text-slate-700"
+          className={`lg:hidden p-2 rounded-lg border transition-colors ${
+            scrolled
+              ? "bg-white/80 border-slate-200 text-slate-700"
+              : "bg-white/10 border-white/20 text-white"
+          }`}
           aria-label="Toggle menu"
         >
           {open ? <X size={20} /> : <Menu size={20} />}
@@ -97,7 +123,11 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden bg-white/95 backdrop-blur-xl border-slate-200 border-b overflow-hidden"
+            className={`lg:hidden backdrop-blur-xl border-b overflow-hidden ${
+              scrolled
+                ? "bg-white/95 border-slate-200 text-slate-700"
+                : "bg-[#02201d]/95 border-emerald-900/60 text-white"
+            }`}
           >
             <div className="flex flex-col gap-1 px-6 py-4">
               {LINKS.map((l) => (
