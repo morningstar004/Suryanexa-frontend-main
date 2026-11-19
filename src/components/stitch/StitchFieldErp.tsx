@@ -377,8 +377,8 @@ export default function StitchFieldErp() {
           </div>
         </div>
 
-        {/* DESKTOP MONITOR FRAME (16:9 Widescreen) */}
-        <div className="relative flex flex-col bg-[#E8EEF4] shadow-[0_25px_80px_rgba(15,23,42,0.14)] border border-zinc-300 rounded-3xl w-full aspect-[16/9] overflow-hidden">
+        {/* DESKTOP MONITOR FRAME (16:9 Widescreen - Reduced size by 17%) */}
+        <div className="relative mx-auto flex flex-col bg-[#E8EEF4] shadow-[0_25px_80px_rgba(15,23,42,0.14)] border border-zinc-300 rounded-3xl w-full max-w-[83%] aspect-[16/9] overflow-hidden">
           {/* 1. TOP BROWSER CHROME FRAME (Compact h-9) */}
           <div className="relative flex justify-between items-center bg-[#1A232C] px-4 py-2 border-zinc-800 border-b font-sans text-[11px] text-zinc-300 shrink-0">
             {/* Window Controls + Left-aligned Tab (moved left right next to dots) */}

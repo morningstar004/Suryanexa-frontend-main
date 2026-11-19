@@ -115,6 +115,24 @@ export default function StitchHero() {
               Zero margin leakage. Direct depot allocation. Dispute-proof delivery. Instant kit matching — SuryaNexa connects bulk solar traders, verified EPCs, and local installers with Blind-Vault™ lead privacy and satellite-precise sizing.
             </p>
 
+            {/* Restored Dual CTAs with active:scale-[0.97] */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 mb-8">
+              <a
+                href="#dashboard-preview"
+                className="inline-flex items-center justify-center px-7 py-3.5 text-sm font-bold font-display rounded-full text-zinc-950 bg-emerald-400 hover:bg-emerald-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-400/30 transition-all duration-200 group active:scale-[0.97]"
+              >
+                <Play className="w-4 h-4 mr-2 fill-zinc-950" />
+                Explore Operations ERP
+              </a>
+              <a
+                href="#pilot-cta"
+                className="inline-flex items-center justify-center px-7 py-3.5 text-sm font-bold font-display rounded-full text-emerald-100 bg-emerald-950/70 hover:bg-emerald-900/80 border border-emerald-500/40 shadow-xs transition-all duration-200 group backdrop-blur-sm active:scale-[0.97]"
+              >
+                Request Verified Trader Access
+                <ArrowRight className="ml-2 w-4 h-4 text-emerald-400 transition-transform group-hover:translate-x-1" />
+              </a>
+            </div>
+
             {/* Value Highlights */}
             <div className="gap-4 grid grid-cols-1 sm:grid-cols-3 mx-auto pt-6 border-emerald-800/50 border-t w-full max-w-2xl">
               <div className="flex justify-center items-center space-x-2.5 font-sans font-semibold text-emerald-100/90 text-xs">

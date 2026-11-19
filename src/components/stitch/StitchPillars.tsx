@@ -4,8 +4,21 @@ import React from "react";
 export default function StitchPillars() {
   return (
     <>
-      <section className="bg-white py-24 lg:py-32">
-        <div className="mx-auto px-6 sm:px-8 2xl:px-12 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] max-w-7xl">
+      <section className="relative py-24 lg:py-32 overflow-hidden" id="pillars">
+        {/* Background Landscape with Elegant Frosted Warm Overlay */}
+        <div className="absolute inset-0 z-0 select-none pointer-events-none">
+          <img
+            src="/Renewable Energy Sunrise Landscape.png"
+            alt="Renewable Energy Sunrise Landscape"
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Frosted warm overlay allowing the sunrise landscape to show through while preserving contrast */}
+          <div className="absolute inset-0 bg-[#faf8f3]/80 backdrop-blur-[1px]" />
+          {/* Seamless edge gradients */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
+        </div>
+
+        <div className="relative z-10 mx-auto px-6 sm:px-8 2xl:px-12 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] max-w-7xl">
           <div className="mb-16 max-w-3xl 2xl:max-w-4xl">
             <h2 className="font-display font-extrabold text-zinc-950 text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl text-balance leading-tight tracking-tight">
               Built for everyone the sun touches <br />

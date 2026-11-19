@@ -18,7 +18,10 @@ import {
   ExternalLink,
   Menu,
   X,
-  Activity
+  Activity,
+  CheckCircle2,
+  Scale,
+  FileCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -36,6 +39,8 @@ export default function DedicatedNavbar() {
   const policiesTriggerRef = useRef<HTMLButtonElement>(null);
   const companyTriggerRef = useRef<HTMLButtonElement>(null);
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const [triggerPos, setTriggerPos] = useState<{
     left: number;
     originX: number;
@@ -96,26 +101,28 @@ export default function DedicatedNavbar() {
       const navRect = navContainerRef.current.getBoundingClientRect();
       const btnRect = ref.getBoundingClientRect();
 
-      // Position directly under the option button
-      let left = btnRect.left - navRect.left;
+      const dropdownWidth = menu === "policies" ? 520 : menu === "company" ? 480 : 460;
 
-      const dropdownWidth = menu === "policies" ? 368 : 460;
+      // Center the dropdown horizontally under the trigger button (middle under trigger option)
+      const btnCenter = (btnRect.left - navRect.left) + (btnRect.width / 2);
+      let left = btnCenter - (dropdownWidth / 2);
 
-      // On smaller screens, clamp so the dropdown doesn't overflow the viewport
+      // On smaller screens or edge positions, clamp so the dropdown doesn't overflow viewport boundaries
       if (typeof window !== "undefined") {
         const viewportWidth = window.innerWidth;
         const navLeftOnScreen = navRect.left;
-        const rightEdge = navLeftOnScreen + left + dropdownWidth;
-        if (rightEdge > viewportWidth - 20) {
-          const overshoot = rightEdge - (viewportWidth - 20);
-          left = Math.max(0, left - overshoot);
+        const absLeft = navLeftOnScreen + left;
+        if (absLeft < 16) {
+          left += (16 - absLeft);
+        } else if (absLeft + dropdownWidth > viewportWidth - 16) {
+          left -= (absLeft + dropdownWidth - (viewportWidth - 16));
         }
       }
 
       // Exact horizontal center of the button relative to the dropdown's left edge
       const originX = Math.max(
         16,
-        btnRect.left + btnRect.width / 2 - (navRect.left + left)
+        Math.min(dropdownWidth - 16, btnCenter - left)
       );
 
       const originRatio = Math.min(1, Math.max(0, originX / dropdownWidth));
@@ -133,8 +140,47 @@ export default function DedicatedNavbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, [activeDropdown]);
 
+  // Close notifications or user profile menu when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(target)
+      ) {
+        setShowActivities(false);
+      }
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(target)
+      ) {
+        setShowUserMenu(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowActivities(false);
+        setShowUserMenu(false);
+        setActiveDropdown(null);
+      }
+    };
+
+    if (showActivities || showUserMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showActivities, showUserMenu]);
+
   const handleMouseEnter = (menu: "policies" | "company" | "contact") => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setShowActivities(false);
+    setShowUserMenu(false);
     updateTriggerPosition(menu);
     setActiveDropdown(menu);
   };
@@ -325,15 +371,15 @@ export default function DedicatedNavbar() {
             </button>
           </nav>
 
-          {/* Morphing Dropdown Panel: Positioned directly under the option, appears 36px lower, transforms with ease */}
+          {/* Morphing Dropdown Panel: Positioned centered directly under the active option */}
           <AnimatePresence>
             {activeDropdown && (
               <motion.div
                 key="nav-unified-popup"
                 initial={{
                   opacity: 0,
-                  y: 36,
-                  scale: 0.97,
+                  y: 10,
+                  scale: 0.96,
                   left: triggerPos.left,
                 }}
                 animate={{
@@ -344,9 +390,9 @@ export default function DedicatedNavbar() {
                 }}
                 exit={{
                   opacity: 0,
-                  y: -28,
-                  scale: 0.90,
-                  transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] },
+                  y: -6,
+                  scale: 0.95,
+                  transition: { duration: 0.16, ease: [0.16, 1, 0.3, 1] },
                 }}
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                 style={{
@@ -365,7 +411,7 @@ export default function DedicatedNavbar() {
                   transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                   className="bg-[#faf8f3] shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-4 border border-[#e5e1d4] rounded-3xl overflow-hidden text-zinc-900"
                   style={{
-                    width: activeDropdown === "policies" ? 368 : 460,
+                    width: activeDropdown === "policies" ? 520 : activeDropdown === "company" ? 480 : 460,
                     originX: triggerPos.originRatio,
                     originY: 0,
                     transformOrigin: `${triggerPos.originX}px 0px`,
@@ -384,33 +430,79 @@ export default function DedicatedNavbar() {
                         <div>
                           <div className="flex justify-between items-center mb-3 pb-3 border-[#ece8dc] border-b">
                             <div className="flex items-center gap-2.5">
-                              <div className="flex justify-center items-center bg-emerald-100 rounded-md w-8 h-8 text-emerald-800">
+                              <div className="flex justify-center items-center bg-emerald-100 rounded-lg w-8 h-8 text-emerald-800">
                                 <ScrollText className="stroke-[2] w-4 h-4" />
                               </div>
-                              <h4 className="font-display font-bold text-zinc-950 text-sm leading-tight">
-                                Governance &amp; Trust Policies
-                              </h4>
+                              <div>
+                                <h4 className="font-display font-bold text-zinc-950 text-sm leading-tight">
+                                  Governance &amp; Trust Policies
+                                </h4>
+                                <p className="text-[11px] text-zinc-600 font-sans">
+                                  SuryaNexa B2B Procurement Standards
+                                </p>
+                              </div>
+                            </div>
+                            <span className="inline-flex items-center gap-1 bg-emerald-50 px-2 py-0.5 border border-emerald-200/80 rounded-full font-mono font-bold text-[10px] text-emerald-800">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" /> MNRE Compliant
+                            </span>
+                          </div>
+
+                          {/* 4 Core Pillars Grid */}
+                          <div className="grid grid-cols-2 gap-2.5 mb-3">
+                            <div className="p-2.5 bg-white/80 border border-[#ece8dc] rounded-xl hover:bg-emerald-50/50 transition-colors">
+                              <div className="flex items-center gap-1.5 mb-1 text-emerald-800">
+                                <Shield className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                                <strong className="font-display font-bold text-xs text-zinc-950">Blind-Vault™ Privacy</strong>
+                              </div>
+                              <p className="text-[11px] text-zinc-700 font-sans leading-relaxed">
+                                Client rooftop GPS coordinates and project margins remain cryptographically sealed. Zero internal lead poaching.
+                              </p>
+                            </div>
+
+                            <div className="p-2.5 bg-white/80 border border-[#ece8dc] rounded-xl hover:bg-emerald-50/50 transition-colors">
+                              <div className="flex items-center gap-1.5 mb-1 text-emerald-800">
+                                <Camera className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                                <strong className="font-display font-bold text-xs text-zinc-950">180s Video Escrow</strong>
+                              </div>
+                              <p className="text-[11px] text-zinc-700 font-sans leading-relaxed">
+                                Pallet payout unlocks upon QR scanning &amp; 180s unboxing video proof. Instant carrier insurance for micro-cracks.
+                              </p>
+                            </div>
+
+                            <div className="p-2.5 bg-white/80 border border-[#ece8dc] rounded-xl hover:bg-emerald-50/50 transition-colors">
+                              <div className="flex items-center gap-1.5 mb-1 text-emerald-800">
+                                <FileCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                                <strong className="font-display font-bold text-xs text-zinc-950">ALMM &amp; BIS Mandate</strong>
+                              </div>
+                              <p className="text-[11px] text-zinc-700 font-sans leading-relaxed">
+                                100% Tier-1 Approved List of Models &amp; Manufacturers only. No refurbished, non-ALMM or gray stock permitted.
+                              </p>
+                            </div>
+
+                            <div className="p-2.5 bg-white/80 border border-[#ece8dc] rounded-xl hover:bg-emerald-50/50 transition-colors">
+                              <div className="flex items-center gap-1.5 mb-1 text-emerald-800">
+                                <Scale className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                                <strong className="font-display font-bold text-xs text-zinc-950">48h Rapid Arbitration</strong>
+                              </div>
+                              <p className="text-[11px] text-zinc-700 font-sans leading-relaxed">
+                                Bound technical dispute mediation with OEM factory flash reports. Rapid capital clearance without frozen funds.
+                              </p>
                             </div>
                           </div>
 
-                          <div className="space-y-2">
-                            <span className="block font-sans font-bold text-[10px] text-emerald-800 uppercase tracking-wider">
-                              Core Guarantees
+                          {/* Footer Protocol Banner */}
+                          <div className="flex items-center justify-between px-3 py-2 bg-emerald-900/5 border border-emerald-800/10 rounded-xl text-[11px]">
+                            <span className="text-zinc-700 font-sans">
+                              Governed by <strong>SuryaNexa Bonded Escrow Terms</strong>.
                             </span>
-                            <ul className="space-y-2 text-xs stagger-rows">
-                              <li className="flex items-start gap-2 text-zinc-800 transition-all duration-200" style={{ transitionDelay: "0ms" }}>
-                                <Shield className="mt-0.5 w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                <span><strong>Blind-Vault™:</strong> Zero lead poaching by call centers.</span>
-                              </li>
-                              <li className="flex items-start gap-2 text-zinc-800 transition-all duration-200" style={{ transitionDelay: "30ms" }}>
-                                <Camera className="mt-0.5 w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                <span><strong>180s Video Escrow:</strong> Instant payout upon video scan.</span>
-                              </li>
-                              <li className="flex items-start gap-2 text-zinc-800 transition-all duration-200" style={{ transitionDelay: "60ms" }}>
-                                <Star className="mt-0.5 w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                <span><strong>ALMM &amp; BIS Only:</strong> 100% compliant Tier-1 stock.</span>
-                              </li>
-                            </ul>
+                            <a
+                              href="/#friction"
+                              onClick={() => setActiveDropdown(null)}
+                              className="font-bold text-emerald-800 hover:text-emerald-950 inline-flex items-center gap-1 ml-2 transition-colors"
+                            >
+                              <span>Review Protocol</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </a>
                           </div>
                         </div>
                       )}
@@ -482,9 +574,13 @@ export default function DedicatedNavbar() {
           
           {/* Notification Bell in Circular Frame - renders ONLY after login */}
           {isLoggedIn && (
-            <div className="relative">
+            <div ref={notificationsRef} className="relative">
               <button
-                onClick={() => setShowActivities(!showActivities)}
+                onClick={() => {
+                  setShowActivities((prev) => !prev);
+                  setShowUserMenu(false);
+                  setActiveDropdown(null);
+                }}
                 title="Notifications"
                 className="relative flex justify-center items-center bg-white/90 hover:bg-white shadow-xs border border-[#e2ddd0] rounded-full w-10 h-10 text-zinc-700 hover:text-zinc-950 active:scale-[0.97] transition-all cursor-pointer"
               >
@@ -564,11 +660,15 @@ export default function DedicatedNavbar() {
                 </Link>
               </div>
             ) : (
-              <div key="user-circular-hub" className="relative">
+              <div key="user-circular-hub" ref={userMenuRef} className="relative">
                 {/* Circular box containing the image of the person, or initials if no image */}
                 <button
                   type="button"
-                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  onClick={() => {
+                    setShowUserMenu((prev) => !prev);
+                    setShowActivities(false);
+                    setActiveDropdown(null);
+                  }}
                   title={`${displayName} (${userData?.role || "User"})`}
                   className="flex justify-center items-center bg-white shadow-xs hover:shadow-md p-0.5 border-2 border-emerald-600/40 hover:border-emerald-600 rounded-full w-10 h-10 overflow-hidden active:scale-[0.97] transition-all cursor-pointer"
                 >
@@ -652,7 +752,12 @@ export default function DedicatedNavbar() {
 
           {/* Mobile Hamburger Menu Toggle Button */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => {
+              setMobileMenuOpen(!mobileMenuOpen);
+              setShowActivities(false);
+              setShowUserMenu(false);
+              setActiveDropdown(null);
+            }}
             className={`lg:hidden flex justify-center items-center rounded-full w-10 h-10 transition-colors cursor-pointer border ${
               scrolled
                 ? "bg-white/90 hover:bg-white border-[#e2ddd0] text-zinc-800"

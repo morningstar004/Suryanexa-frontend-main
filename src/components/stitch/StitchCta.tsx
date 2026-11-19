@@ -27,12 +27,23 @@ export default function StitchCta() {
       id="pilot-cta"
       className="w-full bg-[#faf8f3] py-20 lg:py-28 relative overflow-hidden border-t border-zinc-200/80"
     >
+      {/* Background Graphic - Gemini Generated Solar Panel Network Architecture */}
+      <div className="pointer-events-none absolute inset-0 z-0 select-none overflow-hidden flex justify-end">
+        <img
+          src="/Gemini_Generated_Image_solar_panal.png"
+          alt="SuryaNexa Solar Network Architecture"
+          className="h-full w-auto max-w-none object-contain object-right opacity-30 sm:opacity-50 lg:opacity-95 2xl:opacity-100 transition-opacity duration-700"
+        />
+        {/* Soft gradient mask ensuring typography remains 100% crisp across mobile and mid-sized screens */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#faf8f3] via-[#faf8f3]/80 to-transparent xl:via-transparent pointer-events-none" />
+      </div>
+
       {/* Subtle ambient lighting */}
       <div className="pointer-events-none absolute top-1/4 -right-20 w-[420px] h-[420px] rounded-full bg-emerald-500/5 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full bg-amber-500/5 blur-[120px]" />
 
       <div className="max-w-7xl 2xl:max-w-[1536px] 3xl:max-w-[1850px] 4xl:max-w-[2200px] mx-auto px-6 sm:px-8 2xl:px-12 relative z-10">
-        <div className="max-w-3xl 2xl:max-w-4xl">
+        <div className="max-w-2xl xl:max-w-3xl 2xl:max-w-4xl">
           <h2 className="text-3xl sm:text-5xl lg:text-6xl 2xl:text-7xl font-extrabold font-display tracking-tight text-zinc-950 mb-6 leading-[1.12] text-balance">
             Run your solar business on one network. <br />
             <span className="text-emerald-700">Zero chaos. Zero lead leak.</span>

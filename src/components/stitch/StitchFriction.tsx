@@ -2,45 +2,68 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck, Lock, Video, SlidersHorizontal } from "lucide-react";
+import {
+  MessageSquareX,
+  ShieldAlert,
+  PackageX,
+  Boxes,
+  BadgeCheck,
+  Lock,
+  Video,
+  LayoutGrid,
+  X,
+  Check,
+} from "lucide-react";
 import PhoneMockDashboard from "./PhoneMockDashboard";
 
 const COMPARISONS = [
   {
-    painTitle: "Unverified WhatsApp trade groups",
+    painTitle: "Unverified Trade Groups",
     painDesc:
-      "Shadow brokers quote ghost inventory, inflate margins, and vanish when panel micro-cracks occur on site.",
-    nexaTitle: "KYB-Audited Trader Command Center",
+      "Vague broker quotes, shadow inventory, and price wars on chat apps.",
+    painIcon: MessageSquareX,
+    painIconStyle: "bg-[#FCE8E6] text-[#D93025]",
+    nexaTitle: "Verified Command Center",
     nexaDesc:
-      "Only OEM-authorized direct desks and verified stockists with bonded warehouses can list pallets on the open network.",
-    icon: ShieldCheck,
+      "Buy directly from OEM-authorized desks and bonded warehouses with locked pricing.",
+    nexaIcon: BadgeCheck,
+    nexaIconStyle: "bg-[#E8F1FD] text-[#1A73E8]",
   },
   {
-    painTitle: "High-intent rooftop leads get poached",
+    painTitle: "Leaked & Poached Leads",
     painDesc:
-      "Central CRM admins and call center staff routinely leak your high-margin commercial leads to competitor installers.",
-    nexaTitle: "Blind-Vault™ Lead Privacy Protection",
+      "Customer details and project margins routinely leaked to competitors.",
+    painIcon: ShieldAlert,
+    painIconStyle: "bg-[#FFF0E6] text-[#EA580C]",
+    nexaTitle: "Blind-Vault™ Lead Privacy",
     nexaDesc:
-      "Envelope privacy protection ensures customer details and project margins are sealed and strictly owned by your firm.",
-    icon: Lock,
+      "Data is sealed, encrypted, and strictly owned by your firm.",
+    nexaIcon: Lock,
+    nexaIconStyle: "bg-[#EFEAFF] text-[#7C3AED]",
   },
   {
-    painTitle: "Transit micro-cracks spark endless disputes",
+    painTitle: "Damages & Transit Disputes",
     painDesc:
-      "Truck drivers drop pallets, installers sign blindly, and OEM warranties get denied leaving EPCs with 6-week frozen cash.",
-    nexaTitle: "Timestamped 180s Unloading Video Protocol",
+      "Unseen micro-cracks lead to endless finger-pointing and denied warranties.",
+    painIcon: PackageX,
+    painIconStyle: "bg-[#FEE2E2] text-[#DC2626]",
+    nexaTitle: "Timestamped Unloading Video",
     nexaDesc:
-      "Unboxing video with barcode scan directly unlocks the delivery escrow or initiates instantaneous carrier insurance compensation.",
-    icon: Video,
+      "180s unloading check with barcode scan instantly secures delivery escrow.",
+    nexaIcon: Video,
+    nexaIconStyle: "bg-[#E6F8F3] text-[#059669]",
   },
   {
-    painTitle: "Forced single-distributor bundled kits",
+    painTitle: "Forced Bundle Monopolies",
     painDesc:
-      "Distributors tie in substandard inverters or mounting brackets to offload aging stock, destroying your project efficiency.",
-    nexaTitle: "Cross-Trader Spot Engine & Kit Configurator",
+      "Distributors tie high-quality components to substandard, aging stock.",
+    painIcon: Boxes,
+    painIconStyle: "bg-[#FFF2E2] text-[#D97706]",
+    nexaTitle: "Cross-Trader Spot Engine",
     nexaDesc:
-      "Mix Tier-1 TOPCon modules from Trader A with hybrid inverters from Trader B for maximum generation efficiency at spot prices.",
-    icon: SlidersHorizontal,
+      "Mix and match Tier-1 panels and hybrid inverters freely at spot prices.",
+    nexaIcon: LayoutGrid,
+    nexaIconStyle: "bg-[#E6F7F2] text-[#00A878]",
   },
 ];
 
@@ -78,60 +101,76 @@ export default function StitchFriction() {
             <PhoneMockDashboard />
           </motion.div>
 
-          {/* RIGHT: Clean Editorial Comparison List (No Cards / No Box Wrappers) */}
-          <div className="lg:col-span-7 ml-24 lg:pl-8 2xl:pl-16">
-            {/* Column Headers */}
-            <div className="gap-6 sm:gap-8 grid grid-cols-1 sm:grid-cols-2 mb-2 px-1 pb-4 border-zinc-200 border-b font-sans font-bold text-xs uppercase tracking-wider">
-              <span className="flex items-center gap-1.5 text-emerald-800 text-center">
-                <span className="bg-emerald-600 rounded-full w-2 h-2 text-center" />
-                SuryaNexa Verified Protocol
-              </span>
+          {/* RIGHT: Comparison Cards Grid (Legacy Industry Friction vs SuryaNEXA Verified Protocol) */}
+          <div className="lg:col-span-7 lg:pl-4 2xl:pl-10 xl:pl-8">
+            {/* Pill Headers matching the reference image */}
+            <div className="gap-6 sm:gap-8 lg:gap-10 grid grid-cols-1 sm:grid-cols-2 mb-3.5">
+              <div className="flex justify-center">
+                <span className="inline-flex items-center gap-1.5 bg-[#FCE8E6] px-3.5 py-1.5 rounded-full font-sans font-bold text-[#C5221F] text-xs tracking-tight select-none">
+                  <X className="stroke-[2.5] w-3.5 h-3.5" />
+                  <span>Legacy Industry Friction</span>
+                </span>
+              </div>
+              <div className="flex justify-center">
+                <span className="inline-flex items-center gap-1.5 bg-[#CEEAD6] px-3.5 py-1.5 rounded-full font-sans font-bold text-[#137333] text-xs tracking-tight select-none">
+                  <Check className="stroke-[2.5] w-3.5 h-3.5" />
+                  <span>SuryaNEXA Verified Protocol</span>
+                </span>
+              </div>
             </div>
+            {/* Thin horizontal line under headings */}
+            <div className="my-4 sm:my-5 border-zinc-200/80 border-t" />
 
-            {/* Clean Rows List */}
-            <div className="divide-zinc-200/70">
-              {COMPARISONS.map((row, idx) => (
-                <motion.div
-                  key={row.painTitle}
-                  initial={{ opacity: 0, x: 12 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 0.4, delay: idx * 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className={`grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 ${
-                    idx !== 0 ? "pt-6 sm:pt-7" : "pt-2"
-                  } pb-6 sm:pb-7`}
-                >
-                  {/* WRONG (Legacy Friction) */}
-                  {/* <div className="flex items-start gap-3.5">
-                    <span className="flex justify-center items-center bg-rose-50 mt-0.5 border border-rose-200/60 rounded-full w-6 h-6 font-bold text-rose-700 shrink-0">
-                      <X className="stroke-[2.5] w-3.5 h-3.5 text-rose-700" />
-                    </span>
-                    <div className="flex-1">
-                      <h4 className="font-display font-bold text-zinc-950 text-sm text-balance leading-snug">
-                        {row.painTitle}
-                      </h4>
-                      <p className="mt-1.5 font-sans text-zinc-700 text-xs text-pretty leading-relaxed">
-                        {row.painDesc}
-                      </p>
-                    </div>
-                  </div> */}
+            {/* Comparison Cards Stack with increased gap and thin vertical divider line between sections */}
+            <div className="relative">
+              {/* Thin vertical divider line between the two sections on sm+ */}
+              <div
+                className="hidden sm:block top-0 bottom-0 left-1/2 absolute bg-zinc-200/80 -translate-x-1/2 w-px pointer-events-none"
+                aria-hidden="true"
+              />
 
-                  {/* RIGHT (SuryaNexa Solution Protocol) */}
-                  <div className="flex items-center gap-3.5 w-96">
-                    <span className="flex justify-center items-center bg-emerald-50 mt-0.5 border border-emerald-200/60 rounded-full w-6 h-6 font-bold text-emerald-800 shrink-0">
-                      <row.icon className="stroke-[2.2] w-3.5 h-3.5 text-emerald-800" />
-                    </span>
-                    <div className="flex-1">
-                      <h4 className="font-display font-bold text-zinc-950 text-sm text-balance leading-snug">
-                        {row.nexaTitle}
-                      </h4>
-                      <p className="mt-1.5 font-sans text-zinc-700 text-xs text-pretty leading-relaxed">
-                        {row.nexaDesc}
-                      </p>
+              <div className="space-y-3 sm:space-y-3.5">
+                {COMPARISONS.map((row, idx) => (
+                  <motion.div
+                    key={row.painTitle}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.4, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    className="items-stretch gap-6 sm:gap-8 lg:gap-10 grid grid-cols-1 sm:grid-cols-2"
+                  >
+                    {/* Left Card (Legacy Industry Friction) */}
+                    <div className="flex items-center gap-3 sm:gap-3.5 bg-white hover:bg-zinc-50/70 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-md p-3 sm:p-3.5 border border-zinc-200/80 rounded-2xl sm:rounded-[22px] transition-all">
+                      <div className={`flex justify-center items-center rounded-full w-12 h-12 sm:w-13 sm:h-13 shrink-0 ${row.painIconStyle}`}>
+                        <row.painIcon className="stroke-[2.2] w-6 h-6" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-display font-bold text-[14px] text-zinc-950 sm:text-[15px] leading-snug">
+                          {row.painTitle}
+                        </h4>
+                        <p className="mt-0.5 font-sans text-zinc-500 sm:text-[12.5px] text-xs leading-relaxed">
+                          {row.painDesc}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+
+                    {/* Right Card (SuryaNEXA Verified Protocol) */}
+                    <div className="flex items-center gap-3 sm:gap-3.5 bg-white hover:bg-emerald-50/20 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-md p-3 sm:p-3.5 border border-zinc-200/80 hover:border-emerald-300/80 rounded-2xl sm:rounded-[22px] transition-all">
+                      <div className={`flex justify-center items-center rounded-full w-12 h-12 sm:w-13 sm:h-13 shrink-0 ${row.nexaIconStyle}`}>
+                        <row.nexaIcon className="stroke-[2.2] w-6 h-6" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-display font-bold text-[14px] text-zinc-950 sm:text-[15px] leading-snug">
+                          {row.nexaTitle}
+                        </h4>
+                        <p className="mt-0.5 font-sans text-zinc-600 sm:text-[12.5px] text-xs leading-relaxed">
+                          {row.nexaDesc}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

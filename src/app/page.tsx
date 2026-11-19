@@ -26,6 +26,9 @@ import StitchFooter from "@/components/stitch/StitchFooter";
 export default function Home() {
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+    if (typeof window !== "undefined") {
+      (window as any).__lenis = lenis;
+    }
     let rafId: number;
 
     const raf = (time: number) => {
@@ -53,6 +56,9 @@ export default function Home() {
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      if (typeof window !== "undefined") {
+        delete (window as any).__lenis;
+      }
       document.removeEventListener("click", onClick);
     };
   }, []);
@@ -86,10 +92,10 @@ export default function Home() {
           {/* 5-Part Stakeholder Solutions */}
           <StitchBentoGrid />
 
-          {/* S-Curve Logistics Journey & Freight Telematics */}
-          <SectionScrollFade>
+          {/* S-Curve Logistics Journey & Freight Telematics (Component preserved, currently hidden from render) */}
+          {/* <SectionScrollFade>
             <LogisticsRoadSection />
-          </SectionScrollFade>
+          </SectionScrollFade> */}
 
           <SectionScrollFade disableY={true}>
             <StitchLifecycleStack />

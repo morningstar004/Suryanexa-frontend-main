@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Quote, CheckCircle2, Star } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 
 interface Testimonial {
   id: string;
@@ -93,36 +93,46 @@ export default function StitchTestimonials() {
               key={item.id}
               className="relative flex flex-col bg-white shadow-xl shadow-zinc-950/5 hover:shadow-2xl hover:shadow-zinc-950/10 border border-zinc-200/90 rounded-[32px] transition-all hover:-translate-y-1.5 duration-300"
             >
-              {/* Top Avatar Circle on the bigger card background */}
-              <div className="top-5 z-20 relative flex justify-center pt-3">
-                <div className="relative flex justify-center items-center bg-zinc-100 shadow-md border-[4px] border-white rounded-full ring-1 ring-zinc-200/60 w-20 sm:w-22 h-20 sm:h-22 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="top-5 w-full h-full object-cover object-top"
-                    loading="lazy"
-                  />
-                  {/* Verified checkmark badge */}
-                  <div className="top-1 right-1 absolute bg-white shadow-xs p-0.5 rounded-full text-emerald-600">
-                    <CheckCircle2 className="fill-emerald-600 w-3.5 h-3.5 text-white" />
+              {/* Top Author Header on the white card background */}
+              <div className="z-20 relative flex items-center gap-4 px-4 sm:px-5 pt-4 pb-3">
+                <div className="relative w-24 sm:w-28 h-24 sm:h-28 shrink-0">
+                  <div className="bg-zinc-100 shadow-md border-[3px] border-white rounded-full ring-1 ring-zinc-200/80 w-full h-full overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover object-top"
+                      loading="lazy"
+                    />
                   </div>
+                </div>
+
+                {/* Author Name and Designation */}
+                <div className="flex-1 min-w-0 text-left">
+                  <h3 className="font-display font-bold text-[#1B8049] text-base sm:text-lg leading-tight tracking-tight">
+                    {item.name}
+                  </h3>
+                  <p className="mt-1 font-sans font-medium text-zinc-600 sm:text-[13px] text-xs leading-snug">
+                    {item.role}, <span className="font-semibold text-zinc-500">{item.company}</span>
+                    <span className="text-zinc-400"> · </span>
+                    <span className="text-zinc-500">{item.location}</span>
+                  </p>
                 </div>
               </div>
 
               {/* Inner Green Testimonial Card sitting on the bigger card background */}
-              <div className="relative flex flex-col flex-1 justify-between bg-[#1B8049] shadow-[0_12px_28px_rgba(10,50,28,0.22)] px-5 sm:px-6 pt-4 pb-5 border border-emerald-400/30 rounded-[24px] text-white">
+              <div className="relative flex flex-col flex-1 justify-between bg-[#1B8049] shadow-[0_12px_28px_rgba(10,50,28,0.22)] px-5 sm:px-6 pt-5 pb-5 border border-emerald-400/30 rounded-[26px] text-white">
                 {/* Rating + Review Status */}
                 <div className="flex flex-col items-center gap-1.5 mb-2.5">
                   <div className="flex items-center gap-1 bg-white/95 shadow-xs px-2.5 py-1 border border-white/90 rounded-full">
                     <div className="flex items-center gap-0.5">
                       {Array.from({ length: item.rating }).map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                        <Star key={i} className="fill-amber-400 w-3.5 h-3.5 text-amber-400 shrink-0" />
                       ))}
                     </div>
-                    <span className="font-sans font-bold text-xs text-zinc-900 ml-1">5.0</span>
+                    <span className="ml-1 font-sans font-bold text-zinc-900 text-xs">5.0</span>
                   </div>
                   {/* Review Type badge with high-contrast emerald text */}
-                  <span className="font-sans font-semibold text-[10px] sm:text-[11px] text-emerald-100/90 tracking-wider uppercase whitespace-nowrap">
+                  <span className="font-sans font-semibold text-[10px] text-emerald-100/90 sm:text-[11px] uppercase tracking-wider whitespace-nowrap">
                     {item.reviewType}
                   </span>
                 </div>
@@ -135,23 +145,13 @@ export default function StitchTestimonials() {
                   </div>
 
                   {/* Testimonial Quote Text with High-Legibility Typography */}
-                  <p className="font-sans font-medium text-white/95 text-[14px] sm:text-[15px] 2xl:text-[16px] leading-[1.68] tracking-[-0.01em] text-pretty px-0.5 my-2">
+                  <p className="my-2 px-0.5 font-sans font-medium text-[14px] text-white/95 sm:text-[14.5px] 2xl:text-[15.5px] text-pretty leading-[1.68] tracking-[-0.01em]">
                     “{item.quote}”
                   </p>
 
                   {/* Double Close Quote */}
-                  <div className="flex justify-end mt-1 mb-2.5">
+                  <div className="flex justify-end mt-1 mb-2">
                     <Quote className="opacity-90 fill-white/80 w-5 sm:w-6 h-5 sm:h-6 text-white shrink-0" />
-                  </div>
-
-                  {/* Author Name and Designation */}
-                  <div className="pt-3 border-white/20 border-t text-center">
-                    <h3 className="font-display font-bold text-white text-base sm:text-[17px] tracking-tight">
-                      {item.name}
-                    </h3>
-                    <p className="mt-1 font-sans font-medium text-xs sm:text-[13px] text-emerald-100/90 leading-snug">
-                      {item.role}, <span className="font-semibold text-white">{item.company}</span> · {item.location}
-                    </p>
                   </div>
                 </div>
               </div>
