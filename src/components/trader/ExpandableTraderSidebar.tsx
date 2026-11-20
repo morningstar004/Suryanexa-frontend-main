@@ -12,8 +12,8 @@ import {
   Store,
   Users,
   Settings,
-  ChevronLeft,
-  ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen,
   LogOut,
 } from "lucide-react";
 
@@ -94,7 +94,7 @@ export default function ExpandableTraderSidebar({
   return (
     <aside
       className={`fixed top-0 left-0 bottom-0 z-40 bg-[#0b1017] text-zinc-200 border-r border-zinc-800/80 transition-all duration-300 flex flex-col justify-between select-none ${
-        isExpanded ? "w-64 shadow-2xl" : "w-[72px]"
+        isExpanded ? "w-[272px] shadow-2xl" : "w-[72px]"
       }`}
     >
       {/* Top Header & Brand */}
@@ -116,13 +116,13 @@ export default function ExpandableTraderSidebar({
 
             {isExpanded && (
               <motion.div
-                initial={{ opacity: 0, x: -8 }}
+                initial={{ opacity: 0, x: -6 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -8 }}
+                exit={{ opacity: 0, x: -6 }}
                 className="overflow-hidden whitespace-nowrap"
               >
                 <div className="flex items-center gap-1.5">
-                  <span className="font-display font-extrabold text-white text-base tracking-tight">
+                  <span className="font-display font-extrabold text-white text-[15px] tracking-tight">
                     Surya<span className="text-emerald-400">NEXA</span>
                   </span>
                   <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
@@ -136,31 +136,31 @@ export default function ExpandableTraderSidebar({
             )}
           </Link>
 
-          {/* Toggle Button in Expanded Mode */}
+          {/* Toggle Button in Expanded Mode (PanelLeftClose icon) */}
           {isExpanded && onToggleExpand && (
             <button
               type="button"
               onClick={onToggleExpand}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors cursor-pointer shrink-0"
-              title="Collapse Sidebar"
-              aria-label="Collapse Sidebar"
+              className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors cursor-pointer shrink-0 ml-1"
+              title="Close Sidebar"
+              aria-label="Close Sidebar"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <PanelLeftClose className="w-5 h-5 text-zinc-400 hover:text-white transition-colors" />
             </button>
           )}
         </div>
 
-        {/* Expand Toggle when Collapsed */}
+        {/* Toggle Button in Collapsed Mode (PanelLeftOpen icon) */}
         {!isExpanded && onToggleExpand && (
           <div className="p-2 border-b border-zinc-800/80 flex justify-center">
             <button
               type="button"
               onClick={onToggleExpand}
-              className="w-10 h-8 flex items-center justify-center rounded-xl text-zinc-400 hover:text-emerald-400 hover:bg-zinc-800/60 transition-colors cursor-pointer"
-              title="Expand Sidebar"
-              aria-label="Expand Sidebar"
+              className="w-10 h-10 flex items-center justify-center rounded-xl text-zinc-400 hover:text-emerald-400 hover:bg-zinc-800/60 transition-colors cursor-pointer group"
+              title="Open Sidebar"
+              aria-label="Open Sidebar"
             >
-              <ChevronRight className="w-4 h-4" />
+              <PanelLeftOpen className="w-5 h-5 transition-transform group-hover:scale-110" />
             </button>
           </div>
         )}

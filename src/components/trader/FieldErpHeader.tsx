@@ -11,6 +11,7 @@ import {
 
 interface FieldErpHeaderProps {
   onOpenMobileSidebar?: () => void;
+  isSidebarExpanded?: boolean;
   userName?: string;
   userEmail?: string;
   userAvatar?: string | null;
@@ -18,6 +19,7 @@ interface FieldErpHeaderProps {
 
 export default function FieldErpHeader({
   onOpenMobileSidebar,
+  isSidebarExpanded = false,
   userName = "Noor",
   userEmail = "noor@tidewell.com",
   userAvatar = null,
@@ -51,60 +53,66 @@ export default function FieldErpHeader({
       .toUpperCase() || "NH";
 
   return (
-    <header className="h-14 sm:h-16 px-4 sm:px-6 bg-[#f8fafc]/95 backdrop-blur-md border-b border-zinc-200/80 flex items-center justify-between sticky top-0 z-20 select-none">
-      {/* Left: Mobile hamburger + SuryaNexa Brand Logo Badge (Consistent with sidebar) */}
+    <header className="top-0 z-20 flex justify-between items-center bg-[#ECEFF0] backdrop-blur-md mt-2 px-4 sm:px-6 h-16 select-none">
+      {/* Left: Mobile hamburger menu + Brand Title (Fades smoothly when sidebar expands) */}
       <div className="flex items-center gap-3">
         {onOpenMobileSidebar && (
           <button
             type="button"
             onClick={onOpenMobileSidebar}
-            className="lg:hidden p-2 rounded-xl text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100 border border-zinc-200 transition-colors cursor-pointer"
+            className="lg:hidden flex justify-center items-center bg-white hover:bg-zinc-100 shadow-2xs p-2 border border-zinc-200 rounded-xl w-10 h-10 text-zinc-700 hover:text-zinc-950 transition-colors cursor-pointer"
             aria-label="Open mobile navigation"
           >
             <Menu className="w-5 h-5" />
           </button>
         )}
 
-        <Link href="/trader/dashboard" className="flex items-center gap-2.5 group">
-          {/* Official SuryaNexa Logo Image */}
-          <div className="w-8 h-8 rounded-xl bg-white border border-zinc-200/90 p-1 flex items-center justify-center shrink-0 shadow-2xs group-hover:border-emerald-500/50 transition-colors">
-            <img
-              src="/suryanexa-logo.png"
-              alt="SuryaNexa Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5 leading-tight">
-              <span className="font-display font-black text-sm sm:text-base text-zinc-950 tracking-tight">
-                Surya<span className="text-emerald-700">NEXA</span>
-              </span>
-            </div>
-            <p className="text-[9.5px] font-mono font-bold uppercase tracking-wider text-zinc-500 leading-none">
-              FIELD ERP
-            </p>
+        <Link
+          href="/trader/dashboard"
+          className={`group flex items-center h-10 transition-all duration-300 ease-in-out ${isSidebarExpanded
+            ? "opacity-0 pointer-events-none -translate-x-3"
+            : "opacity-100 translate-x-0"
+            }`}
+        >
+          <div className="flex items-center gap-1.5 leading-tight">
+            <span className="font-display font-black text-zinc-950 sm:text-[22px] text-xl tracking-tight">
+              Surya<span className="text-emerald-700">NEXA</span>
+            </span>
           </div>
         </Link>
       </div>
 
-      {/* Right Action Strip: Live Clock + Notifications + User Company Badge */}
-      <div className="flex items-center gap-2.5 sm:gap-3.5">
-        {/* Live Clock Pill (matching screenshot: "• 9:40 AM Live") */}
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 shadow-2xs text-xs font-mono font-bold text-zinc-800">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>{timeString} Live</span>
+      {/* Right Action Strip: Perfectly Consistent Heights (h-10), Borders, Shadows & Radii */}
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* 1. Live Clock Pill: h-10, px-3.5, rounded-full, bg-white, border-zinc-200 */}
+        <div className="flex items-center gap-2 bg-white/80 hover:bg-white/60 shadow-2xs px-3 sm:px-3.5 border border-white rounded-full h-10 transition-colors">
+          {/* Concentric Green Beacon (Pale outer halo + dark green solid center) */}
+          <div className="flex justify-center items-center bg-[#dcfce7] rounded-full w-5 h-5 shrink-0">
+            <span className="bg-[#15803d] rounded-full w-2.5 h-2.5" />
+          </div>
+
+          {/* Time & Live Label */}
+          <div className="flex items-center gap-1.5 leading-none">
+            <span className="font-sans font-semibold text-zinc-950 sm:text-[13px] text-xs tracking-tight">
+              {timeString}
+            </span>
+            <span className="font-sans font-normal text-zinc-500 sm:text-[13px] text-xs">
+              Live
+            </span>
+          </div>
         </div>
 
-        {/* Notifications Bell with 4 Badge */}
+        {/* 2. Notifications Bell: h-10 w-10 circular button, rounded-full, bg-white, border-zinc-200 */}
         <div className="relative">
           <button
             type="button"
             onClick={() => setShowNotifications(!showNotifications)}
-            className="w-9 h-9 rounded-full bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-zinc-950 flex items-center justify-center shadow-2xs transition-all cursor-pointer relative"
+            className="relative flex justify-center items-center bg-white/80 hover:bg-white/60 shadow-2xs border border-white rounded-full w-10 h-10 text-zinc-700 hover:text-zinc-950 transition-all cursor-pointer"
             title="Field Alerts"
+            aria-label="Field Alerts"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white font-mono font-bold text-[9px] flex items-center justify-center ring-2 ring-white">
+            <span className="-top-0.5 -right-0.5 absolute flex justify-center items-center bg-rose-500 rounded-full ring-2 ring-white w-4 h-4 font-mono font-bold text-[9px] text-white">
               4
             </span>
           </button>
@@ -112,28 +120,28 @@ export default function FieldErpHeader({
           {showNotifications && (
             <>
               <div
-                className="fixed inset-0 z-40 bg-transparent"
+                className="z-40 fixed inset-0 bg-transparent"
                 onClick={() => setShowNotifications(false)}
               />
-              <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white border border-zinc-200 shadow-xl p-3.5 z-50 text-xs font-sans space-y-2 animate-in fade-in-50 zoom-in-95 duration-150">
-                <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
-                  <span className="font-display font-bold text-zinc-950 flex items-center gap-1.5">
+              <div className="right-0 z-50 absolute space-y-2 bg-white shadow-xl mt-2 p-3.5 border border-zinc-200 rounded-2xl w-80 font-sans text-xs animate-in duration-150 fade-in-50 zoom-in-95">
+                <div className="flex justify-between items-center pb-2 border-zinc-100 border-b">
+                  <span className="flex items-center gap-1.5 font-display font-bold text-zinc-950">
                     <Activity className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Live Field Stream</span>
                   </span>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">
+                  <span className="bg-rose-50 px-2 py-0.5 border border-rose-200 rounded-full font-mono font-bold text-[10px] text-rose-600">
                     4 Actionable
                   </span>
                 </div>
                 <div className="space-y-1.5">
-                  <div className="p-2 rounded-xl bg-zinc-50 border border-zinc-100">
-                    <p className="font-bold text-zinc-900 text-[11px]">
+                  <div className="bg-zinc-50 p-2 border border-zinc-100 rounded-xl">
+                    <p className="font-bold text-[11px] text-zinc-900">
                       Weekly HSE walk — blocks 1-6
                     </p>
                     <p className="text-[10px] text-zinc-500">Inspection pending today</p>
                   </div>
-                  <div className="p-2 rounded-xl bg-zinc-50 border border-zinc-100">
-                    <p className="font-bold text-zinc-900 text-[11px]">
+                  <div className="bg-zinc-50 p-2 border border-zinc-100 rounded-xl">
+                    <p className="font-bold text-[11px] text-zinc-900">
                       RFI-245 substation B relocation
                     </p>
                     <p className="text-[10px] text-zinc-500">Cedar Flats Farm · High Priority</p>
@@ -144,19 +152,19 @@ export default function FieldErpHeader({
           )}
         </div>
 
-        {/* User Company Profile Chip (matching screenshot: "NH Tidewell Renewables Salt Lake City HQ") */}
+        {/* 3. User Company Profile Chip: h-10, rounded-full, bg-white, border-zinc-200 */}
         <Link
           href="/trader/profile"
-          className="flex items-center gap-2 px-2 sm:px-2.5 py-1 rounded-full bg-white border border-zinc-200 shadow-2xs hover:border-zinc-300 transition-colors cursor-pointer"
+          className="flex items-center gap-2 bg-white/80 hover:bg-white/60 shadow-2xs pr-3 pl-1.5 border-white rounded-full h-10 transition-all cursor-pointer"
         >
-          <div className="w-7 h-7 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">
+          <div className="flex justify-center items-center bg-zinc-900 rounded-full w-7 h-7 font-mono font-bold text-white text-xs shrink-0">
             {userInitials}
           </div>
-          <div className="hidden sm:block text-left leading-tight pr-1">
-            <p className="font-display font-bold text-xs text-zinc-950">
+          <div className="hidden sm:block pr-0.5 text-left leading-tight">
+            <p className="font-display font-bold text-zinc-950 text-xs leading-none">
               Tidewell Renewables
             </p>
-            <p className="text-[10px] text-zinc-500 font-sans">
+            <p className="mt-0.5 font-sans text-[10px] text-zinc-500 leading-none">
               Mundra Logistics HQ
             </p>
           </div>

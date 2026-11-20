@@ -11,6 +11,7 @@ import {
   Clock,
   Zap,
   ArrowUpRight,
+  ArrowRight,
   ShieldCheck,
   Check,
   ChevronLeft,
@@ -20,6 +21,9 @@ import {
   Wind,
   Radio,
   Plus,
+  Building2,
+  AlertTriangle,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { INITIAL_ORDERS, TraderOrder } from "@/lib/traderData";
@@ -82,8 +86,8 @@ const DAY_DOTS: Record<number, string[]> = {
 export default function TraderDashboardPage() {
   const [userName, setUserName] = useState("Noor");
   const [selectedProject, setSelectedProject] = useState("All projects");
-  // Default to day 24 matching the provided user screenshot
-  const [selectedDay, setSelectedDay] = useState<number>(24);
+  // Default to day 21 matching the user reference screenshot
+  const [selectedDay, setSelectedDay] = useState<number>(21);
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0); // 0 = Oct 2026
 
   const [tasks, setTasks] = useState<TaskItem[]>([
@@ -177,163 +181,182 @@ export default function TraderDashboardPage() {
   const dayEvents = CALENDAR_EVENTS[selectedDay] || [];
 
   return (
-    <div className="space-y-4 sm:space-y-5 pb-10 font-sans text-zinc-900 select-none">
+    <div className="space-y-4 sm:space-y-5 pb-10 font-sans text-zinc-900 select-none bg-[#ECEFF0]">
       {/* =========================================================================
-          TOP COMMAND ROW: 3 Distinct Columns (5 + 4 + 3 = 12 cols)
-          Left: Greeting + Solar Instrument & Weather Telemetry (5 cols)
-          Center: AI Delivery Confidence & Bottleneck Diagnosis (4 cols)
-          Right: Milestone Calendar (3 cols)
+          TOP COMMAND SECTION (9 Cols Main + 3 Cols Calendar)
          ========================================================================= */}
       <div className="items-stretch gap-4 sm:gap-5 grid grid-cols-1 lg:grid-cols-12">
-        {/* Left Card: Field Operations Greeting & Daylight Gauge (lg:col-span-5) */}
-        <div className="flex flex-col justify-between space-y-4 lg:col-span-5 bg-white shadow-2xs p-5 sm:p-6 border border-zinc-200/90 rounded-3xl">
-          <div className="flex sm:flex-row flex-col justify-between sm:items-start gap-4">
-            <div>
-              <p className="mb-1 font-sans font-medium text-zinc-500 text-xs">
-                Wednesday, October 21, 2026
-              </p>
-              <h1 className="font-display font-extrabold text-zinc-950 text-2xl sm:text-3xl leading-tight tracking-tight">
-                Good morning, {userName}
-              </h1>
-              <p className="mt-2 max-w-sm font-sans text-zinc-600 sm:text-[13px] text-xs leading-relaxed">
-                7 builds are live across five states. 13 approvals and one delayed site need your sign-off today.
-              </p>
-            </div>
+        {/* Left/Main Column: 2 Top Command Cards + 6 Metric Stat Cards (lg:col-span-9) */}
+        <div className="flex flex-col justify-between space-y-4 lg:col-span-9">
+          {/* Top 2 Cards: Field Operations Greeting (lg:col-span-7) & AI Delivery Confidence (lg:col-span-5) */}
+          <div className="items-stretch gap-4 sm:gap-5 grid grid-cols-1 lg:grid-cols-12">
+            {/* Left Card: Good morning, Noor (lg:col-span-7) */}
+            <div className="flex flex-col justify-between space-y-3 lg:col-span-7 bg-white shadow-2xs p-5 sm:p-6 border border-zinc-200/90 rounded-3xl">
+              <div className="flex sm:flex-row flex-col justify-between sm:items-start gap-4">
+                {/* Left Column: Date with CalendarIcon, Greeting, Description, and Environmental Telemetry Strip */}
+                <div className="flex flex-col justify-between flex-1 space-y-3">
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1.5 text-zinc-500">
+                      <CalendarIcon className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                      <p className="font-sans font-medium text-xs">
+                        Wednesday, October 21, 2026
+                      </p>
+                    </div>
+                    <h1 className="font-display font-extrabold text-zinc-950 text-2xl sm:text-3xl leading-tight tracking-tight">
+                      Good morning,<br />{userName}
+                    </h1>
+                    <p className="mt-2 max-w-sm font-sans text-zinc-600 sm:text-[13px] text-xs leading-relaxed">
+                      7 builds are live across five states. 13 approvals and one delayed site need you today.
+                    </p>
+                  </div>
 
-            {/* Daylight Remaining Solar Instrument */}
-            <div className="self-start bg-[#fcfcfd] shadow-2xs p-3 border border-zinc-200/80 rounded-2xl w-full sm:w-44 text-center shrink-0">
-              <span className="block mb-1 font-mono font-bold text-[9.5px] text-zinc-400 uppercase tracking-wider">
-                Daylight left on site
-              </span>
+                  {/* Environmental Telemetry Strip placed directly under greeting column */}
+                  <div className="flex flex-col gap-2 pt-1">
+                    <div>
+                      <span className="inline-flex items-center gap-1.5 bg-zinc-100/90 px-3 py-1 rounded-full font-sans text-zinc-700 text-xs">
+                        <CloudSun className="w-3.5 h-3.5 text-amber-500" />
+                        <span>61°F Clear · Tooele</span>
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 bg-zinc-100/90 px-3 py-1 rounded-full font-sans text-zinc-700 text-xs">
+                        <Wind className="w-3.5 h-3.5 text-zinc-500" />
+                        <span>12 mph NW, gusts 18</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 bg-emerald-50 px-3 py-1 border border-emerald-200/70 rounded-full font-sans font-medium text-emerald-800 text-xs">
+                        <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
+                        <span>Live from 6 sites</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Solar Arc Gauge */}
-              <div className="relative flex justify-center items-center mx-auto w-36 h-20">
-                <svg viewBox="0 0 100 55" className="w-full h-full overflow-visible">
-                  {/* Calibrated background track */}
-                  <path
-                    d="M 10 50 A 40 40 0 0 1 90 50"
-                    fill="none"
-                    stroke="#e4e4e7"
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                  />
-                  {/* Solar progress arc with warm solar dawn-dusk gradient */}
-                  <path
-                    d="M 10 50 A 40 40 0 0 1 80 25"
-                    fill="none"
-                    stroke="url(#solar-arc-gradient)"
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                    strokeDasharray="125"
-                    strokeDashoffset="25"
-                  />
-                  <defs>
-                    <linearGradient id="solar-arc-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#f59e0b" />
-                      <stop offset="100%" stopColor="#fbbf24" />
-                    </linearGradient>
-                  </defs>
-                  {/* Sun position marker */}
-                  <circle cx="80" cy="25" r="4.5" fill="#f59e0b" stroke="#ffffff" strokeWidth="2" />
-                </svg>
+                {/* Right Column: Daylight Remaining Solar Instrument */}
+                <div className="flex flex-col items-center justify-center text-center shrink-0 w-full sm:w-44 pt-2">
+                  <span className="block mb-1 font-mono font-bold text-[9.5px] text-zinc-400 uppercase tracking-wider">
+                    Daylight left on site
+                  </span>
 
-                {/* Center metric */}
-                <div className="bottom-1 absolute font-display font-black text-zinc-950 text-sm">
-                  8 h 58 min
+                  {/* Solar Arc Gauge with Dashed Track & Center Metric */}
+                  <div className="relative flex justify-center items-center mx-auto w-36 h-20">
+                    <svg viewBox="0 0 100 55" className="w-full h-full overflow-visible">
+                      {/* Dashed background track matching reference */}
+                      <path
+                        d="M 10 50 A 40 40 0 0 1 90 50"
+                        fill="none"
+                        stroke="#cbd5e1"
+                        strokeWidth="2.5"
+                        strokeDasharray="4 4"
+                        strokeLinecap="round"
+                      />
+                      {/* Solar progress arc with warm solar orange */}
+                      <path
+                        d="M 10 50 A 40 40 0 0 1 38 18"
+                        fill="none"
+                        stroke="#f59e0b"
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                      />
+                      {/* Sun position marker */}
+                      <circle cx="38" cy="18" r="4.5" fill="#f59e0b" stroke="#ffffff" strokeWidth="2.5" />
+                    </svg>
+
+                    {/* Center metric */}
+                    <div className="bottom-0 absolute font-display font-black text-zinc-950 text-base sm:text-lg">
+                      7 h 44 min
+                    </div>
+                  </div>
+
+                  {/* Sunrise / Sunset Ticks */}
+                  <div className="flex justify-between w-full px-2 mt-1 font-mono text-[10px] text-zinc-400">
+                    <span>7:46</span>
+                    <span>18:38</span>
+                  </div>
+                  <p className="mt-1 font-sans text-[9.5px] text-zinc-500">
+                    Crews stand down at 18:00
+                  </p>
                 </div>
               </div>
-
-              {/* Sunrise / Sunset Ticks */}
-              <div className="flex justify-between mt-0.5 px-1 font-mono text-[10px] text-zinc-400">
-                <span>07:46</span>
-                <span>18:38</span>
-              </div>
-              <p className="mt-1 font-sans text-[9.5px] text-zinc-500">
-                Crews stand down at 18:00
-              </p>
-            </div>
-          </div>
-
-          {/* Environmental Telemetry Strip */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-zinc-100 border-t">
-            <span className="inline-flex items-center gap-1.5 bg-zinc-100/90 px-3 py-1 rounded-full font-sans text-zinc-700 text-xs">
-              <CloudSun className="w-3.5 h-3.5 text-amber-500" />
-              <span>61°F Clear · Tooele Valley</span>
-            </span>
-            <span className="inline-flex items-center gap-1.5 bg-zinc-100/90 px-3 py-1 rounded-full font-sans text-zinc-700 text-xs">
-              <Wind className="w-3.5 h-3.5 text-zinc-500" />
-              <span>12 mph NW, gusts 18</span>
-            </span>
-            <span className="inline-flex items-center gap-1.5 bg-emerald-50 px-3 py-1 border border-emerald-200/70 rounded-full font-sans font-medium text-emerald-800 text-xs">
-              <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
-              <span>Live from 6 sites</span>
-            </span>
-          </div>
         </div>
 
-        {/* Center Card: AI Project Insights & Critical Path Diagnosis (lg:col-span-4) */}
-        <div className="relative flex flex-col justify-between space-y-4 lg:col-span-4 bg-[#042c22] shadow-2xs p-5 sm:p-6 border border-emerald-900/60 rounded-3xl overflow-hidden text-white">
+        {/* Center Card: AI Project Insights & Critical Path Diagnosis (lg:col-span-5) */}
+        <div className="relative flex flex-col justify-between space-y-3 lg:col-span-5 bg-[#0e3129] shadow-2xs p-4 sm:p-5 border border-[#1b4b40] rounded-3xl overflow-hidden text-white">
           {/* Subtle environmental glow */}
           <div className="-top-12 -right-12 absolute bg-emerald-500/10 blur-3xl rounded-full w-48 h-48 pointer-events-none" />
 
           <div>
             {/* Header */}
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="w-4 h-4 text-emerald-300" />
-              <span className="font-display font-bold text-emerald-200 text-xs uppercase tracking-wider">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="flex justify-center items-center bg-[#98e2c6] rounded-full w-5.5 h-5.5 text-[#0e3129] shrink-0">
+                <Sparkles className="w-3 h-3 fill-current" />
+              </div>
+              <span className="font-display font-bold text-white text-xs tracking-wide">
                 AI project insights
               </span>
             </div>
 
-            {/* Score Ring + Delivery Confidence text */}
-            <div className="flex items-center gap-4 mt-1">
-              {/* Circular gauge: 75 / 100 */}
-              <div className="relative flex justify-center items-center w-16 h-16 shrink-0">
-                <svg className="w-full h-full -rotate-90 transform">
-                  <circle
-                    cx="32"
-                    cy="32"
-                    r="26"
-                    stroke="#063e30"
-                    strokeWidth="5"
-                    fill="transparent"
-                  />
-                  <circle
-                    cx="32"
-                    cy="32"
-                    r="26"
-                    stroke="#34d399"
-                    strokeWidth="5"
-                    fill="transparent"
-                    strokeDasharray={163.3}
-                    strokeDashoffset={163.3 * (1 - 75 / 100)}
+            {/* Speedometer Dial Gauge + Delivery Confidence */}
+            <div className="flex items-center gap-3.5 pt-1">
+              {/* Dial gauge matching reference */}
+              <div className="relative flex justify-center items-center w-28 h-20 shrink-0">
+                <svg viewBox="0 0 110 70" className="w-full h-full overflow-visible">
+                  {/* Background Arc Track */}
+                  <path
+                    d="M 12 58 A 42 42 0 0 1 98 58"
+                    fill="none"
+                    stroke="#174f44"
+                    strokeWidth="6"
                     strokeLinecap="round"
                   />
+                  {/* Active Arc (green 75%) */}
+                  <path
+                    d="M 12 58 A 42 42 0 0 1 84 28"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                  {/* Needle */}
+                  <line
+                    x1="55"
+                    y1="58"
+                    x2="79"
+                    y2="34"
+                    stroke="#ffffff"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="55" cy="58" r="3.5" fill="#ffffff" />
                 </svg>
-                <div className="absolute text-center leading-none">
-                  <span className="font-display font-extrabold text-white text-sm">75</span>
-                  <span className="block font-mono text-[9px] text-emerald-300/80">/100</span>
+                {/* Center metric */}
+                <div className="bottom-0 absolute flex flex-col items-center leading-none">
+                  <span className="font-display font-extrabold text-white text-xl">
+                    75
+                  </span>
+                  <span className="font-sans text-[8.5px] text-[#9ee8ce]/80 mt-0.5">
+                    out of 100
+                  </span>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-display font-bold text-white text-sm leading-snug">
+                <h4 className="font-display font-bold text-white text-xs sm:text-sm leading-snug">
                   Delivery confidence
                 </h4>
-                <p className="mt-0.5 font-sans text-emerald-200/80 text-xs leading-snug">
+                <p className="mt-1 font-sans text-[11px] sm:text-xs text-[#a3d4c6] leading-snug">
                   Good chance of on-time delivery across the portfolio.
                 </p>
               </div>
             </div>
 
             {/* Critical Path Insight Callout */}
-            <div className="space-y-1 bg-white/5 backdrop-blur-xs mt-4 p-3 border border-white/10 rounded-2xl">
-              <div className="flex items-center gap-1.5 font-bold text-amber-300 text-xs">
-                <Zap className="fill-amber-300 w-3.5 h-3.5" />
+            <div className="space-y-0.5 bg-[#0b2620]/80 mt-2.5 p-2.5 border border-[#1b4b40] rounded-xl">
+              <div className="flex items-center gap-1.5 font-bold text-teal-300 text-[11px]">
+                <Sparkles className="w-3 h-3 text-teal-300" />
                 <span>Key insight</span>
               </div>
-              <p className="font-sans text-zinc-200 text-xs leading-relaxed">
-                Pinecrest will miss its COD by ~3 weeks unless transformer lead time is expedited.
+              <p className="font-sans text-[11.5px] text-zinc-200 leading-relaxed">
+                Pinecrest will miss its COD by ~3 weeks
               </p>
             </div>
           </div>
@@ -341,199 +364,244 @@ export default function TraderDashboardPage() {
           <button
             type="button"
             onClick={() => toast.info("Analyzing supply chain lead times & transformer customs clearance...")}
-            className="flex justify-center items-center gap-1.5 bg-white/10 hover:bg-white/15 px-4 py-2.5 border border-white/10 rounded-xl w-full font-sans font-semibold text-white text-xs transition-colors cursor-pointer"
+            className="flex justify-center items-center gap-1.5 bg-[#09221d] hover:bg-[#0e2f28] py-2 px-3 border border-white/10 rounded-xl w-full font-sans font-semibold text-white text-xs transition-colors cursor-pointer"
           >
             <span>View full AI analysis</span>
-            <ArrowUpRight className="w-4 h-4" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
-        </div>
-
-        {/* Right Card: High-Fidelity Calendar Widget (lg:col-span-3 - Matching User Image) */}
-        <div className="flex flex-col justify-between space-y-3 lg:col-span-3 bg-white shadow-2xs p-4 sm:p-5 border border-zinc-200/90 rounded-3xl">
-          <div className="space-y-3">
-            {/* 1. Header with Teal Badge & Calendar Title */}
-            <div className="flex items-center gap-2.5">
-              <div className="flex justify-center items-center bg-[#e6f4f1] border border-[#d2ebe5] rounded-2xl w-9 h-9 text-[#0f766e] shrink-0">
-                <CalendarIcon className="w-4.5 h-4.5 stroke-[1.8]" />
-              </div>
-              <h3 className="font-display font-bold text-zinc-950 text-base">
-                Calendar
-              </h3>
-            </div>
-
-            {/* 2. Month Bar with Month Title & Circular Arrow Controls */}
-            <div className="flex justify-between items-center pt-1">
-              <h4 className="font-display font-bold text-zinc-900 text-sm">
-                October 2026
-              </h4>
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCurrentMonthIndex((prev) => prev - 1);
-                    toast.info("Navigated to September 2026");
-                  }}
-                  className="flex justify-center items-center hover:bg-zinc-100 border border-zinc-200/90 rounded-full w-7 h-7 text-zinc-600 hover:text-zinc-950 transition-colors cursor-pointer"
-                  title="Previous Month"
-                  aria-label="Previous Month"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCurrentMonthIndex((prev) => prev + 1);
-                    toast.info("Navigated to November 2026");
-                  }}
-                  className="flex justify-center items-center hover:bg-zinc-100 border border-zinc-200/90 rounded-full w-7 h-7 text-zinc-600 hover:text-zinc-950 transition-colors cursor-pointer"
-                  title="Next Month"
-                  aria-label="Next Month"
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* 3. Days of the Week Header */}
-            <div className="grid grid-cols-7 py-0.5 font-semibold text-center text-xs text-zinc-700">
-              <span>Mo</span>
-              <span>Tu</span>
-              <span>We</span>
-              <span>Th</span>
-              <span>Fr</span>
-              <span>Sa</span>
-              <span>Su</span>
-            </div>
-
-            {/* 4. Calendar Days Grid (October 2026: Day 1 starts on Thursday) */}
-            <div className="gap-y-1.5 grid grid-cols-7 text-center">
-              {/* Empty leading days: Monday, Tuesday, Wednesday */}
-              <div />
-              <div />
-              <div />
-
-              {/* Days 1 through 31 */}
-              {Array.from({ length: 31 }, (_, idx) => idx + 1).map((day) => {
-                const isToday = day === 21;
-                const isSelected = day === selectedDay;
-                const dots = DAY_DOTS[day];
-
-                return (
-                  <div
-                    key={day}
-                    onClick={() => setSelectedDay(day)}
-                    className="flex justify-center items-center cursor-pointer"
-                  >
-                    <div
-                      className={`relative flex flex-col items-center justify-center w-8 h-9 sm:w-9 sm:h-9.5 rounded-xl transition-all ${
-                        isToday
-                          ? "bg-[#1e293b] text-white shadow-xs"
-                          : isSelected
-                          ? "border-2 border-zinc-900 bg-white font-bold text-zinc-950"
-                          : "text-zinc-700 hover:bg-zinc-100/80 font-medium"
-                      }`}
-                    >
-                      <span className={`text-xs ${isToday ? "font-bold text-white" : isSelected ? "font-bold text-zinc-950" : ""}`}>
-                        {day}
-                      </span>
-
-                      {/* Dots indicators below the date number */}
-                      {dots && dots.length > 0 ? (
-                        <div className="flex justify-center items-center gap-0.5 mt-0.5 min-h-[4px]">
-                          {dots.map((dotColor, dIdx) => (
-                            <span
-                              key={dIdx}
-                              className={`w-1 h-1 rounded-full shrink-0 ${dotColor}`}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="mt-0.5 min-h-[4px]" />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 5. Bottom Detail View (e.g. Saturday, Oct 24 · 0 events / Nothing scheduled) */}
-          <div className="space-y-1.5 pt-3 border-zinc-100 border-t">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-display font-bold text-sm text-zinc-950">
-                {selectedDayFormatted}
-              </span>
-              <span className="font-sans text-xs text-zinc-500">
-                {dayEvents.length} events
-              </span>
-            </div>
-
-            <div className="min-h-[44px]">
-              {dayEvents.length === 0 ? (
-                <p className="mt-1 font-sans text-xs text-zinc-500">
-                  Nothing scheduled.
-                </p>
-              ) : (
-                <div className="space-y-1.5 mt-1 font-sans text-[11px] text-zinc-700">
-                  {dayEvents.map((evt, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full shrink-0 ${evt.color}`} />
-                      <span className="truncate">{evt.title}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* =========================================================================
-          MIDDLE ROW 1: 6 Metric Stat Cards (Semantic Tints & Real Deltas)
-         ========================================================================= */}
+      {/* Row 2: 6 Metric Stat Cards inside lg:col-span-9 directly below Card 1 & Card 2 */}
       <div className="gap-3 sm:gap-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
         {/* Metric 1: Active projects */}
-        <div className="bg-[#ecfdf5] shadow-2xs p-3.5 sm:p-4 border border-emerald-200/80 rounded-2xl">
-          <span className="block font-semibold text-zinc-700 text-xs">Active projects</span>
-          <div className="mt-1 font-display font-extrabold text-zinc-950 text-2xl">7</div>
-          <span className="font-sans font-medium text-[11px] text-emerald-700">+1 this quarter</span>
+        <div className="flex flex-col justify-between bg-[#d4efe3] shadow-2xs p-3.5 sm:p-4 border border-emerald-300/40 rounded-2xl">
+          <div className="flex items-center gap-2">
+            <div className="flex justify-center items-center bg-[#bbf0da] rounded-lg w-7 h-7 text-emerald-800 shrink-0">
+              <Building2 className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-zinc-700 text-xs">Active projects</span>
+          </div>
+          <div className="mt-1.5 font-display font-extrabold text-zinc-950 text-2xl">7</div>
+          <div className="flex items-center gap-1 mt-0.5 font-sans font-medium text-[11px] text-emerald-800">
+            <TrendingUp className="w-3 h-3 text-emerald-800" />
+            <span>+1 this quarter</span>
+          </div>
         </div>
 
         {/* Metric 2: Completed builds */}
-        <div className="bg-[#f8fafc] shadow-2xs p-3.5 sm:p-4 border border-slate-200/80 rounded-2xl">
-          <span className="block font-semibold text-zinc-700 text-xs">Completed builds</span>
-          <div className="mt-1 font-display font-extrabold text-zinc-950 text-2xl">32</div>
-          <span className="font-sans font-medium text-[11px] text-zinc-500">+2 vs last year</span>
+        <div className="flex flex-col justify-between bg-white shadow-2xs p-3.5 sm:p-4 border border-zinc-200/90 rounded-2xl">
+          <div className="flex items-center gap-2">
+            <div className="flex justify-center items-center bg-emerald-50 border border-emerald-100 rounded-lg w-7 h-7 text-emerald-600 shrink-0">
+              <Check className="stroke-[2.5] w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-zinc-700 text-xs">Completed builds</span>
+          </div>
+          <div className="mt-1.5 font-display font-extrabold text-zinc-950 text-2xl">32</div>
+          <div className="flex items-center gap-1 mt-0.5 font-sans font-medium text-[11px] text-zinc-500">
+            <TrendingUp className="w-3 h-3 text-zinc-400" />
+            <span>+2 vs last year</span>
+          </div>
         </div>
 
         {/* Metric 3: Delayed projects */}
-        <div className="bg-[#fff1f2] shadow-2xs p-3.5 sm:p-4 border border-rose-200/80 rounded-2xl">
-          <span className="block font-semibold text-zinc-700 text-xs">Delayed projects</span>
-          <div className="mt-1 font-display font-extrabold text-zinc-950 text-2xl">2</div>
-          <span className="font-sans font-medium text-[11px] text-rose-600">Same as last month</span>
+        <div className="flex flex-col justify-between bg-[#fcdcdb] shadow-2xs p-3.5 sm:p-4 border border-rose-200/60 rounded-2xl">
+          <div className="flex items-center gap-2">
+            <div className="flex justify-center items-center bg-[#f8bebc] rounded-lg w-7 h-7 text-rose-800 shrink-0">
+              <AlertTriangle className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-zinc-700 text-xs">Delayed projects</span>
+          </div>
+          <div className="mt-1.5 font-display font-extrabold text-zinc-950 text-2xl">2</div>
+          <span className="block mt-0.5 font-sans font-medium text-[11px] text-rose-800">Same as last month</span>
         </div>
 
         {/* Metric 4: Work packages live */}
-        <div className="bg-[#f0f9ff] shadow-2xs p-3.5 sm:p-4 border border-sky-200/80 rounded-2xl">
-          <span className="block font-semibold text-zinc-700 text-xs">Work packages live</span>
-          <div className="mt-1 font-display font-extrabold text-zinc-950 text-2xl">17</div>
-          <span className="font-sans font-medium text-[11px] text-sky-700">1 start this week</span>
+        <div className="flex flex-col justify-between bg-white shadow-2xs p-3.5 sm:p-4 border border-zinc-200/90 rounded-2xl">
+          <div className="flex items-center gap-2">
+            <div className="flex justify-center items-center bg-zinc-100 rounded-lg w-7 h-7 text-zinc-600 shrink-0">
+              <TrendingUp className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-zinc-700 text-xs">Work packages live</span>
+          </div>
+          <div className="mt-1.5 font-display font-extrabold text-zinc-950 text-2xl">17</div>
+          <div className="flex items-center gap-1 mt-0.5 font-sans font-medium text-[11px] text-zinc-500">
+            <TrendingUp className="w-3 h-3 text-zinc-400" />
+            <span>1 start this week</span>
+          </div>
         </div>
 
         {/* Metric 5: Pending approvals */}
-        <div className="bg-[#fefce8] shadow-2xs p-3.5 sm:p-4 border border-amber-200/80 rounded-2xl">
-          <span className="block font-semibold text-zinc-700 text-xs">Pending approvals</span>
-          <div className="mt-1 font-display font-extrabold text-zinc-950 text-2xl">13</div>
-          <span className="font-sans font-medium text-[11px] text-amber-700">3 due today</span>
+        <div className="flex flex-col justify-between bg-[#fef3c7] shadow-2xs p-3.5 sm:p-4 border border-amber-200/60 rounded-2xl">
+          <div className="flex items-center gap-2">
+            <div className="flex justify-center items-center bg-[#fde68a] rounded-lg w-7 h-7 text-amber-800 shrink-0">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-zinc-700 text-xs">Pending approvals</span>
+          </div>
+          <div className="mt-1.5 font-display font-extrabold text-zinc-950 text-2xl">13</div>
+          <div className="flex items-center gap-1 mt-0.5 font-sans font-medium text-[11px] text-amber-800">
+            <Clock className="w-3 h-3 text-amber-800" />
+            <span>3 due today</span>
+          </div>
         </div>
 
         {/* Metric 6: Crew attendance */}
-        <div className="bg-[#f9fafb] shadow-2xs p-3.5 sm:p-4 border border-zinc-200 rounded-2xl">
-          <span className="block font-semibold text-zinc-700 text-xs">Crew attendance</span>
-          <div className="mt-1 font-display font-extrabold text-zinc-950 text-2xl">90%</div>
-          <span className="font-sans font-medium text-[11px] text-zinc-500">19 of 21 on site</span>
+        <div className="flex flex-col justify-between bg-white shadow-2xs p-3.5 sm:p-4 border border-zinc-200/90 rounded-2xl">
+          <div className="flex items-center gap-2">
+            <div className="flex justify-center items-center bg-zinc-100 rounded-lg w-7 h-7 text-zinc-600 shrink-0">
+              <Users className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-semibold text-zinc-700 text-xs">Crew attendance</span>
+          </div>
+          <div className="mt-1.5 font-display font-extrabold text-zinc-950 text-2xl">90%</div>
+          <div className="flex items-center gap-1 mt-0.5 font-sans font-medium text-[11px] text-zinc-500">
+            <TrendingUp className="w-3 h-3 text-zinc-400" />
+            <span>19 of 21 on site</span>
+          </div>
         </div>
       </div>
+    </div>
+
+    {/* Right Card: High-Fidelity Calendar Widget (lg:col-span-3 - Matching User Image) */}
+    <div className="flex flex-col justify-between space-y-3 lg:col-span-3 bg-white shadow-2xs p-4 sm:p-5 border border-zinc-200/90 rounded-3xl">
+      <div className="space-y-3">
+        {/* 1. Header with Teal Badge & Calendar Title */}
+        <div className="flex items-center gap-2">
+          <div className="flex justify-center items-center bg-[#e6f4f1] border border-[#d2ebe5] rounded-xl w-8 h-8 text-[#0f766e] shrink-0">
+            <CalendarIcon className="stroke-[1.8] w-4 h-4" />
+          </div>
+          <h3 className="font-display font-bold text-zinc-950 text-sm">
+            Calendar
+          </h3>
+        </div>
+
+        {/* 2. Month Bar with Month Title & Circular Arrow Controls */}
+        <div className="flex justify-between items-center pt-0.5">
+          <h4 className="font-display font-bold text-xs text-zinc-900">
+            October 2026
+          </h4>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentMonthIndex((prev) => prev - 1);
+                toast.info("Navigated to September 2026");
+              }}
+              className="flex justify-center items-center hover:bg-zinc-100 border border-zinc-200/90 rounded-full w-7 h-7 text-zinc-600 hover:text-zinc-950 transition-colors cursor-pointer"
+              title="Previous Month"
+              aria-label="Previous Month"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentMonthIndex((prev) => prev + 1);
+                toast.info("Navigated to November 2026");
+              }}
+              className="flex justify-center items-center hover:bg-zinc-100 border border-zinc-200/90 rounded-full w-7 h-7 text-zinc-600 hover:text-zinc-950 transition-colors cursor-pointer"
+              title="Next Month"
+              aria-label="Next Month"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
+        {/* 3. Days of the Week Header */}
+        <div className="grid grid-cols-7 py-0.5 font-semibold text-xs text-zinc-600 text-center">
+          <span>Mo</span>
+          <span>Tu</span>
+          <span>We</span>
+          <span>Th</span>
+          <span>Fr</span>
+          <span>Sa</span>
+          <span>Su</span>
+        </div>
+
+        {/* 4. Calendar Days Grid (Full Original Size matching reference) */}
+        <div className="gap-y-1 grid grid-cols-7 text-center">
+          {/* Empty leading days: Monday, Tuesday, Wednesday */}
+          <div />
+          <div />
+          <div />
+
+          {/* Days 1 through 31 */}
+          {Array.from({ length: 31 }, (_, idx) => idx + 1).map((day) => {
+            const isToday = day === 21;
+            const isSelected = day === selectedDay;
+            const dots = DAY_DOTS[day];
+
+            return (
+              <div
+                key={day}
+                onClick={() => setSelectedDay(day)}
+                className="flex justify-center items-center cursor-pointer"
+              >
+                <div
+                  className={`relative flex flex-col items-center justify-center w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl transition-all ${
+                    isToday
+                      ? "bg-[#1e293b] text-white shadow-xs"
+                      : isSelected
+                        ? "border-2 border-zinc-900 bg-white font-bold text-zinc-950"
+                        : "text-zinc-700 hover:bg-zinc-100/80 font-medium"
+                  }`}
+                >
+                  <span className={`text-xs ${isToday ? "font-bold text-white" : isSelected ? "font-bold text-zinc-950" : ""}`}>
+                    {day}
+                  </span>
+
+                  {/* Dots indicators below the date number */}
+                  {dots && dots.length > 0 ? (
+                    <div className="flex justify-center items-center gap-0.5 mt-0.5 min-h-[4px]">
+                      {dots.map((dotColor, dIdx) => (
+                        <span
+                          key={dIdx}
+                          className={`w-1 h-1 rounded-full shrink-0 ${isToday ? "bg-white" : dotColor}`}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="mt-0.5 min-h-[4px]" />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 5. Bottom Detail View (e.g. Today · 3 events / Saturday, Oct 24 · 0 events) */}
+      <div className="space-y-1.5 pt-3 border-zinc-100 border-t">
+        <div className="flex justify-between items-center text-xs">
+          <span className="font-display font-bold text-xs text-zinc-950">
+            {selectedDay === 21 ? "Today" : selectedDayFormatted}
+          </span>
+          <span className="font-sans text-[11px] text-zinc-500">
+            {dayEvents.length} events
+          </span>
+        </div>
+
+        <div className="min-h-[48px]">
+          {dayEvents.length === 0 ? (
+            <p className="mt-1 font-sans text-xs text-zinc-500">
+              Nothing scheduled.
+            </p>
+          ) : (
+            <div className="space-y-1.5 mt-1 font-sans text-[11px] text-zinc-700">
+              {dayEvents.map((evt, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${evt.color}`} />
+                  <span className="truncate">{evt.title}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
 
       {/* =========================================================================
           MIDDLE ROW 2: Analytics & Field Execution Row (4 Columns)
@@ -554,7 +622,7 @@ export default function TraderDashboardPage() {
             </div>
 
             {/* Circular Donut Gauge matching reference */}
-            <div className="relative flex justify-center items-center my-3 mx-auto w-36 h-36">
+            <div className="relative flex justify-center items-center mx-auto my-3 w-36 h-36">
               <svg className="w-full h-full -rotate-90 transform">
                 <circle
                   cx="72"
@@ -577,8 +645,8 @@ export default function TraderDashboardPage() {
                 />
               </svg>
               <div className="absolute text-center leading-none">
-                <div className="font-display font-black text-2xl text-zinc-950">38%</div>
-                <span className="block mt-0.5 font-bold font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
+                <div className="font-display font-black text-zinc-950 text-2xl">38%</div>
+                <span className="block mt-0.5 font-mono font-bold text-[10px] text-zinc-400 uppercase tracking-widest">
                   utilized
                 </span>
               </div>
@@ -591,7 +659,7 @@ export default function TraderDashboardPage() {
                   <span className="bg-zinc-950 rounded-full w-2 h-2 shrink-0" />
                   <span>Total budget</span>
                 </span>
-                <span className="font-bold font-mono text-zinc-950">$234M</span>
+                <span className="font-mono font-bold text-zinc-950">$234M</span>
               </div>
 
               <div className="flex justify-between items-center">
@@ -599,7 +667,7 @@ export default function TraderDashboardPage() {
                   <span className="bg-sky-500 rounded-full w-2 h-2 shrink-0" />
                   <span>Spent</span>
                 </span>
-                <span className="font-bold font-mono text-zinc-950">$88.1M</span>
+                <span className="font-mono font-bold text-zinc-950">$88.1M</span>
               </div>
 
               <div className="flex justify-between items-center">
@@ -607,7 +675,7 @@ export default function TraderDashboardPage() {
                   <span className="bg-indigo-500 rounded-full w-2 h-2 shrink-0" />
                   <span>Committed</span>
                 </span>
-                <span className="font-bold font-mono text-zinc-950">$26.7M</span>
+                <span className="font-mono font-bold text-zinc-950">$26.7M</span>
               </div>
 
               <div className="flex justify-between items-center">
@@ -615,19 +683,19 @@ export default function TraderDashboardPage() {
                   <span className="bg-zinc-300 rounded-full w-2 h-2 shrink-0" />
                   <span>Remaining</span>
                 </span>
-                <span className="font-bold font-mono text-zinc-950">$119M</span>
+                <span className="font-mono font-bold text-zinc-950">$119M</span>
               </div>
             </div>
 
             {/* Month-over-month trend pill */}
-            <div className="flex justify-between items-center bg-emerald-50 mt-3 px-2.5 py-1.5 border border-emerald-200/60 rounded-xl font-medium font-sans text-[11px] text-emerald-800">
+            <div className="flex justify-between items-center bg-emerald-50 mt-3 px-2.5 py-1.5 border border-emerald-200/60 rounded-xl font-sans font-medium text-[11px] text-emerald-800">
               <span>↑ 36% → 38% spent this month</span>
             </div>
           </div>
 
           {/* Largest Budgets sub-card */}
           <div className="pt-2.5 border-zinc-100 border-t">
-            <span className="block mb-1 font-bold font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+            <span className="block mb-1 font-mono font-bold text-[10px] text-zinc-400 uppercase tracking-wider">
               LARGEST BUDGETS
             </span>
             <div className="flex justify-between items-center text-xs">
@@ -652,7 +720,7 @@ export default function TraderDashboardPage() {
                   <select
                     value={selectedProject}
                     onChange={(e) => setSelectedProject(e.target.value)}
-                    className="bg-zinc-100 hover:bg-zinc-200 py-1 pr-6 pl-2 border-none rounded-lg focus:ring-1 focus:ring-emerald-500 font-sans text-xs text-zinc-700 cursor-pointer appearance-none"
+                    className="bg-zinc-100 hover:bg-zinc-200 py-1 pr-6 pl-2 border-none rounded-lg focus:ring-1 focus:ring-emerald-500 font-sans text-zinc-700 text-xs appearance-none cursor-pointer"
                   >
                     <option value="All projects">All projects</option>
                     <option value="Cedar Flats">Cedar Flats</option>
@@ -685,7 +753,7 @@ export default function TraderDashboardPage() {
             <div className="relative mt-2">
               <div className="flex items-stretch gap-1">
                 {/* Y-axis labels */}
-                <div className="flex flex-col justify-between pr-1 h-28 font-mono text-[9px] text-right text-zinc-400 select-none">
+                <div className="flex flex-col justify-between pr-1 h-28 font-mono text-[9px] text-zinc-400 text-right select-none">
                   <span>100%</span>
                   <span>75%</span>
                   <span>50%</span>
@@ -756,7 +824,7 @@ export default function TraderDashboardPage() {
                   </svg>
 
                   {/* Today Badge */}
-                  <div className="top-1 left-[54%] absolute bg-zinc-900 shadow-xs px-1.5 py-0.5 rounded font-bold font-mono text-[9px] text-white transform -translate-x-1/2">
+                  <div className="top-1 left-[54%] absolute bg-zinc-900 shadow-xs px-1.5 py-0.5 rounded font-mono font-bold text-[9px] text-white -translate-x-1/2 transform">
                     Today
                   </div>
                 </div>
@@ -790,7 +858,7 @@ export default function TraderDashboardPage() {
               <button
                 type="button"
                 onClick={() => toast.info("Opening site-by-site telematics dashboard...")}
-                className="font-semibold font-sans text-emerald-700 hover:text-emerald-900 text-xs cursor-pointer"
+                className="font-sans font-semibold text-emerald-700 hover:text-emerald-900 text-xs cursor-pointer"
               >
                 View all &rarr;
               </button>
@@ -806,8 +874,8 @@ export default function TraderDashboardPage() {
                     <span className="text-[10.5px] text-zinc-500">Tooele, Utah · 48 MWp</span>
                   </div>
                   <div className="text-right">
-                    <span className="font-bold font-mono text-xs text-zinc-900">69%</span>
-                    <span className="block font-semibold font-sans text-[10px] text-emerald-700">On track</span>
+                    <span className="font-mono font-bold text-zinc-900 text-xs">69%</span>
+                    <span className="block font-sans font-semibold text-[10px] text-emerald-700">On track</span>
                   </div>
                 </div>
                 <div className="bg-zinc-100 mt-1.5 rounded-full w-full h-1.5 overflow-hidden">
@@ -823,8 +891,8 @@ export default function TraderDashboardPage() {
                     <span className="text-[10.5px] text-zinc-500">Kern County, California · 40 MWh</span>
                   </div>
                   <div className="text-right">
-                    <span className="font-bold font-mono text-xs text-zinc-900">50%</span>
-                    <span className="block font-semibold font-sans text-[10px] text-emerald-700">On track</span>
+                    <span className="font-mono font-bold text-zinc-900 text-xs">50%</span>
+                    <span className="block font-sans font-semibold text-[10px] text-emerald-700">On track</span>
                   </div>
                 </div>
                 <div className="bg-zinc-100 mt-1.5 rounded-full w-full h-1.5 overflow-hidden">
@@ -840,8 +908,8 @@ export default function TraderDashboardPage() {
                     <span className="text-[10.5px] text-zinc-500">Columbus, Ohio · 6.2 MWp</span>
                   </div>
                   <div className="text-right">
-                    <span className="font-bold font-mono text-xs text-zinc-900">89%</span>
-                    <span className="block font-semibold font-sans text-[10px] text-emerald-700">On track</span>
+                    <span className="font-mono font-bold text-zinc-900 text-xs">89%</span>
+                    <span className="block font-sans font-semibold text-[10px] text-emerald-700">On track</span>
                   </div>
                 </div>
                 <div className="bg-zinc-100 mt-1.5 rounded-full w-full h-1.5 overflow-hidden">
@@ -857,8 +925,8 @@ export default function TraderDashboardPage() {
                     <span className="text-[10.5px] text-zinc-500">Yakima, Washington · 22 MWp</span>
                   </div>
                   <div className="text-right">
-                    <span className="font-bold font-mono text-xs text-zinc-900">31%</span>
-                    <span className="block font-semibold font-sans text-[10px] text-rose-600">Delayed</span>
+                    <span className="font-mono font-bold text-zinc-900 text-xs">31%</span>
+                    <span className="block font-sans font-semibold text-[10px] text-rose-600">Delayed</span>
                   </div>
                 </div>
                 <div className="bg-zinc-100 mt-1.5 rounded-full w-full h-1.5 overflow-hidden">
@@ -874,8 +942,8 @@ export default function TraderDashboardPage() {
                     <span className="text-[10.5px] text-zinc-500">Savannah, Georgia · 3.8 MWp</span>
                   </div>
                   <div className="text-right">
-                    <span className="font-bold font-mono text-xs text-zinc-900">98%</span>
-                    <span className="block font-semibold font-sans text-[10px] text-emerald-700">On track</span>
+                    <span className="font-mono font-bold text-zinc-900 text-xs">98%</span>
+                    <span className="block font-sans font-semibold text-[10px] text-emerald-700">On track</span>
                   </div>
                 </div>
                 <div className="bg-zinc-100 mt-1.5 rounded-full w-full h-1.5 overflow-hidden">
@@ -913,7 +981,7 @@ export default function TraderDashboardPage() {
                 <button
                   type="button"
                   onClick={() => toast.info("Viewing all field tasks & RFI approvals...")}
-                  className="font-semibold font-sans text-zinc-700 hover:text-zinc-950 text-xs cursor-pointer"
+                  className="font-sans font-semibold text-zinc-700 hover:text-zinc-950 text-xs cursor-pointer"
                 >
                   View all &rarr;
                 </button>
@@ -926,36 +994,33 @@ export default function TraderDashboardPage() {
                 <div
                   key={task.id}
                   onClick={() => toggleTask(task.id)}
-                  className="flex items-start gap-2.5 hover:bg-zinc-50/80 p-1.5 rounded-xl transition-colors cursor-pointer group"
+                  className="group flex items-start gap-2.5 hover:bg-zinc-50/80 p-1.5 rounded-xl transition-colors cursor-pointer"
                 >
                   {/* Round Checkbox Toggle */}
                   <div
-                    className={`mt-0.5 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition-all ${
-                      task.completed
-                        ? "bg-blue-600 border-blue-600 text-white"
-                        : "border-zinc-300 group-hover:border-zinc-400 bg-white"
-                    }`}
+                    className={`mt-0.5 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition-all ${task.completed
+                      ? "bg-blue-600 border-blue-600 text-white"
+                      : "border-zinc-300 group-hover:border-zinc-400 bg-white"
+                      }`}
                   >
-                    {task.completed && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                    {task.completed && <Check className="stroke-[3] w-2.5 h-2.5" />}
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-1">
                       <p
-                        className={`text-xs font-medium leading-snug line-clamp-2 ${
-                          task.completed ? "line-through text-zinc-400" : "text-zinc-900"
-                        }`}
+                        className={`text-xs font-medium leading-snug line-clamp-2 ${task.completed ? "line-through text-zinc-400" : "text-zinc-900"
+                          }`}
                       >
                         {task.title}
                       </p>
                       <span
-                        className={`text-[9.5px] font-sans font-semibold px-2 py-0.5 rounded-full shrink-0 ${
-                          task.priority === "High"
-                            ? "bg-rose-100 text-rose-700"
-                            : task.priority === "Medium"
+                        className={`text-[9.5px] font-sans font-semibold px-2 py-0.5 rounded-full shrink-0 ${task.priority === "High"
+                          ? "bg-rose-100 text-rose-700"
+                          : task.priority === "Medium"
                             ? "bg-amber-100 text-amber-800"
                             : "bg-emerald-100 text-emerald-800"
-                        }`}
+                          }`}
                       >
                         {task.priority}
                       </span>
@@ -986,23 +1051,23 @@ export default function TraderDashboardPage() {
             <h3 className="font-display font-bold text-zinc-950 text-sm sm:text-base">
               Ongoing Purchase Orders &amp; Dispatch Ledger
             </h3>
-            <p className="font-sans text-xs text-zinc-500">
+            <p className="font-sans text-zinc-500 text-xs">
               Real-time escrow dispatch feed across regional solar projects
             </p>
           </div>
 
           <Link
             href="/trader/orders"
-            className="flex items-center gap-1 font-bold font-display text-emerald-700 hover:text-emerald-900 text-xs"
+            className="flex items-center gap-1 font-display font-bold text-emerald-700 hover:text-emerald-900 text-xs"
           >
             <span>View All Orders &rarr;</span>
           </Link>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full font-sans text-left text-xs">
+          <table className="w-full font-sans text-xs text-left">
             <thead>
-              <tr className="border-zinc-100 border-b font-bold font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+              <tr className="border-zinc-100 border-b font-mono font-bold text-[10px] text-zinc-400 uppercase tracking-wider">
                 <th className="px-3 py-2.5">PO #</th>
                 <th className="px-3 py-2.5">Buyer Name</th>
                 <th className="px-3 py-2.5">Status</th>
@@ -1012,7 +1077,7 @@ export default function TraderDashboardPage() {
             <tbody className="divide-y divide-zinc-100">
               {orders.map((ord) => (
                 <tr key={ord.id} className="hover:bg-zinc-50/80 transition-colors">
-                  <td className="px-3 py-3 font-bold font-mono text-zinc-950">
+                  <td className="px-3 py-3 font-mono font-bold text-zinc-950">
                     {ord.poNumber}
                   </td>
                   <td className="px-3 py-3">
@@ -1021,22 +1086,21 @@ export default function TraderDashboardPage() {
                   </td>
                   <td className="px-3 py-3">
                     <span
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
-                        ord.escrowStatus === "DISBURSED"
-                          ? "bg-emerald-100 text-emerald-900 border-emerald-300"
-                          : ord.escrowStatus === "VERIFIED"
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${ord.escrowStatus === "DISBURSED"
+                        ? "bg-emerald-100 text-emerald-900 border-emerald-300"
+                        : ord.escrowStatus === "VERIFIED"
                           ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                           : ord.deliveryStatus === "IN_TRANSIT"
-                          ? "bg-amber-100 text-amber-900 border-amber-300"
-                          : "bg-zinc-100 text-zinc-700 border-zinc-200"
-                      }`}
+                            ? "bg-amber-100 text-amber-900 border-amber-300"
+                            : "bg-zinc-100 text-zinc-700 border-zinc-200"
+                        }`}
                     >
                       {ord.escrowStatus === "DISBURSED" && <Check className="w-3 h-3 text-emerald-700" />}
                       {ord.escrowStatus === "VERIFIED" && <ShieldCheck className="w-3 h-3 text-emerald-700" />}
                       {ord.deliveryStatus === "IN_TRANSIT" ? "In Transit" : ord.escrowStatus}
                     </span>
                   </td>
-                  <td className="px-3 py-3 font-bold font-mono text-right text-zinc-950">
+                  <td className="px-3 py-3 font-mono font-bold text-zinc-950 text-right">
                     ₹{ord.totalValue.toLocaleString()}
                   </td>
                 </tr>

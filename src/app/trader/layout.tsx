@@ -51,7 +51,7 @@ export default function TraderLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] text-zinc-900 font-sans flex antialiased">
+    <div className="min-h-screen bg-[#ECEFF0] text-zinc-900 font-sans flex antialiased">
       <Toaster position="bottom-right" richColors />
 
       {/* 1. Desktop Expandable Dark Sidebar */}
@@ -87,16 +87,17 @@ export default function TraderLayout({
         </div>
       )}
 
-      {/* 3. Main Workspace Area (Smooth left padding transition: 72px collapsed, 256px expanded) */}
+      {/* 3. Main Workspace Area (Smooth left padding transition: 72px collapsed, 272px expanded) */}
       <div
         className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
-          isSidebarExpanded ? "lg:pl-64" : "lg:pl-[72px]"
+          isSidebarExpanded ? "lg:pl-[272px]" : "lg:pl-[72px]"
         }`}
       >
         <FieldErpHeader
           userName={userData.name}
           userEmail={userData.email}
           userAvatar={userData.avatar}
+          isSidebarExpanded={isSidebarExpanded}
           onOpenMobileSidebar={() => setMobileMenuOpen(true)}
         />
 
