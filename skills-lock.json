@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "frontend-design": {
+      "source": "guanyang/open-agent-hub",
+      "commit": "334b8308c6b57ba0a579b1cd09f8f3e2ab7981fe",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "83485963700bcf11d5bf78118facb301676b69d918fee2e45a95e7f1a2840f6c"
+    }
+  }
+}

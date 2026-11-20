@@ -20,8 +20,6 @@ import {
   Camera,
   User
 } from "lucide-react";
-import DedicatedNavbar from "@/components/stitch/DedicatedNavbar";
-import StitchFooter from "@/components/stitch/StitchFooter";
 
 type VerificationStatus = "PENDING_DETAILS" | "UNDER_REVIEW" | "VERIFIED";
 
@@ -170,10 +168,7 @@ export default function TraderProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf8f3] text-zinc-900 font-sans selection:bg-emerald-600 selection:text-white flex flex-col justify-between overflow-x-hidden">
-      {/* Top Navigation */}
-      <DedicatedNavbar />
-
+    <div className="space-y-6 select-none">
       {/* Floating Notification Toast */}
       <AnimatePresence>
         {toastMessage && (
@@ -191,108 +186,100 @@ export default function TraderProfilePage() {
         )}
       </AnimatePresence>
 
-      {/* Main Content Area */}
-      <main className="flex-1 w-full pt-[74px]">
-        {/* =========================================================================
-            1. FULL-WIDTH PANORAMIC SOLAR BANNER (100vw x 50vh, No overlays on top)
-           ========================================================================= */}
-        <div className="relative w-full w-[100vw] max-w-full h-[50vh] overflow-hidden bg-[#ede8db]">
-          <img
-            src="/profile-solar-panoramic.jpg"
-            alt="Solar Field Panoramic Banner"
-            className="w-full h-full object-cover object-center"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = "/profile-solar-banner.jpg";
-            }}
-          />
-          {/* Subtle atmospheric gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-        </div>
+      {/* 1. PANORAMIC SOLAR BANNER */}
+      <div className="relative w-full h-44 sm:h-56 rounded-3xl overflow-hidden bg-[#ede8db] shadow-xs border border-[#ece8dc]">
+        <img
+          src="/profile-solar-panoramic.jpg"
+          alt="Solar Field Panoramic Banner"
+          className="w-full h-full object-cover object-center"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "/profile-solar-banner.jpg";
+          }}
+        />
+        {/* Subtle atmospheric gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+      </div>
 
-        {/* =========================================================================
-            2. TRADER PROFILE CONTENT SECTION (-mt-16 to overlay lower banner)
-           ========================================================================= */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 pb-20 space-y-6">
-          
-          {/* Top User Identity Card */}
-          <div className="w-full rounded-2xl sm:rounded-3xl bg-white border border-[#ece8dc] p-5 sm:p-6 shadow-md flex items-center justify-between flex-wrap gap-4 transition-all hover:shadow-lg">
-            <div className="flex items-center gap-4">
-              {/* Circular / Rounded Avatar with Image Upload capability */}
-              <div className="relative group shrink-0">
-                <div className="w-13 h-13 sm:w-16 sm:h-16 rounded-full bg-emerald-50 border-2 border-emerald-200/90 flex items-center justify-center overflow-hidden shadow-xs">
-                  {userAvatar ? (
-                    <img
-                      src={userAvatar}
-                      alt={userName || "Trader"}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm uppercase select-none">
-                      {userInitials}
-                    </div>
-                  )}
-                </div>
-
-                {/* Upload Image Camera Button */}
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  title="Upload profile picture"
-                  className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white flex items-center justify-center shadow-md transition-all cursor-pointer group-hover:scale-105"
-                >
-                  <Camera className="w-3 h-3" />
-                </button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
+      {/* 2. TRADER PROFILE CONTENT SECTION (-mt-12 to overlay lower banner) */}
+      <div className="relative z-10 -mt-12 sm:-mt-16 space-y-6">
+        {/* Top User Identity Card */}
+        <div className="w-full rounded-2xl sm:rounded-3xl bg-white border border-[#ece8dc] p-5 sm:p-6 shadow-md flex items-center justify-between flex-wrap gap-4 transition-all hover:shadow-lg">
+          <div className="flex items-center gap-4">
+            {/* Circular / Rounded Avatar with Image Upload capability */}
+            <div className="relative group shrink-0">
+              <div className="w-13 h-13 sm:w-16 sm:h-16 rounded-full bg-emerald-50 border-2 border-emerald-200/90 flex items-center justify-center overflow-hidden shadow-xs">
+                {userAvatar ? (
+                  <img
+                    src={userAvatar}
+                    alt={userName || "Trader"}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm uppercase select-none">
+                    {userInitials}
+                  </div>
+                )}
               </div>
 
-              {/* User info */}
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2.5">
-                  <h2 className="text-lg sm:text-xl font-bold font-display text-zinc-950 leading-none">
-                    {userName || (isLoggedIn ? "Dev" : "Guest Trader")}
-                  </h2>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold tracking-wider bg-emerald-50 text-emerald-800 uppercase border border-emerald-200">
-                    {userRole}
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-zinc-500 font-sans">
-                  {userEmail || (isLoggedIn ? "devb4111@gmail.com" : "Not logged in")}
-                </p>
-              </div>
+              {/* Upload Image Camera Button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                title="Upload profile picture"
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white flex items-center justify-center shadow-md transition-all cursor-pointer group-hover:scale-105"
+              >
+                <Camera className="w-3 h-3" />
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className="hidden"
+              />
             </div>
 
-            {/* Right Action Cluster: Dashboard Button appears ONLY AFTER USER GETS VERIFIED */}
-            <div className="flex items-center gap-3">
-              {isLoggedIn && verificationStatus === "VERIFIED" && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setToastMessage("Opening Trader Operations & Wholesale Dispatch Console...");
-                    setTimeout(() => setToastMessage(null), 4000);
-                  }}
-                  className="px-4 sm:px-5 py-2.5 rounded-xl font-bold font-display text-xs sm:text-sm text-white bg-emerald-700 hover:bg-emerald-800 shadow-md shadow-emerald-700/20 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                  <span>Open Trader Dashboard</span>
-                </button>
-              )}
-
-              {/* Original Log Out Button - kept intact */}
-              <button
-                onClick={handleLogout}
-                title="Log Out of SuryaNexa"
-                className="w-10 h-10 rounded-xl bg-white hover:bg-rose-50 border border-zinc-200 hover:border-rose-200 text-zinc-600 hover:text-rose-600 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-[0.97] shrink-0"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+            {/* User info */}
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-lg sm:text-xl font-bold font-display text-zinc-950 leading-none">
+                  {userName || (isLoggedIn ? "Dev" : "Guest Trader")}
+                </h2>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold tracking-wider bg-emerald-50 text-emerald-800 uppercase border border-emerald-200">
+                  {userRole}
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-zinc-500 font-sans">
+                {userEmail || (isLoggedIn ? "devb4111@gmail.com" : "Not logged in")}
+              </p>
             </div>
           </div>
+
+          {/* Right Action Cluster: Dashboard Button appears ONLY AFTER USER GETS VERIFIED */}
+          <div className="flex items-center gap-3">
+            {isLoggedIn && verificationStatus === "VERIFIED" && (
+              <button
+                type="button"
+                onClick={() => {
+                  router.push("/trader/dashboard");
+                }}
+                className="px-4 sm:px-5 py-2.5 rounded-xl font-bold font-display text-xs sm:text-sm text-white bg-emerald-700 hover:bg-emerald-800 shadow-md shadow-emerald-700/20 active:scale-[0.97] transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <LayoutGrid className="w-4 h-4" />
+                <span>Open Trader Dashboard</span>
+              </button>
+            )}
+
+            {/* Original Log Out Button - kept intact */}
+            <button
+              onClick={handleLogout}
+              title="Log Out of SuryaNexa"
+              className="w-10 h-10 rounded-xl bg-white hover:bg-rose-50 border border-zinc-200 hover:border-rose-200 text-zinc-600 hover:text-rose-600 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-[0.97] shrink-0"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
 
           {/* Trader Verification Details Form Card */}
           <div className="w-full rounded-2xl sm:rounded-3xl bg-white border border-[#ece8dc] p-6 sm:p-8 shadow-md">
@@ -502,12 +489,7 @@ export default function TraderProfilePage() {
               </div>
             </form>
           </div>
-
         </div>
-      </main>
-
-      {/* Main Website Footer */}
-      <StitchFooter />
-    </div>
-  );
-}
+      </div>
+    );
+  }

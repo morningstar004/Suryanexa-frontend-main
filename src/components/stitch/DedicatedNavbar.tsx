@@ -30,8 +30,9 @@ export default function DedicatedNavbar() {
   const [activeLink, setActiveLink] = useState<string>("home");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<{ name?: string; email?: string; role?: string; avatar?: string } | null>(null);
-  const [showActivities, setShowActivities] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [activePopup, setActivePopup] = useState<"activities" | "user" | null>(null);
+  const showActivities = activePopup === "activities";
+  const showUserMenu = activePopup === "user";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -142,45 +143,41 @@ export default function DedicatedNavbar() {
 
   // Close notifications or user profile menu when clicking outside or pressing Escape
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (
-        notificationsRef.current &&
-        !notificationsRef.current.contains(target)
-      ) {
-        setShowActivities(false);
-      }
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(target)
-      ) {
-        setShowUserMenu(false);
+    if (!activePopup) return;
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      const isInsideNotifications = notificationsRef.current?.contains(target);
+      const isInsideUserMenu = userMenuRef.current?.contains(target);
+
+      if (!isInsideNotifications && !isInsideUserMenu) {
+        setActivePopup(null);
       }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setShowActivities(false);
-        setShowUserMenu(false);
+        setActivePopup(null);
         setActiveDropdown(null);
       }
     };
 
-    if (showActivities || showUserMenu) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    document.addEventListener("mousedown", handlePointerDown, true);
+    document.addEventListener("touchstart", handlePointerDown, true);
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handlePointerDown, true);
+      document.removeEventListener("touchstart", handlePointerDown, true);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [showActivities, showUserMenu]);
+  }, [activePopup]);
 
   const handleMouseEnter = (menu: "policies" | "company" | "contact") => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setShowActivities(false);
-    setShowUserMenu(false);
+    setActivePopup(null);
     updateTriggerPosition(menu);
     setActiveDropdown(menu);
   };
@@ -201,8 +198,7 @@ export default function DedicatedNavbar() {
   const handleLogout = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsLoggedIn(false);
-    setShowUserMenu(false);
-    setShowActivities(false);
+    setActivePopup(null);
     setUserData(null);
     if (typeof window !== "undefined") {
       localStorage.removeItem("suryanexa_user");
@@ -577,8 +573,7 @@ export default function DedicatedNavbar() {
             <div ref={notificationsRef} className="relative">
               <button
                 onClick={() => {
-                  setShowActivities((prev) => !prev);
-                  setShowUserMenu(false);
+                  setActivePopup((prev) => (prev === "activities" ? null : "activities"));
                   setActiveDropdown(null);
                 }}
                 title="Notifications"
@@ -665,8 +660,7 @@ export default function DedicatedNavbar() {
                 <button
                   type="button"
                   onClick={() => {
-                    setShowUserMenu((prev) => !prev);
-                    setShowActivities(false);
+                    setActivePopup((prev) => (prev === "user" ? null : "user"));
                     setActiveDropdown(null);
                   }}
                   title={`${displayName} (${userData?.role || "User"})`}
@@ -717,15 +711,28 @@ export default function DedicatedNavbar() {
                       </div>
                       <div className="py-1">
                         <Link
-                          href={userData?.role?.toUpperCase().includes("VENDOR") ? "/vendor/profile" : "/trader/profile"}
-                          onClick={() => setShowUserMenu(false)}
+                          href="/trader/dashboard"
+                          onClick={() => setActivePopup(null)}
                           className="flex justify-between items-center hover:bg-white px-3 py-2 rounded-lg font-semibold text-zinc-900"
                         >
                           <span className="flex items-center gap-2">
                             <span className="bg-emerald-600 rounded-full w-1.5 h-1.5" />
-                            {userData?.role?.toUpperCase().includes("VENDOR") ? "Vendor Profile" : "Trader Profile"}
+                            <span>Trader Dashboard</span>
                           </span>
                           <span className="bg-emerald-50 px-1.5 py-0.5 border border-emerald-200 rounded font-sans font-bold text-[10px] text-emerald-800">
+                            TERMINAL
+                          </span>
+                        </Link>
+                        <Link
+                          href={userData?.role?.toUpperCase().includes("VENDOR") ? "/vendor/profile" : "/trader/profile"}
+                          onClick={() => setActivePopup(null)}
+                          className="flex justify-between items-center hover:bg-white px-3 py-2 rounded-lg font-semibold text-zinc-900"
+                        >
+                          <span className="flex items-center gap-2">
+                            <span className="bg-zinc-400 rounded-full w-1.5 h-1.5" />
+                            {userData?.role?.toUpperCase().includes("VENDOR") ? "Vendor Profile" : "KYC & Verification"}
+                          </span>
+                          <span className="bg-zinc-100 px-1.5 py-0.5 border border-zinc-200 rounded font-sans font-bold text-[10px] text-zinc-700">
                             {userData?.role?.toUpperCase().includes("VENDOR") ? "PLANS" : "KYC"}
                           </span>
                         </Link>
@@ -754,8 +761,7 @@ export default function DedicatedNavbar() {
           <button
             onClick={() => {
               setMobileMenuOpen(!mobileMenuOpen);
-              setShowActivities(false);
-              setShowUserMenu(false);
+              setActivePopup(null);
               setActiveDropdown(null);
             }}
             className={`lg:hidden flex justify-center items-center rounded-full w-10 h-10 transition-colors cursor-pointer border ${
@@ -769,6 +775,15 @@ export default function DedicatedNavbar() {
           </button>
         </div>
       </div>
+
+      {/* Global Transparent Backdrop to dismiss popups when clicking anywhere outside */}
+      {activePopup && (
+        <div
+          className="fixed inset-0 z-40 bg-transparent"
+          onClick={() => setActivePopup(null)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* =========================================================================
           4. MOBILE FULL-WIDTH DRAWER MENU (BACKGROUND #FAF8F3)
@@ -813,6 +828,21 @@ export default function DedicatedNavbar() {
                 >
                   Policies
                 </Link>
+                {isLoggedIn && (
+                  <Link
+                    href="/trader/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex justify-between items-center bg-emerald-50/70 p-2.5 rounded-xl text-emerald-950 font-bold border border-emerald-200"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                      <span>Trader Operations Console</span>
+                    </span>
+                    <span className="bg-emerald-700 px-2 py-0.5 rounded text-white font-mono font-bold text-[10px]">
+                      DASHBOARD
+                    </span>
+                  </Link>
+                )}
                 <Link
                   href={
                     isLoggedIn

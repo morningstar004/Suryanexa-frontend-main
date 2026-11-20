@@ -68,22 +68,59 @@ export default function StitchFaq() {
   }, [isModalOpen]);
 
   useEffect(() => {
+    const pageWrapper = document.getElementById("page-content-wrapper");
+    const navbar = document.querySelector("header");
+
     if (isModalOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
+
+      if (pageWrapper) {
+        pageWrapper.style.filter = "blur(8px)";
+        pageWrapper.style.transition = "filter 0.25s cubic-bezier(0.16, 1, 0.3, 1)";
+        pageWrapper.style.pointerEvents = "none";
+        pageWrapper.setAttribute("aria-hidden", "true");
+      }
+      if (navbar) {
+        navbar.style.filter = "blur(8px)";
+        navbar.style.transition = "filter 0.25s cubic-bezier(0.16, 1, 0.3, 1)";
+        navbar.style.pointerEvents = "none";
+      }
+
       if (typeof window !== "undefined" && (window as any).__lenis) {
         (window as any).__lenis.stop();
       }
     } else {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+
+      if (pageWrapper) {
+        pageWrapper.style.filter = "";
+        pageWrapper.style.pointerEvents = "";
+        pageWrapper.removeAttribute("aria-hidden");
+      }
+      if (navbar) {
+        navbar.style.filter = "";
+        navbar.style.pointerEvents = "";
+      }
+
       if (typeof window !== "undefined" && (window as any).__lenis) {
         (window as any).__lenis.start();
       }
     }
+
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      if (pageWrapper) {
+        pageWrapper.style.filter = "";
+        pageWrapper.style.pointerEvents = "";
+        pageWrapper.removeAttribute("aria-hidden");
+      }
+      if (navbar) {
+        navbar.style.filter = "";
+        navbar.style.pointerEvents = "";
+      }
       if (typeof window !== "undefined" && (window as any).__lenis) {
         (window as any).__lenis.start();
       }
@@ -234,7 +271,11 @@ export default function StitchFaq() {
         createPortal(
           <AnimatePresence>
             {isModalOpen && (
-              <div className="z-[999999] fixed inset-0 flex justify-center items-center p-4 sm:p-6 overflow-y-auto overscroll-contain">
+              <div
+                className="fixed inset-0 z-[999999] overflow-y-auto overscroll-contain"
+                aria-modal="true"
+                role="dialog"
+              >
                 {/* Full-Page Backdrop Blur across the entire screen */}
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -242,185 +283,166 @@ export default function StitchFaq() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.22 }}
                   onClick={() => setIsModalOpen(false)}
-                  className="fixed inset-0 bg-zinc-950/60 backdrop-blur-md"
+                  className="fixed inset-0 bg-zinc-950/60 backdrop-blur-md cursor-pointer"
                   aria-hidden="true"
                 />
 
-                {/* Modal Content Card Centered on Screen */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: 16 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: 16 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  className="z-10 relative bg-white shadow-2xl my-auto p-6 sm:p-8 border border-zinc-200 rounded-3xl w-full max-w-xl max-h-[92vh] overflow-y-auto text-zinc-900"
+                {/* Outer centering wrapper: min-h-full flex items-center justify-center.
+                    Clicking on the padding/margins outside the card closes the modal! */}
+                <div
+                  onClick={(e) => {
+                    if (e.target === e.currentTarget) {
+                      setIsModalOpen(false);
+                    }
+                  }}
+                  className="flex min-h-full items-center justify-center p-4 sm:p-6 text-center"
                 >
-              {/* Top Header */}
-              <div className="flex justify-between items-start mb-6 pb-4 border-zinc-100 border-b">
-                <div className="flex items-center gap-3">
-                  <div className="flex justify-center items-center bg-emerald-100 rounded-xl w-10 h-10 text-emerald-800 shrink-0">
-                    <HelpCircle className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-display font-bold text-zinc-950 text-lg sm:text-xl leading-tight">
-                      Ask SuryaNexa Support
-                    </h3>
-                    <p className="mt-0.5 font-sans text-zinc-500 sm:text-[13px] text-xs">
-                      Submit your technical, procurement, or policy query below.
-                    </p>
-                  </div>
-                </div>
+                  {/* Modal Content Card Centered on Screen */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 16 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 16 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="relative z-10 w-full max-w-xl rounded-3xl bg-white p-6 sm:p-8 text-left shadow-2xl border border-zinc-200 max-h-[86vh] flex flex-col text-zinc-900"
+                  >
+                    {/* Top Header */}
+                    <div className="flex justify-between items-start mb-4 pb-4 border-zinc-100 border-b shrink-0">
+                      <div className="flex items-center gap-3">
+                        <div className="flex justify-center items-center bg-emerald-100 rounded-xl w-10 h-10 text-emerald-800 shrink-0">
+                          <HelpCircle className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="font-display font-bold text-zinc-950 text-lg sm:text-xl leading-tight">
+                            Ask SuryaNexa Support
+                          </h3>
+                          <p className="mt-0.5 font-sans text-zinc-500 sm:text-[13px] text-xs">
+                            Submit your technical, procurement, or policy query below.
+                          </p>
+                        </div>
+                      </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="hover:bg-zinc-100 p-1.5 rounded-full text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer"
-                  title="Close"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsModalOpen(false)}
+                        className="hover:bg-zinc-100 p-1.5 rounded-full text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer"
+                        title="Close"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col">
+                      <div className="flex-1 min-h-0 overflow-y-auto pr-1 -mr-1 space-y-4">
+                        {/* 1. User Information */}
+                        <div className="gap-3.5 grid grid-cols-1 sm:grid-cols-2">
+                          <div>
+                            <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
+                              Full Name <span className="text-rose-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              placeholder=""
+                              value={formData.name}
+                              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                              className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
+                              Work Email <span className="text-rose-500">*</span>
+                            </label>
+                            <input
+                              type="email"
+                              required
+                              placeholder=""
+                              value={formData.email}
+                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                              className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all"
+                            />
+                          </div>
+                        </div>
+
+                        {/* 2. Subject Section */}
+                        <div>
+                          <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
+                            Subject <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder=""
+                            value={formData.subject}
+                            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                            className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all"
+                          />
+                        </div>
+
+                        {/* 3. Question / Query Section */}
+                        <div>
+                          <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
+                            Your Question <span className="text-rose-500">*</span>
+                          </label>
+                          <textarea
+                            required
+                            rows={3}
+                            placeholder="Provide details about your query or requirement so our engineering team can assist you accurately..."
+                            value={formData.question}
+                            onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+                            className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all resize-none"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Bottom Actions */}
+                      <div className="flex sm:flex-row flex-col-reverse justify-between items-center gap-3 pt-3 mt-3 border-zinc-100 border-t shrink-0">
+                        <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>Protected by Blind-Vault™ encryption</span>
+                        </span>
+
+                        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                          <button
+                            type="button"
+                            onClick={() => setIsModalOpen(false)}
+                            className="flex-1 sm:flex-none hover:bg-zinc-100 px-4 py-2.5 border border-zinc-200 rounded-xl font-sans font-semibold text-zinc-600 hover:text-zinc-900 text-xs transition-colors cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            disabled={!isFormFilled || isSubmitting}
+                            className={`inline-flex flex-1 sm:flex-none justify-center items-center gap-1.5 px-5 py-2.5 rounded-xl font-sans font-bold text-xs transition-all ${
+                              isFormFilled && !isSubmitting
+                                ? "bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs active:scale-[0.97] cursor-pointer"
+                                : "bg-zinc-200 text-zinc-400 cursor-not-allowed shadow-none"
+                            }`}
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <span className="border-2 border-white border-t-transparent rounded-full w-3.5 h-3.5 animate-spin" />
+                                <span>Submitting...</span>
+                              </>
+                            ) : (
+                              <>
+                                <span>Submit</span>
+                                <Send className="w-3.5 h-3.5" />
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </motion.div>
+                </div>
               </div>
-
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* 1. User Information */}
-                <div className="gap-3.5 grid grid-cols-1 sm:grid-cols-2">
-                  <div>
-                    <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
-                      Full Name <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder=""
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
-                      Work Email <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder=""
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* <div className="gap-3.5 grid grid-cols-1 sm:grid-cols-2">
-                  <div>
-                    <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
-                      Phone / WhatsApp
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
-                      Your Role in Solar
-                    </label>
-                    <select
-                      value={formData.role}
-                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                      className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all cursor-pointer"
-                    >
-                      <option value="EPC Contractor">EPC Contractor</option>
-                      <option value="Solar Trader / Stockist">Solar Trader / Stockist</option>
-                      <option value="Certified Installer">Certified Installer</option>
-                      <option value="Project Consultant">Project Consultant</option>
-                      <option value="Commercial / Residential Customer">Commercial / Residential Customer</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                </div> */}
-
-                {/* 2. Subject Section */}
-                <div>
-                  <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
-                    Subject <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder=""
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all"
-                  />
-                </div>
-
-                {/* 3. Question / Query Section */}
-                <div>
-                  <label className="block mb-1 font-sans font-semibold text-zinc-700 text-xs">
-                    Your Question <span className="text-rose-500">*</span>
-                  </label>
-                  <textarea
-                    required
-                    rows={4}
-                    placeholder="Provide details about your query or requirement so our engineering team can assist you accurately..."
-                    value={formData.question}
-                    onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-                    className="bg-zinc-50/50 focus:bg-white px-3.5 py-2.5 border border-zinc-200 focus:border-emerald-600 rounded-xl outline-hidden focus:ring-2 focus:ring-emerald-500/20 w-full font-sans text-zinc-900 text-xs sm:text-sm transition-all resize-none"
-                  />
-                </div>
-
-                {/* Bottom Actions */}
-                <div className="flex sm:flex-row flex-col-reverse justify-between items-center gap-3 pt-3 border-zinc-100 border-t">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>Protected by Blind-Vault™ encryption</span>
-                  </span>
-
-                  <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                    <button
-                      type="button"
-                      onClick={() => setIsModalOpen(false)}
-                      className="flex-1 sm:flex-none hover:bg-zinc-100 px-4 py-2.5 border border-zinc-200 rounded-xl font-sans font-semibold text-zinc-600 hover:text-zinc-900 text-xs transition-colors cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={!isFormFilled || isSubmitting}
-                      className={`inline-flex flex-1 sm:flex-none justify-center items-center gap-1.5 px-5 py-2.5 rounded-xl font-sans font-bold text-xs transition-all ${
-                        isFormFilled && !isSubmitting
-                          ? "bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs active:scale-[0.97] cursor-pointer"
-                          : "bg-zinc-200 text-zinc-400 cursor-not-allowed shadow-none"
-                      }`}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <span className="border-2 border-white border-t-transparent rounded-full w-3.5 h-3.5 animate-spin" />
-                          <span>Submitting...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Submit</span>
-                          <Send className="w-3.5 h-3.5" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </motion.div>
-          </div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>,
-      document.body
-    )}
     </section>
   );
 }
