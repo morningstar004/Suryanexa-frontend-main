@@ -300,12 +300,14 @@ export function BrandBadge({
   iconSize = 22,
   theme = "light",
   showSubtitle = true,
+  plain = false,
 }: {
   brand: string;
   className?: string;
   iconSize?: number;
   theme?: "light" | "dark";
   showSubtitle?: boolean;
+  plain?: boolean;
 }) {
   const config = getBrandConfig(brand);
 
@@ -335,7 +337,11 @@ export function BrandBadge({
 
   return (
     <div
-      className={`inline-flex items-center gap-2 bg-[#f8f9fa] shadow-2xs hover:shadow-xs px-2.5 py-1 border border-zinc-200/80 rounded-xl transition-all duration-200 select-none ${className}`}
+      className={`inline-flex items-center gap-2 select-none ${
+        plain
+          ? "bg-transparent border-none shadow-none p-0"
+          : "bg-[#f8f9fa] shadow-2xs hover:shadow-xs px-2.5 py-1 border border-zinc-200/80 rounded-xl"
+      } transition-all duration-200 ${className}`}
     >
       {/* Brand Official SVG Emblem */}
       <div className="shrink-0 drop-shadow-2xs">{config.renderIcon(iconSize)}</div>

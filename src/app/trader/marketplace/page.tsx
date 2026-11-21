@@ -19,6 +19,7 @@ import {
   Search,
   Sparkles,
   Layers,
+  Star,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -223,7 +224,7 @@ export default function MarketplacePage() {
       id: "stock" as MarketTab,
       label: "Depot Stock",
       icon: Layers,
-      badge: "6.65 MW",
+      badge: `${INITIAL_PRODUCTS.reduce((sum, p) => sum + (p.availableStockMW || 0), 0).toFixed(2)} MW`,
     },
     {
       id: "my-list" as MarketTab,
@@ -246,9 +247,9 @@ export default function MarketplacePage() {
               <Store className="w-3.5 h-3.5 text-zinc-400" />
               <span>Trader Portal</span>
             </span>
-            <span className="font-mono text-zinc-300">/</span>
+            <span className="font-mono text-zinc-400">{`>`}</span>
             <span className="font-medium text-zinc-600">Marketplace</span>
-            <span className="font-mono text-zinc-300">/</span>
+            <span className="font-mono text-zinc-400">{`>`}</span>
             <AnimatePresence mode="wait">
               <motion.span
                 key={activeTab}
@@ -256,9 +257,8 @@ export default function MarketplacePage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
                 transition={{ duration: 0.18 }}
-                className="inline-flex items-center gap-1.5 bg-[#e6f4f1] px-2.5 py-0.5 border border-[#d2ebe5] rounded-full font-mono font-bold text-[#0f766e] text-[11px]"
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 font-mono font-semibold text-[#0f766e] text-[11px]"
               >
-                <span className="bg-[#0f766e] rounded-full w-1.5 h-1.5 animate-pulse" />
                 {activeTab === "market" && "Spot Market"}
                 {activeTab === "stock" && "Depot Stock"}
                 {activeTab === "my-list" && "My List"}
@@ -524,7 +524,7 @@ export default function MarketplacePage() {
       {/* =========================================================================
           PRODUCT CARD GRID: Cards with Brand Logos, Animated Badges & Cart Stepper
          ========================================================================= */}
-      <div className="gap-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="gap-2 gap-x-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {filteredProducts.map((prod) => {
           const isSaved = watchlist.includes(prod.id);
           const cartQty = cart[prod.id] || 0;
@@ -536,114 +536,142 @@ export default function MarketplacePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.25 }}
-              className="group relative flex flex-col justify-between bg-white shadow-2xs hover:shadow-lg p-5 border border-zinc-200/90 hover:border-emerald-300/80 rounded-3xl transition-all duration-300"
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.15 }}
+              className="group relative flex flex-col justify-between bg-white shadow-sm hover:shadow-xl p-3 border border-zinc-200/90 hover:border-emerald-300/80 rounded-3xl transition-all duration-300"
             >
               <div>
-                {/* 1. Header: Brand Logo & Interactive Animated Badges */}
-                <div className="flex justify-between items-center mb-3">
-                  {/* Brand Logo with exact company logo & company logo font */}
-                  <BrandBadge brand={prod.brand} iconSize={20} />
-
-                  {/* Right Side: Animated Hover Verified Badge + My List Bookmark Toggle */}
-                  <div className="flex items-center gap-1.5">
-                    {/* Small Icon that Animates / Expands on Hover */}
-                    <div
-                      className="group/badge relative flex items-center bg-emerald-50 hover:bg-emerald-100/90 shadow-2xs px-2 py-1 border border-emerald-200/80 rounded-full text-emerald-800 transition-all duration-200 cursor-default"
-                      title="MNRE / ALMM Spot Verified Inspection Passed"
-                    >
-                      <motion.div
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
-                        className="flex justify-center items-center"
-                      >
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                      </motion.div>
-                      <span className="max-w-0 group-hover/badge:max-w-xs overflow-hidden font-mono font-bold text-[10px] text-emerald-900 whitespace-nowrap transition-all duration-300 ease-out">
-                        <span className="pl-1">Spot Verified</span>
-                      </span>
-                    </div>
-
-                    {/* Bookmark to My List Toggle */}
-                    <motion.button
-                      whileTap={{ scale: 0.85 }}
-                      onClick={() => toggleWatchlist(prod.id, prod.name)}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center border transition-colors cursor-pointer ${isSaved
-                        ? "bg-emerald-50 border-emerald-300 text-emerald-700"
-                        : "bg-zinc-50 hover:bg-zinc-100 border-zinc-200/80 text-zinc-400 hover:text-zinc-600"
-                        }`}
-                      title={isSaved ? "Remove from My List" : "Save to My List"}
-                    >
-                      <Bookmark
-                        className={`w-3.5 h-3.5 ${isSaved ? "fill-emerald-600 text-emerald-600" : ""
-                          }`}
-                      />
-                    </motion.button>
-                  </div>
-                </div>
-
                 {/* 2. Product Visual & Quick Telematics Overlay */}
                 <div
                   onClick={() => setModalProduct(prod)}
-                  className="group/img relative bg-gradient-to-b from-zinc-50 to-zinc-100/80 mb-3 border border-zinc-100 rounded-2xl h-36 overflow-hidden cursor-pointer"
+                  className="group/img relative bg-gradient-to-b from-zinc-50 to-zinc-100/80 mb-2 border border-zinc-100 rounded-2xl h-56 overflow-hidden cursor-pointer"
                 >
                   <img
                     src={prod.imageUrl}
                     alt={prod.name}
-                    className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover"
                   />
-                  <div className="bottom-2 left-2 absolute flex items-center gap-1.5 bg-zinc-950/75 backdrop-blur-xs px-2.5 py-1 rounded-lg font-mono font-bold text-[10px] text-white">
-                    <Zap className="fill-amber-400 w-3 h-3 text-amber-400" />
-                    <span>
-                      {prod.wattage ? `${prod.wattage}W` : "High Spec"} · {prod.efficiency ? `${prod.efficiency}% Eff` : "ALMM Tier-1"}
-                    </span>
-                  </div>
 
-                  {/* Quick Inspect Hover Pill */}
-                  <div className="top-2 right-2 absolute flex items-center gap-1 bg-white/90 opacity-0 group-hover/img:opacity-100 shadow-xs px-2 py-0.5 rounded-md font-sans font-bold text-[10px] text-zinc-800 transition-opacity">
-                    <Eye className="w-3 h-3" />
-                    <span>Specs</span>
+                  {/* Bookmark to My List Toggle (Moved Inside Image Top-Right) */}
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWatchlist(prod.id, prod.name);
+                    }}
+                    className={`top-2.5 right-2.5 absolute z-10 w-8 h-8 rounded-full flex items-center justify-center shadow-xs backdrop-blur-md transition-all cursor-pointer ${isSaved
+                      ? "text-emerald-700 shadow-sm"
+                      : " hover:bg-zinc-300 text-white"
+                      }`}
+                    title={isSaved ? "Remove from My List" : "Save to My List"}
+                  >
+                    <Bookmark
+                      className={`w-5 h-5 ${isSaved ? "fill-emerald-600 text-emerald-600" : ""
+                        }`}
+                    />
+                  </motion.button>
+
+                  {/* Telematics Pill: Better Sans Typography & ShieldCheck-like Hover Animation */}
+                  <div className="bottom-2.5 left-2.5 absolute flex items-center bg-zinc-950/80 hover:bg-zinc-950/95 shadow-xs backdrop-blur-md px-2.5 py-1 border border-white/15 rounded-full text-white transition-all duration-300">
+                    <motion.div
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6, ease: [0.6, 0.05, 0.2, 1] }}
+                      className="flex justify-center items-center mr-1.5"
+                    >
+                      <Zap className="fill-black w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    </motion.div>
+                    <span className="font-sans font-bold text-[11px] text-white tracking-tight">
+                      {prod.wattage ? `${prod.wattage}W` : "High Spec"}
+                      <span className="mx-1 text-white/60">·</span>
+                      <span className="font-semibold text-amber-300">
+                        {prod.efficiency ? `${prod.efficiency}% Eff` : "ALMM Tier-1"}
+                      </span>
+                    </span>
                   </div>
                 </div>
 
-                {/* 3. Title & Depot Location */}
+                {/* 3. Title & Depot Location with Company Logo & Name */}
                 <h3
                   onClick={() => setModalProduct(prod)}
                   className="font-display font-bold text-zinc-950 hover:text-emerald-800 text-sm sm:text-base line-clamp-1 leading-snug transition-colors cursor-pointer"
                 >
                   {prod.name}
                 </h3>
-                <p className="flex items-center gap-1 mt-1 font-sans text-zinc-500 text-xs truncate">
-                  <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                  <span className="truncate">{prod.depotLocation}</span>
-                </p>
+                <div className="flex justify-between items-center gap-2 mt-1.5">
+                  <p className="flex items-center gap-1 font-sans text-zinc-500 text-xs truncate">
+                    <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                    <span className="truncate">{prod.depotLocation}</span>
+                  </p>
 
-                {/* 4. Specifications Grid */}
-                <div className="gap-2 grid grid-cols-2 bg-[#f8fafc] mt-3 p-3 border border-zinc-200/60 rounded-2xl font-sans text-xs">
-                  <div>
-                    <span className="block font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
-                      Available Stock
-                    </span>
-                    <span className="font-bold text-zinc-900">
-                      {prod.availableStockMW} MW{" "}
-                      <span className="font-normal text-[11px] text-zinc-500">
+                  {/* Company Logo & Name Moved Here: Borderless & Transparent Background */}
+                  <BrandBadge brand={prod.brand} iconSize={16} plain className="shrink-0" />
+                </div>
+
+                {/* Rating with Stars and Review Count */}
+                <div className="flex items-center gap-1.5 mt-2.5 mb-1.5">
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const ratingVal = prod.rating ?? 4.8;
+                      const isFull = star <= Math.floor(ratingVal);
+                      const isHalf = !isFull && star <= Math.ceil(ratingVal) && ratingVal % 1 >= 0.3;
+                      return (
+                        <Star
+                          key={star}
+                          className={`w-3 h-3 ${isFull
+                            ? "fill-amber-400 text-amber-400"
+                            : isHalf
+                              ? "fill-amber-400/60 text-amber-400"
+                              : "fill-zinc-200 text-zinc-200"
+                            }`}
+                        />
+                      );
+                    })}
+                  </div>
+                  <span className="font-bold text-[11px] text-zinc-900 leading-none">
+                    {(prod.rating ?? 4.8).toFixed(1)}
+                  </span>
+                  <span className="font-sans text-[10.5px] text-zinc-400 leading-none">
+                    ({prod.reviewsCount ?? 64})
+                  </span>
+                </div>
+
+
+                {/* 4. Compact Specifications Strip (Takes minimal height while staying clean & legible) */}
+                <div className="bg-zinc-50/90 hover:bg-zinc-100/70 mt-2.5 px-2.5 py-1.5 border border-zinc-200/60 rounded-xl font-sans transition-colors">
+                  <div className="flex justify-between items-center gap-2 text-xs">
+                    <div className="flex items-baseline gap-1.5 min-w-0">
+                      <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-wider shrink-0">
+                        Stock
+                      </span>
+                      <span className="font-bold text-[11.5px] text-zinc-900 truncate">
+                        {prod.availableStockMW} MW
+                      </span>
+                      <span className="font-normal text-[10px] text-zinc-400 shrink-0">
                         ({prod.palletsCount} plts)
                       </span>
-                    </span>
+                    </div>
+
+                    <div className="flex items-baseline gap-1.5 shrink-0">
+                      <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+                        Min
+                      </span>
+                      <span
+                        className="max-w-[105px] font-bold text-[11.5px] text-zinc-800 truncate"
+                        title={prod.minOrderQuantity}
+                      >
+                        {prod.minOrderQuantity}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="block font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
-                      Min Order
+
+                  <div className="flex items-center gap-1.5 mt-1 pt-1 border-zinc-200/50 border-t min-w-0">
+                    <span className="font-mono text-[9.5px] text-zinc-400 uppercase tracking-wider shrink-0">
+                      Tech
                     </span>
-                    <span className="block font-bold text-zinc-900 truncate">
-                      {prod.minOrderQuantity}
-                    </span>
-                  </div>
-                  <div className="col-span-2 pt-1 border-zinc-200/40 border-t">
-                    <span className="block font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
-                      Technology
-                    </span>
-                    <span className="block font-medium text-[11.5px] text-zinc-700 truncate">
+                    <span
+                      className="font-medium text-[11px] text-zinc-600 truncate"
+                      title={prod.cellType || "N-Type Monocrystalline Bifacial"}
+                    >
                       {prod.cellType || "N-Type Monocrystalline Bifacial"}
                     </span>
                   </div>
@@ -666,16 +694,6 @@ export default function MarketplacePage() {
 
                 {/* Interactive Add to Cart & Stepper */}
                 <div className="flex items-center gap-2">
-                  {/* Inspect Details Button */}
-                  <button
-                    type="button"
-                    onClick={() => setModalProduct(prod)}
-                    className="flex justify-center items-center hover:bg-zinc-100 border border-zinc-200/90 rounded-xl w-8 h-8 text-zinc-600 hover:text-zinc-950 transition-colors cursor-pointer"
-                    title="View Comprehensive Solar Panel Specs"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
-
                   {/* Add to Cart / Quantity Stepper */}
                   {cartQty === 0 ? (
                     <motion.button
@@ -683,7 +701,7 @@ export default function MarketplacePage() {
                       whileTap={{ scale: 0.95 }}
                       type="button"
                       onClick={() => addToCart(prod.id, prod.name)}
-                      className="flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 shadow-xs px-3.5 py-2 rounded-xl font-display font-bold text-white text-xs transition-all cursor-pointer"
+                      className="flex items-center gap-1.5 bg-[#53BB90] hover:bg-emerald-600 shadow-xs px-3.5 py-2 rounded-xl font-display font-bold text-white text-xs transition-all cursor-pointer"
                     >
                       <ShoppingCart className="w-3.5 h-3.5" />
                       <span>Add to Cart</span>
@@ -715,7 +733,7 @@ export default function MarketplacePage() {
                       <button
                         type="button"
                         onClick={() => increaseCart(prod.id)}
-                        className="flex justify-center items-center bg-emerald-700 hover:bg-emerald-800 rounded-lg w-7 h-7 font-bold text-white transition-colors cursor-pointer"
+                        className="flex justify-center items-center bg-[#53BB90] hover:bg-emerald-600 rounded-lg w-7 h-7 font-bold text-white transition-colors cursor-pointer"
                         title="Increase quantity"
                       >
                         <Plus className="w-3 h-3" />
@@ -813,6 +831,25 @@ export default function MarketplacePage() {
                       <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
                       <span>{modalProduct.depotLocation}</span>
                     </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-3.5 h-3.5 ${star <= Math.floor(modalProduct.rating ?? 4.8)
+                              ? "fill-amber-400 text-amber-400"
+                              : "fill-zinc-200 text-zinc-200"
+                              }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="font-bold text-zinc-900 text-xs">
+                        {(modalProduct.rating ?? 4.8).toFixed(1)}
+                      </span>
+                      <span className="font-sans text-zinc-500 text-xs">
+                        ({modalProduct.reviewsCount ?? 64} verified buyer reviews)
+                      </span>
+                    </div>
                   </div>
 
                   {/* Spot Rate Callout */}
