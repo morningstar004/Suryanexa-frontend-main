@@ -97,6 +97,11 @@
   }
 }
 
+/* Heading Typography (text >= lg, h1-h4, font-display) matching reference mockup */
+h1, h2, h3, h4, .font-display, .font-heading {
+  font-family: 'Nunito', 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 /* Fluid Typography & Container scaling for Full HD (1080p), 2K (1440p) and 4K (2160p) */
 @media (min-width: 1920px) {
   html {

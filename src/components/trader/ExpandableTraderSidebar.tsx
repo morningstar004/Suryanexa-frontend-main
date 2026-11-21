@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -38,7 +38,7 @@ export const SIDEBAR_ITEMS = [
     label: "Sales & Orders",
     href: "/trader/sales-and-order",
     icon: ShoppingCart,
-    badge: "12",
+    badge: "2",
     badgeColor: "bg-sky-500/15 text-sky-400 border-sky-500/30",
   },
   {
@@ -56,7 +56,7 @@ export const SIDEBAR_ITEMS = [
     badgeColor: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
   },
   {
-    label: "Market Place",
+    label: "Marketplace",
     href: "/trader/marketplace",
     icon: Store,
     badge: "Hot",
@@ -106,7 +106,7 @@ export default function ExpandableTraderSidebar({
 
   return (
     <aside
-      className={`fixed top-0 left-0 bottom-0 z-40 bg-[#0b1017] text-zinc-200 border-r border-zinc-800/80 transition-all duration-300 flex flex-col justify-between select-none ${isExpanded ? "w-[272px] shadow-2xl" : "w-[72px]"
+      className={`fixed top-0 left-0 bottom-0 z-40 bg-[#0d251f] text-zinc-200 border-r border-zinc-800/80 transition-all duration-300 flex flex-col justify-between select-none ${isExpanded ? "w-[272px] shadow-2xl" : "w-[72px]"
         }`}
     >
       {/* Top Header & Brand */}
@@ -126,62 +126,86 @@ export default function ExpandableTraderSidebar({
               />
             </div>
 
-            {isExpanded && (
-              <motion.div
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -6 }}
-                className="overflow-hidden whitespace-nowrap"
-              >
-                <div className="flex items-center gap-1.5">
-                  <span className="font-display font-extrabold text-[15px] text-white tracking-tight">
-                    Surya<span className="text-emerald-400">NEXA</span>
-                  </span>
-                  <span className="bg-emerald-500/20 px-1.5 py-0.5 border border-emerald-500/30 rounded font-mono font-bold text-[9px] text-emerald-300">
-                    FIELD ERP
-                  </span>
-                </div>
-                <p className="font-sans text-[10px] text-zinc-400">
-                  Operations &amp; Spot OS
-                </p>
-              </motion.div>
-            )}
+            <AnimatePresence initial={false}>
+              {isExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                  className="overflow-hidden whitespace-nowrap"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display font-extrabold text-[15px] text-white tracking-tight">
+                      Surya<span className="text-emerald-400">NEXA</span>
+                    </span>
+                    <span className="bg-emerald-500/20 px-1.5 py-0.5 border border-emerald-500/30 rounded font-mono font-bold text-[9px] text-emerald-300">
+                      FIELD ERP
+                    </span>
+                  </div>
+                  <p className="font-sans text-[10px] text-zinc-400">
+                    Operations &amp; Spot OS
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Link>
         </div>
 
-        <div className={`${isExpanded ? "border-zinc-800/80 -mt-2 pb-2 border-b w-[270px] px-2 duration-200" : "border-none"}`}>
-          {/* Toggle Button in Expanded Mode (PanelLeftClose icon) */}
-          {isExpanded && onToggleExpand && (
+        {/* Toggle Button (Unified, Smoothly Blends with Sidebar Width Expansion) */}
+        {onToggleExpand && (
+          <div className="px-2.5 pb-2 -mt-2 border-b border-zinc-800/80 w-full overflow-hidden transition-all duration-300">
             <button
               type="button"
               onClick={onToggleExpand}
-              className="group relative flex items-center gap-3 hover:bg-zinc-800/80 ml-1 p-1.5 px-3 py-2.5 rounded-xl font-sans font-medium text-zinc-400 hover:text-white text-xs transition-all cursor-pointer shrink-0"
-              title="Close Sidebar"
-              aria-label="Close Sidebar"
+              className={`group relative flex items-center h-10 rounded-xl font-sans text-xs font-medium cursor-pointer transition-all duration-300 w-full overflow-hidden ${
+                isExpanded
+                  ? "justify-between px-3 hover:bg-zinc-800/70 text-zinc-400 hover:text-white"
+                  : "justify-center px-0 hover:bg-zinc-800/60 text-zinc-400 hover:text-emerald-400"
+              }`}
+              title={isExpanded ? "Close Sidebar" : "Open Sidebar"}
+              aria-label={isExpanded ? "Close Sidebar" : "Open Sidebar"}
             >
-              <span className="mr-[126px] text-[13px] truncate capitalize">navigation</span>
-              <PanelLeftClose className="w-5 h-5 text-zinc-400 hover:text-white" />
-            </button>
-          )}
-        </div>
+              {/* Navigation Label (Smoothly expands and collapses in sync with sidebar width) */}
+              <AnimatePresence initial={false}>
+                {isExpanded && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0, x: -6 }}
+                    animate={{ opacity: 1, width: "auto", x: 0 }}
+                    exit={{ opacity: 0, width: 0, x: -6 }}
+                    transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                    className="text-[13px] font-sans font-medium text-zinc-400 group-hover:text-zinc-200 capitalize tracking-wide overflow-hidden whitespace-nowrap"
+                  >
+                    navigation
+                  </motion.span>
+                )}
+              </AnimatePresence>
 
-        {/* Toggle Button in Collapsed Mode (PanelLeftOpen icon) */}
-        {!isExpanded && onToggleExpand && (
-          <div className="flex justify-center -mt-4 p-2 border-zinc-800/80 border-b">
-            <button
-              type="button"
-              onClick={onToggleExpand}
-              className="group flex justify-center items-center hover:bg-zinc-800/60 rounded-xl w-10 h-10 text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer"
-              title="Open Sidebar"
-              aria-label="Open Sidebar"
-            >
-              <PanelLeftOpen className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              {/* Toggle Icon with Fluid Directional Morph */}
+              <div className="flex justify-center items-center w-5 h-5 shrink-0">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={isExpanded ? "close" : "open"}
+                    initial={{ opacity: 0, scale: 0.85, rotate: isExpanded ? -20 : 20 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, scale: 0.85, rotate: isExpanded ? 20 : -20 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="flex justify-center items-center"
+                  >
+                    {isExpanded ? (
+                      <PanelLeftClose className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
+                    ) : (
+                      <PanelLeftOpen className="w-5 h-5 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </button>
           </div>
         )}
 
         {/* Navigation Items with Animated Stretching Pill Indicator */}
-        <nav className="space-y-1.5 mt-1 p-2.5 relative" aria-label="Trader Operations">
+        <nav className="relative space-y-1.5 mt-1 p-2.5" aria-label="Trader Operations">
           {SIDEBAR_ITEMS.map((item) => {
             const isActive = isItemActive(item.href);
 
@@ -191,18 +215,17 @@ export default function ExpandableTraderSidebar({
                 href={item.href}
                 onClick={() => setActiveHref(item.href)}
                 title={!isExpanded ? item.label : undefined}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-sans font-medium group transition-colors duration-200 outline-none ${
-                  isActive
-                    ? "text-emerald-300 font-semibold"
-                    : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/40"
-                } ${!isExpanded ? "justify-center" : "justify-between"}`}
+                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-sans font-medium group transition-colors duration-200 outline-none ${isActive
+                  ? "text-emerald-300 font-semibold"
+                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/40"
+                  } ${!isExpanded ? "justify-center" : "justify-between"}`}
               >
                 {/* Responsive Pill-Shaped Active Indicator with Continuous Stretching & Morphing Motion (Clean Matte Finish) */}
                 {isActive && (
                   <motion.div
                     layout
                     layoutId="sidebarActivePill"
-                    className="absolute inset-0 bg-emerald-500/15 border border-emerald-500/30 rounded-xl pointer-events-none z-0"
+                    className="z-0 absolute inset-0 bg-emerald-500/15 border border-emerald-500/30 rounded-xl pointer-events-none"
                     transition={{
                       type: "spring",
                       stiffness: 350,
@@ -211,16 +234,15 @@ export default function ExpandableTraderSidebar({
                     }}
                   >
                     {/* Left edge accent indicator pip */}
-                    <span className="absolute left-0 top-2.5 bottom-2.5 w-1 bg-emerald-400 rounded-r-full" />
+                    <span className="top-2.5 bottom-2.5 left-0 absolute bg-emerald-400 rounded-r-full w-1" />
                   </motion.div>
                 )}
 
                 {/* Tab Content (Icon & Label) - Lifted above the indicator with z-10 */}
-                <div className="relative z-10 flex items-center gap-3 min-w-0">
+                <div className="z-10 relative flex items-center gap-3 min-w-0">
                   <item.icon
-                    className={`w-5 h-5 shrink-0 transition-colors duration-200 ${
-                      isActive ? "text-emerald-400" : "text-zinc-400 group-hover:text-zinc-200"
-                    }`}
+                    className={`w-5 h-5 shrink-0 transition-colors duration-200 ${isActive ? "text-emerald-400" : "text-zinc-400 group-hover:text-zinc-200"
+                      }`}
                   />
                   {isExpanded && (
                     <span className="text-[13px] truncate">{item.label}</span>
@@ -230,7 +252,7 @@ export default function ExpandableTraderSidebar({
                 {/* Optional Status Badge in Expanded Mode */}
                 {isExpanded && item.badge && (
                   <span
-                    className={`relative z-10 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border shrink-0 transition-transform duration-200 ${item.badgeColor}`}
+                    className={`relative z-10 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 transition-transform duration-200 ${item.badgeColor}`}
                   >
                     {item.hasDot && (
                       <span className="bg-emerald-400 rounded-full w-1.5 h-1.5 animate-pulse" />
@@ -249,11 +271,10 @@ export default function ExpandableTraderSidebar({
         {/* Settings Action Button */}
         <Link
           href="/trader/profile"
-          className={`relative w-full py-2 flex items-center rounded-xl transition-colors cursor-pointer ${
-            pathname.startsWith("/trader/profile")
-              ? "text-emerald-300 font-semibold bg-emerald-500/10 border border-emerald-500/20"
-              : "text-zinc-400 hover:text-white hover:bg-zinc-800/60"
-          } ${!isExpanded ? "justify-center" : "justify-start px-3 gap-3"}`}
+          className={`relative w-full py-2 flex items-center rounded-xl transition-colors cursor-pointer ${pathname.startsWith("/trader/profile")
+            ? "text-emerald-300 font-semibold bg-emerald-500/10 border border-emerald-500/20"
+            : "text-zinc-400 hover:text-white hover:bg-zinc-800/60"
+            } ${!isExpanded ? "justify-center" : "justify-start px-3 gap-3"}`}
           title="Field &amp; Account Settings"
         >
           <Settings className="w-5 h-5 group-hover:rotate-45 transition-transform shrink-0" />

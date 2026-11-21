@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "@/components/ui/sonner";
 import ExpandableTraderSidebar from "@/components/trader/ExpandableTraderSidebar";
 import FieldErpHeader from "@/components/trader/FieldErpHeader";
@@ -103,19 +102,10 @@ export default function TraderLayout({
           onOpenMobileSidebar={() => setMobileMenuOpen(true)}
         />
 
-        {/* Dynamic Page Outlet with smooth module crossfade transition */}
-        <AnimatePresence mode="wait">
-          <motion.main
-            key={pathname}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-x-hidden"
-          >
-            {children}
-          </motion.main>
-        </AnimatePresence>
+        {/* Dynamic Page Outlet */}
+        <main className="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-x-hidden">
+          {children}
+        </main>
       </div>
     </div>
   );

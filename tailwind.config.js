@@ -71,7 +71,8 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        display: ["Poppins", "sans-serif"],
+        display: ["Nunito", "Poppins", "sans-serif"],
+        heading: ["Nunito", "Poppins", "sans-serif"],
         sans: ["Onest", "sans-serif"],
         mono: ["Onest", "sans-serif"],
       },
