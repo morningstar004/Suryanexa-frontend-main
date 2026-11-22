@@ -4,6 +4,7 @@ export interface SolarProduct {
   brand: string;
   category: "PANELS" | "INVERTERS" | "STRUCTURES" | "BOS";
   wattage?: number; // e.g. 585
+  capacityKW?: number; // e.g. 50
   efficiency?: number; // e.g. 22.7
   cellType?: string; // e.g. "N-Type TOPCon 16BB"
   pricePerWatt?: number; // e.g. 18.40

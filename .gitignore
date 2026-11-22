@@ -14,14 +14,25 @@ dist/
 *.tsbuildinfo
 next-env.d.ts
 
-# Environment variables
+# Environment variables & secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env*.local
 .env.prod
 .env.xample
+cred.json
+*.pem
+*.key
+
+# Agent directories
+.agents/
+.agent/
+agents/
+agent/
+
+# Markdown documentation (except README.md)
+*.md
+!README.md
+!readme.md
 
 # Debug logs
 npm-debug.log*
@@ -29,7 +40,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
 # OS files
 .DS_Store
 Thumbs.db
-

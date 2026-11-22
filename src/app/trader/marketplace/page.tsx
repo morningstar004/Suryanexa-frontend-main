@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Store,
   TrendingUp,
@@ -20,8 +20,12 @@ import {
   Sparkles,
   Layers,
   Star,
+  Trash2,
+  ChevronDown,
+  Lock,
+  Package,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { toast } from "sonner";
 import { INITIAL_PRODUCTS, type SolarProduct } from "@/lib/traderData";
 import { BrandBadge, getBrandConfig } from "@/constants/brands";
@@ -36,6 +40,302 @@ const SORT_OPTIONS = [
   { id: "price-desc", label: "Price: High to Low" },
   { id: "wattage-desc", label: "Wattage: High to Low" },
 ];
+
+// Staggered Container Variants for Marketplace View Entrance
+const viewContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.04,
+    },
+  },
+};
+
+const widgetVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 260,
+      damping: 24,
+    },
+  },
+};
+
+const cardGridVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.04,
+      delayChildren: 0.02,
+    },
+  },
+};
+
+const cardItemVariants: Variants = {
+  hidden: { opacity: 0, y: 18, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 280,
+      damping: 22,
+    },
+  },
+};
+
+// Dispatch Cart list & item entrance variants
+const cartListVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.035,
+    },
+  },
+};
+
+const cartItemVariants: Variants = {
+  hidden: { opacity: 0, x: 16 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 340,
+      damping: 28,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: 40,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut",
+    },
+  },
+};
+
+/**
+ * Smooth dynamic counting number component that animates from previous value
+ * to the target value with an ease-out deceleration curve.
+ */
+function CountingNumber({
+  value,
+  duration = 0.85,
+  decimals = 0,
+  prefix = "",
+  suffix = "",
+}: {
+  value: number;
+  duration?: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const [displayValue, setDisplayValue] = useState(value);
+  const prevValueRef = React.useRef(value);
+
+  useEffect(() => {
+    let startTime: number | null = null;
+    let animationFrame: number;
+    const startVal = prevValueRef.current;
+    const endVal = value;
+
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      // easeOutCubic curve for smooth decelerating rollout
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = startVal + (endVal - startVal) * ease;
+      setDisplayValue(current);
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(step);
+      } else {
+        setDisplayValue(endVal);
+        prevValueRef.current = endVal;
+      }
+    };
+
+    animationFrame = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      prevValueRef.current = displayValue;
+    };
+  }, [value, duration]);
+
+  const formatted =
+    decimals > 0
+      ? displayValue.toLocaleString("en-IN", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        })
+      : Math.round(displayValue).toLocaleString("en-IN");
+
+  return (
+    <span className="tabular-nums">
+      {prefix}
+      {formatted}
+      {suffix}
+    </span>
+  );
+}
+
+// Technical & Engineering Spec Types & Dynamic Resolver
+interface TechSpec {
+  label: string;
+  value: string;
+  sub?: string;
+}
+
+function getMoqNumber(minOrderQuantity?: string): number {
+  if (!minOrderQuantity) return 1;
+  const match = minOrderQuantity.match(/^(\d+)/);
+  if (match) {
+    const val = parseInt(match[1], 10);
+    return val > 0 ? val : 1;
+  }
+  return 1;
+}
+
+function getCategorySpecs(prod: SolarProduct): TechSpec[] {
+  if (prod.category === "STRUCTURES") {
+    return [
+      {
+        label: "Material Grade",
+        value: prod.cellType ? prod.cellType.split("(")[0].trim() : "Hot-Dip Galvanized Steel (HDG)",
+        sub: "C-Channel Railing Spec",
+      },
+      {
+        label: "Wind Load Rating",
+        value: "180 km/h (Class-5 Zone)",
+        sub: "IS 875 Part 3 Tested",
+      },
+      {
+        label: "Corrosion Coating",
+        value: "80-120 Micron Zinc Dip",
+        sub: "25+ Year Outdoor Life",
+      },
+      {
+        label: "IS Certification",
+        value: prod.almmCertNumber || "IS-2062 & IS-875",
+        sub: "Bureau of Indian Standards",
+      },
+      {
+        label: "Structural Warranty",
+        value: `${prod.warrantyYears || 15} Years Anti-Rust`,
+        sub: "Factory Coating Guarantee",
+      },
+      {
+        label: "Minimum Order (MOQ)",
+        value: prod.minOrderQuantity || "10 Kits",
+        sub: "Complete Hardware & Fasteners",
+      },
+    ];
+  }
+
+  if (prod.category === "INVERTERS") {
+    const capKW = prod.capacityKW || (prod.wattage ? Math.round(prod.wattage / 1000) : 50);
+    return [
+      {
+        label: "Rated AC Output",
+        value: `${capKW} kW AC Continuous`,
+        sub: "Three-Phase 415V Grid",
+      },
+      {
+        label: "Peak Efficiency",
+        value: `${prod.efficiency || 98.7}% Max Yield`,
+        sub: "Euro-Efficiency 98.3%",
+      },
+      {
+        label: "MPPT Channels",
+        value: prod.cellType || "Multi-MPPT High-Yield",
+        sub: "Independent String Optimizers",
+      },
+      {
+        label: "Grid Standard",
+        value: prod.almmCertNumber || "BIS-CRS / CEA Certified",
+        sub: "Anti-Islanding & SPD Protection",
+      },
+      {
+        label: "Equipment Warranty",
+        value: `${prod.warrantyYears || 10} Years On-Site`,
+        sub: "Authorized Service Network",
+      },
+      {
+        label: "Minimum Order (MOQ)",
+        value: prod.minOrderQuantity || "1 Unit",
+        sub: "Heavy-Duty Wooden Crate",
+      },
+    ];
+  }
+
+  // Default: PANELS or other solar equipment
+  return [
+    {
+      label: "Power Output",
+      value: `${prod.wattage || 585} Wp STC`,
+      sub: "Pmax Flash Test Certified",
+    },
+    {
+      label: "Module Efficiency",
+      value: `${prod.efficiency || 22.7}% Aperture`,
+      sub: "High-Density Cell Packing",
+    },
+    {
+      label: "Cell Architecture",
+      value: prod.cellType || "N-Type TOPCon 16BB",
+      sub: "Bifacial Double Glass",
+    },
+    {
+      label: "ALMM Certificate",
+      value: prod.almmCertNumber || "MNRE-ALMM Certified",
+      sub: "Govt. Approved List (ALMM-I)",
+    },
+    {
+      label: "Linear Warranty",
+      value: `${prod.warrantyYears || 30} Years Performance`,
+      sub: "≤ 0.40% Annual Degradation",
+    },
+    {
+      label: "Minimum Order (MOQ)",
+      value: prod.minOrderQuantity || "1 Full Pallet (36 pcs)",
+      sub: "Forklift Depot Strapped",
+    },
+  ];
+}
+
+// 15ms stagger fade-in variants for technical spec cards
+const specGridVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.015,
+      delayChildren: 0.04,
+    },
+  },
+};
+
+const modalSpecVariants: Variants = {
+  hidden: { opacity: 0, y: 6 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.2,
+      ease: "easeOut",
+    },
+  },
+};
 
 export default function MarketplacePage() {
   // Navigation tabs state
@@ -54,8 +354,71 @@ export default function MarketplacePage() {
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // Floating Cart Icon visibility on scroll
+  const [showFloatingCart, setShowFloatingCart] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos =
+        window.scrollY ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+      setShowFloatingCart(scrollPos > 120);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true, capture: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll, { capture: true } as EventListenerOptions);
+  }, []);
+
   // Pop-up Card (Solar Panel / Equipment detail modal)
   const [modalProduct, setModalProduct] = useState<SolarProduct | null>(null);
+  const [modalQty, setModalQty] = useState<number>(1);
+
+  // Initialize modal quantity to MOQ or current cart quantity when modal opens
+  useEffect(() => {
+    if (modalProduct) {
+      const moq = getMoqNumber(modalProduct.minOrderQuantity);
+      const inCart = cart[modalProduct.id];
+      setModalQty(inCart && inCart >= moq ? inCart : moq);
+    }
+  }, [modalProduct, cart]);
+
+  // Live calculated subtotal for the quick-view modal
+  const modalSubtotal = useMemo(() => {
+    if (!modalProduct) return 0;
+    if (modalProduct.pricePerWatt) {
+      const wattage = modalProduct.wattage || 580;
+      return wattage * 36 * modalProduct.pricePerWatt * modalQty;
+    }
+    return (modalProduct.unitPrice || 3450) * modalQty;
+  }, [modalProduct, modalQty]);
+
+  // Prevent background page scrolling when the Dispatch Cart drawer or equipment modal is open
+  useEffect(() => {
+    if (isCartOpen || modalProduct !== null) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+
+      // Compensate for scrollbar width to prevent horizontal layout shift
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
+
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [isCartOpen, modalProduct]);
 
   // Toggle Item in Watchlist (My List)
   const toggleWatchlist = (id: string, name: string) => {
@@ -78,6 +441,27 @@ export default function MarketplacePage() {
       [id]: (prev[id] || 0) + 1,
     }));
     toast.success(`Added 1 pallet/unit of ${name} to cart`);
+  };
+
+  // Dispatch Cart state & handlers
+  const [editingCartId, setEditingCartId] = useState<string | null>(null);
+  const [editQtyValue, setEditQtyValue] = useState<string>("");
+  const [isBreakdownOpen, setIsBreakdownOpen] = useState(false);
+
+  const clearCart = () => {
+    setCart({});
+    toast.info("Dispatch Cart cleared");
+  };
+
+  const updateCartQuantity = (id: string, newQty: number) => {
+    if (newQty <= 0) {
+      decreaseCart(id);
+    } else {
+      setCart((prev) => ({
+        ...prev,
+        [id]: Math.min(999, Math.max(1, newQty)),
+      }));
+    }
   };
 
   const increaseCart = (id: string) => {
@@ -113,6 +497,51 @@ export default function MarketplacePage() {
       return total + unitVal * qty;
     }, 0);
   }, [cart]);
+
+  // B2B Load summary: Total system capacity in kW & estimated pallet load
+  const cartCapacityStats = useMemo(() => {
+    let totalKW = 0;
+    let totalPallets = 0;
+    Object.entries(cart).forEach(([prodId, qty]) => {
+      const prod = INITIAL_PRODUCTS.find((p) => p.id === prodId);
+      if (!prod) return;
+      totalPallets += qty;
+      if (prod.wattage) {
+        // Standard 36 modules per pallet
+        totalKW += ((prod.wattage * 36) / 1000) * qty;
+      } else if (prod.capacityKW) {
+        totalKW += prod.capacityKW * qty;
+      } else {
+        totalKW += 20 * qty;
+      }
+    });
+
+    const truckloadPercent = Math.min(100, Math.round((totalPallets / 24) * 100));
+    return {
+      totalKW: Math.round(totalKW),
+      totalPallets,
+      truckloadPercent,
+    };
+  }, [cart]);
+
+  // Financial breakdown values (Base Equipment, Freight, and GST)
+  const breakdownValues = useMemo(() => {
+    if (totalCartValue === 0) {
+      return { baseEquipment: 0, freight: 0, gst: 0 };
+    }
+    const freight = Math.min(
+      Math.round(totalCartValue * 0.035),
+      cartCapacityStats.totalPallets * 2500
+    );
+    const taxableTotal = Math.round(totalCartValue / 1.138);
+    const gst = totalCartValue - taxableTotal;
+    const baseEquipment = taxableTotal - freight;
+    return {
+      baseEquipment: Math.max(0, baseEquipment),
+      freight,
+      gst,
+    };
+  }, [totalCartValue, cartCapacityStats.totalPallets]);
 
   // Category chips with counts derived dynamically from the products data array
   const categoryChips = useMemo(() => {
@@ -212,34 +641,48 @@ export default function MarketplacePage() {
     return list;
   }, [activeTab, selectedCategory, searchQuery, lowStockOnly, watchlist, sortBy]);
 
+  // Total stock calculation for dynamic live telematics
+  const totalStockMW = useMemo(() => {
+    return INITIAL_PRODUCTS.reduce((sum, p) => sum + (p.availableStockMW || 0), 0);
+  }, []);
+
   // Tab Definitions for Horizontal Navigation
   const NAV_TABS = [
     {
       id: "market" as MarketTab,
       label: "Spot Market",
       icon: Store,
-      badge: INITIAL_PRODUCTS.length,
+      badge: <CountingNumber value={INITIAL_PRODUCTS.length} duration={0.8} />,
     },
     {
       id: "stock" as MarketTab,
       label: "Depot Stock",
       icon: Layers,
-      badge: `${INITIAL_PRODUCTS.reduce((sum, p) => sum + (p.availableStockMW || 0), 0).toFixed(2)} MW`,
+      badge: (
+        <span className="inline-flex items-center gap-0.5">
+          <CountingNumber value={totalStockMW} decimals={2} duration={0.8} /> MW
+        </span>
+      ),
     },
     {
       id: "my-list" as MarketTab,
       label: "My List",
       icon: Bookmark,
-      badge: watchlist.length,
+      badge: <CountingNumber value={watchlist.length} duration={0.5} />,
     },
   ];
 
   return (
-    <div className="space-y-5 bg-[#ECEFF0] pb-16 min-h-screen font-sans text-zinc-900 select-none">
+    <motion.div
+      variants={viewContainerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-5 bg-[#ECEFF0] pb-16 min-h-screen font-sans text-zinc-900 select-none"
+    >
       {/* =========================================================================
-          TOP COMMAND ROW: Title, Live Telematics & Quick Actions (My List & Cart)
+          WIDGET 1: TOP COMMAND ROW: Title, Live Telematics & Quick Actions
          ========================================================================= */}
-      <div className="flex sm:flex-row flex-col justify-between sm:items-center gap-4 p-2.5 sm:p-5">
+      <motion.div variants={widgetVariants} className="flex sm:flex-row flex-col justify-between sm:items-center gap-4 p-2.5 sm:p-5">
         <div>
           {/* Dynamic Breadcrumb Route matching selected tab */}
           <div className="flex items-center gap-2 mb-2 font-sans text-zinc-500 text-xs">
@@ -266,11 +709,19 @@ export default function MarketplacePage() {
             </AnimatePresence>
           </div>
 
-          <h1 className="font-display font-extrabold text-zinc-950 text-2xl sm:text-3xl tracking-tight">
-            National Solar Spot Marketplace
-          </h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-display font-extrabold text-zinc-950 text-2xl sm:text-3xl tracking-tight">
+              National Solar Spot Marketplace
+            </h1>
+            <span className="inline-flex items-center gap-1.5 bg-emerald-50 shadow-2xs px-3 py-1 border border-emerald-200/90 rounded-full font-mono font-bold text-emerald-800 text-xs">
+              <span className="bg-emerald-500 rounded-full w-2 h-2 animate-pulse" />
+              <span>
+                <CountingNumber value={totalStockMW} decimals={2} duration={1.1} /> MW Live Liquidity
+              </span>
+            </span>
+          </div>
           <p className="mt-1 font-sans text-zinc-500 text-xs sm:text-sm">
-            Inter-trader liquidity pool, bulk pallet bids, and flash factory tier-1 allocations.
+            Inter-trader liquidity pool with <CountingNumber value={INITIAL_PRODUCTS.length} duration={0.9} /> Tier-1 verified allocations, bulk bids, and blind escrow guarantees.
           </p>
         </div>
 
@@ -302,7 +753,7 @@ export default function MarketplacePage() {
             </motion.div>
             <span>My List</span>
             <span className="flex justify-center items-center bg-zinc-200/60 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] text-zinc-800">
-              {watchlist.length}
+              <CountingNumber value={watchlist.length} duration={0.5} />
             </span>
           </motion.button>
 
@@ -323,17 +774,17 @@ export default function MarketplacePage() {
                 animate={{ scale: 1 }}
                 className="flex justify-center items-center bg-[#D3F1E4] px-1.5 rounded-full min-w-[20px] h-5 font-mono font-black text-[10px] text-zinc-800"
               >
-                {totalCartCount}
+                <CountingNumber value={totalCartCount} duration={0.4} />
               </motion.span>
             )}
           </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       {/* =========================================================================
-          HORIZONTAL NAVIGATION STRIP: Stock, My List & Spot Market with Pill Morph
+          WIDGET 2: HORIZONTAL NAVIGATION STRIP: Stock, My List & Spot Market
          ========================================================================= */}
-      <div className="flex items-center">
+      <motion.div variants={widgetVariants} className="flex items-center">
         {/* Horizontal Navigation Pill Bar */}
         <div className="inline-flex items-center gap-1 bg-white shadow-2xs p-1 border border-zinc-200/90 rounded-full">
           {NAV_TABS.map((tab) => {
@@ -383,12 +834,12 @@ export default function MarketplacePage() {
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* =========================================================================
-          CATEGORY CHIPS & SEARCH FILTER BAR (Two-Row Design Matching Reference)
+          WIDGET 3: CATEGORY CHIPS & SEARCH FILTER BAR (With dynamic counter chips)
          ========================================================================= */}
-      <div className="space-y-3">
+      <motion.div variants={widgetVariants} className="space-y-3">
         {/* Row 1: Search + Toggle Switch + Horizontal Sort Pill */}
         <div className="flex flex-wrap items-center gap-4">
           {/* Search Input Large White Pill */}
@@ -511,7 +962,7 @@ export default function MarketplacePage() {
                       className={`text-[11px] ${isActive ? "text-white/70 font-medium" : "text-zinc-400 font-normal"
                         }`}
                     >
-                      {chip.count}
+                      <CountingNumber value={chip.count} duration={0.6} />
                     </span>
                   </span>
                 </button>
@@ -519,12 +970,18 @@ export default function MarketplacePage() {
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* =========================================================================
-          PRODUCT CARD GRID: Cards with Brand Logos, Animated Badges & Cart Stepper
+          WIDGET 4: PRODUCT CARD GRID (Staggered cascade on entrance, filter & sort)
          ========================================================================= */}
-      <div className="gap-2 gap-x-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <motion.div
+        key={`${activeTab}-${selectedCategory}-${sortBy}-${lowStockOnly}-${searchQuery ? "searched" : "all"}`}
+        variants={cardGridVariants}
+        initial="hidden"
+        animate="visible"
+        className="gap-2 gap-x-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      >
         {filteredProducts.map((prod) => {
           const isSaved = watchlist.includes(prod.id);
           const cartQty = cart[prod.id] || 0;
@@ -533,9 +990,7 @@ export default function MarketplacePage() {
             <motion.div
               key={prod.id}
               layout
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
+              variants={cardItemVariants}
               whileHover={{ y: -6 }}
               transition={{ duration: 0.15 }}
               className="group relative flex flex-col justify-between bg-white shadow-sm hover:shadow-xl p-3 border border-zinc-200/90 hover:border-emerald-300/80 rounded-3xl transition-all duration-300"
@@ -578,7 +1033,7 @@ export default function MarketplacePage() {
                       transition={{ duration: 0.6, ease: [0.6, 0.05, 0.2, 1] }}
                       className="flex justify-center items-center mr-1.5"
                     >
-                      <Zap className="fill-black w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <Zap className="fill-amber-400 w-3.5 h-3.5 text-amber-400 shrink-0" />
                     </motion.div>
                     <span className="font-sans font-bold text-[11px] text-white tracking-tight">
                       {prod.wattage ? `${prod.wattage}W` : "High Spec"}
@@ -631,7 +1086,7 @@ export default function MarketplacePage() {
                     {(prod.rating ?? 4.8).toFixed(1)}
                   </span>
                   <span className="font-sans text-[10.5px] text-zinc-400 leading-none">
-                    ({prod.reviewsCount ?? 64})
+                    (<CountingNumber value={prod.reviewsCount ?? 64} duration={0.7} />)
                   </span>
                 </div>
 
@@ -644,10 +1099,10 @@ export default function MarketplacePage() {
                         Stock
                       </span>
                       <span className="font-bold text-[11.5px] text-zinc-900 truncate">
-                        {prod.availableStockMW} MW
+                        <CountingNumber value={prod.availableStockMW} decimals={2} duration={0.8} /> MW
                       </span>
                       <span className="font-normal text-[10px] text-zinc-400 shrink-0">
-                        ({prod.palletsCount} plts)
+                        (<CountingNumber value={prod.palletsCount} duration={0.8} /> plts)
                       </span>
                     </div>
 
@@ -686,9 +1141,15 @@ export default function MarketplacePage() {
                     <TrendingUp className="w-3 h-3 text-emerald-600" />
                   </span>
                   <span className="font-mono font-black text-emerald-800 text-base sm:text-lg">
-                    {prod.pricePerWatt
-                      ? `₹${prod.pricePerWatt.toFixed(2)}/Wp`
-                      : `₹${prod.unitPrice?.toLocaleString()}`}
+                    {prod.pricePerWatt ? (
+                      <>
+                        ₹<CountingNumber value={prod.pricePerWatt} decimals={2} duration={0.8} />/Wp
+                      </>
+                    ) : (
+                      <>
+                        ₹<CountingNumber value={prod.unitPrice || 0} decimals={0} duration={0.8} />
+                      </>
+                    )}
                   </span>
                 </div>
 
@@ -745,7 +1206,7 @@ export default function MarketplacePage() {
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Empty State when list has no matches */}
       {filteredProducts.length === 0 && (
@@ -770,42 +1231,43 @@ export default function MarketplacePage() {
       )}
 
       {/* =========================================================================
-          POP-UP CARD (MODAL): Comprehensive Solar Panel / Equipment Information
+          POP-UP CARD (MODAL): Redesigned Two-Column Split Layout
          ========================================================================= */}
       <AnimatePresence>
         {modalProduct && (
-          <div className="z-50 fixed inset-0 flex justify-center items-center p-4 sm:p-6 overflow-y-auto">
+          <div className="z-50 fixed inset-0 flex justify-center items-center p-3 sm:p-5 overflow-y-auto">
             {/* Backdrop Blur */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setModalProduct(null)}
-              className="fixed inset-0 bg-zinc-950/60 backdrop-blur-xs transition-opacity"
+              onTouchMove={(e) => e.preventDefault()}
+              onWheel={(e) => e.preventDefault()}
+              className="fixed inset-0 bg-zinc-950/60 backdrop-blur-sm transition-opacity"
             />
 
             {/* Modal Card */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 16 }}
-              transition={{ type: "spring", stiffness: 320, damping: 28 }}
-              className="z-10 relative flex flex-col bg-white shadow-2xl border border-zinc-200 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ type: "spring", stiffness: 400, damping: 32 }}
+              className="z-10 relative flex flex-col bg-white shadow-2xl border border-zinc-200 rounded-2xl w-[94vw] max-w-[880px] max-h-[92vh] overflow-hidden"
             >
-              {/* Modal Top Header */}
-              <div className="flex justify-between items-center p-5 border-zinc-100 border-b">
-                <div className="flex items-center gap-2">
-                  <div className="flex justify-center items-center bg-emerald-50 rounded-xl w-8 h-8 text-emerald-800">
-                    <Sparkles className="w-4 h-4 text-emerald-600" />
+              {/* Minimal Top Header */}
+              <div className="px-6 py-3.5 border-b border-zinc-100 flex justify-between items-center bg-white shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex justify-center items-center bg-emerald-50 border border-emerald-200/70 rounded-lg w-7 h-7 text-[#047857]">
+                    <Sparkles className="w-4 h-4 text-[#047857]" />
                   </div>
-                  <div>
-                    <h3 className="font-display font-extrabold text-zinc-950 text-base sm:text-lg leading-tight">
-                      Equipment Telematics &amp; Spot Specs
-                    </h3>
-                    <p className="font-sans text-[11px] text-zinc-500">
-                      Certified factory inspection and blind escrow guarantee
-                    </p>
-                  </div>
+                  <h3 className="font-display font-extrabold text-zinc-950 text-sm sm:text-base leading-tight">
+                    Equipment Telematics &amp; Spot Specs
+                  </h3>
+                  <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-50 text-[#047857] border border-emerald-200/80">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" />
+                    <span>Blind Escrow Guaranteed</span>
+                  </span>
                 </div>
 
                 <button
@@ -813,177 +1275,261 @@ export default function MarketplacePage() {
                   onClick={() => setModalProduct(null)}
                   className="flex justify-center items-center bg-zinc-100 hover:bg-zinc-200 rounded-full w-8 h-8 text-zinc-600 hover:text-zinc-950 transition-colors cursor-pointer"
                   title="Close Modal"
+                  aria-label="Close Modal"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Modal Body: Two-Column Detailed Spec Sheet */}
-              <div className="space-y-4 p-5 sm:p-6 overflow-y-auto">
-                {/* Brand & Title */}
-                <div className="flex sm:flex-row flex-col justify-between sm:items-start gap-3">
-                  <div>
-                    <BrandBadge brand={modalProduct.brand} iconSize={22} />
-                    <h2 className="mt-2 font-display font-black text-zinc-950 text-lg sm:text-xl">
-                      {modalProduct.name}
-                    </h2>
-                    <p className="flex items-center gap-1.5 mt-1 font-sans text-zinc-600 text-xs">
-                      <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                      <span>{modalProduct.depotLocation}</span>
-                    </p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="flex items-center gap-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-3.5 h-3.5 ${star <= Math.floor(modalProduct.rating ?? 4.8)
-                              ? "fill-amber-400 text-amber-400"
-                              : "fill-zinc-200 text-zinc-200"
-                              }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="font-bold text-zinc-900 text-xs">
-                        {(modalProduct.rating ?? 4.8).toFixed(1)}
-                      </span>
-                      <span className="font-sans text-zinc-500 text-xs">
-                        ({modalProduct.reviewsCount ?? 64} verified buyer reviews)
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Spot Rate Callout */}
-                  <div className="bg-emerald-50 p-3 border border-emerald-200 rounded-2xl text-right shrink-0">
-                    <span className="block font-mono text-[10px] text-emerald-800 uppercase tracking-wider">
-                      Spot Rate
-                    </span>
-                    <span className="font-mono font-black text-emerald-950 text-xl">
-                      {modalProduct.pricePerWatt
-                        ? `₹${modalProduct.pricePerWatt.toFixed(2)}/Wp`
-                        : `₹${modalProduct.unitPrice?.toLocaleString()}`}
-                    </span>
-                    <span className="block mt-0.5 font-sans font-medium text-[10px] text-emerald-700">
-                      Ex-Depot Escrow Locked
-                    </span>
-                  </div>
-                </div>
-
-                {/* Visual Banner */}
-                <div className="relative bg-zinc-100 border border-zinc-200 rounded-2xl h-44 overflow-hidden">
-                  <img
-                    src={modalProduct.imageUrl}
-                    alt={modalProduct.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="right-3 bottom-3 absolute bg-zinc-950/80 backdrop-blur-xs px-3 py-1 rounded-xl font-mono text-white text-xs">
-                    {modalProduct.wattage ? `${modalProduct.wattage} Watts` : "Industrial Spec"} · {modalProduct.efficiency}% Efficiency
-                  </div>
-                </div>
-
-                {/* Key Technical Specs Grid */}
-                <div>
-                  <h4 className="flex items-center gap-1.5 mb-2 font-display font-bold text-zinc-950 text-xs uppercase tracking-wider">
-                    <Zap className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Technical &amp; Engineering Specifications</span>
-                  </h4>
-
-                  <div className="gap-2.5 grid grid-cols-2 sm:grid-cols-3 bg-[#f8fafc] p-3.5 border border-zinc-200/70 rounded-2xl font-sans text-xs">
-                    <div className="bg-white p-2.5 border border-zinc-200/50 rounded-xl">
-                      <span className="block font-mono text-[10px] text-zinc-400 uppercase">Power Output</span>
-                      <strong className="text-zinc-900 text-sm">{modalProduct.wattage || 585} Wp</strong>
-                    </div>
-
-                    <div className="bg-white p-2.5 border border-zinc-200/50 rounded-xl">
-                      <span className="block font-mono text-[10px] text-zinc-400 uppercase">Efficiency</span>
-                      <strong className="text-zinc-900 text-sm">{modalProduct.efficiency || 22.7}%</strong>
-                    </div>
-
-                    <div className="bg-white p-2.5 border border-zinc-200/50 rounded-xl">
-                      <span className="block font-mono text-[10px] text-zinc-400 uppercase">Cell Architecture</span>
-                      <strong className="block text-zinc-900 text-xs truncate">{modalProduct.cellType || "N-Type TOPCon"}</strong>
-                    </div>
-
-                    <div className="bg-white p-2.5 border border-zinc-200/50 rounded-xl">
-                      <span className="block font-mono text-[10px] text-zinc-400 uppercase">ALMM Certificate</span>
-                      <strong className="block font-mono text-emerald-800 text-xs truncate">{modalProduct.almmCertNumber}</strong>
-                    </div>
-
-                    <div className="bg-white p-2.5 border border-zinc-200/50 rounded-xl">
-                      <span className="block font-mono text-[10px] text-zinc-400 uppercase">Performance Warranty</span>
-                      <strong className="text-zinc-900 text-sm">{modalProduct.warrantyYears} Years Linear</strong>
-                    </div>
-
-                    <div className="bg-white p-2.5 border border-zinc-200/50 rounded-xl">
-                      <span className="block font-mono text-[10px] text-zinc-400 uppercase">Minimum Order</span>
-                      <strong className="block text-zinc-900 text-xs truncate">{modalProduct.minOrderQuantity}</strong>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Logistics & Escrow Safeguard Callout */}
-                <div className="flex items-start gap-3 bg-emerald-50/70 p-3.5 border border-emerald-200/70 rounded-2xl">
-                  <ShieldCheck className="mt-0.5 w-5 h-5 text-emerald-700 shrink-0" />
-                  <div className="text-xs">
-                    <span className="block font-bold text-emerald-950">Blind Video-Escrow Protection Enabled</span>
-                    <p className="mt-0.5 font-sans text-emerald-800 leading-relaxed">
-                      All dispatches from {modalProduct.depotLocation} undergo high-resolution electroluminescence (EL) crack detection and barcode tally prior to gate-out. Escrow payment is disbursed only after digital buyer delivery sign-off.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Modal Footer Actions */}
-              <div className="flex sm:flex-row flex-col justify-between sm:items-center gap-3 bg-zinc-50 p-4 sm:p-5 border-zinc-100 border-t">
-                <div className="flex items-center gap-2">
-                  <span className="font-sans font-medium text-zinc-600 text-xs">Cart Quantity:</span>
-                  <div className="flex items-center bg-white shadow-2xs p-0.5 border border-zinc-200 rounded-xl">
-                    <button
-                      type="button"
-                      onClick={() => decreaseCart(modalProduct.id)}
-                      className="flex justify-center items-center hover:bg-zinc-100 rounded-lg w-7 h-7 font-bold text-zinc-700 transition-colors cursor-pointer"
-                    >
-                      <Minus className="w-3 h-3" />
-                    </button>
-                    <span className="w-8 font-mono font-bold text-zinc-950 text-xs text-center">
-                      {cart[modalProduct.id] || 0}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => increaseCart(modalProduct.id)}
-                      className="flex justify-center items-center hover:bg-zinc-100 rounded-lg w-7 h-7 font-bold text-zinc-700 transition-colors cursor-pointer"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      toggleWatchlist(modalProduct.id, modalProduct.name);
-                    }}
-                    className="flex items-center gap-1.5 bg-white hover:bg-zinc-100 px-3 py-2 border border-zinc-200 rounded-xl font-semibold text-zinc-700 text-xs cursor-pointer"
-                  >
-                    <Bookmark
-                      className={`w-3.5 h-3.5 ${watchlist.includes(modalProduct.id) ? "fill-emerald-600 text-emerald-600" : ""
-                        }`}
+              {/* Split Body: 12-Column Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-12 flex-1 overflow-y-auto">
+                {/* Left Column (md:col-span-5) */}
+                <div className="md:col-span-5 bg-zinc-50/70 p-5 sm:p-6 border-b md:border-b-0 md:border-r border-zinc-100 flex flex-col justify-between gap-4">
+                  {/* 1. 4:3 Product Stage */}
+                  <div className="aspect-[4/3] rounded-xl bg-white border border-zinc-200/80 overflow-hidden relative shadow-2xs flex items-center justify-center group">
+                    <img
+                      src={modalProduct.imageUrl}
+                      alt={modalProduct.name}
+                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
                     />
-                    <span>{watchlist.includes(modalProduct.id) ? "Saved" : "Save to List"}</span>
-                  </button>
+                    {/* Floating bottom-left pills */}
+                    <div className="absolute bottom-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
+                      <span className="px-2 py-0.5 rounded-md bg-zinc-950/80 backdrop-blur-xs text-white font-mono text-[10px] font-semibold">
+                        Industrial Spec
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-[#047857]/90 backdrop-blur-xs text-white font-mono text-[10px] font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                        Ready to Dispatch
+                      </span>
+                    </div>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      addToCart(modalProduct.id, modalProduct.name);
-                      setModalProduct(null);
-                    }}
-                    className="flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 shadow-xs px-4 py-2 rounded-xl font-display font-bold text-white text-xs cursor-pointer"
-                  >
-                    <ShoppingCart className="w-3.5 h-3.5" />
-                    <span>Add to Dispatch Cart</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  {/* 2. Warehouse & Verification Card */}
+                  <div className="bg-white rounded-xl border border-zinc-200/80 p-3.5 space-y-2.5 shadow-2xs">
+                    <div className="flex items-start gap-2">
+                      <div className="mt-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                      <div>
+                        <span className="block font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+                          Depot Fulfillment Hub
+                        </span>
+                        <span className="font-sans font-bold text-zinc-900 text-xs leading-snug block">
+                          {modalProduct.depotLocation}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-zinc-100 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`w-3.5 h-3.5 ${
+                                star <= Math.floor(modalProduct.rating ?? 4.8)
+                                  ? "fill-amber-400 text-amber-400"
+                                  : "fill-zinc-200 text-zinc-200"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="font-bold text-zinc-900 text-xs">
+                          {(modalProduct.rating ?? 4.8).toFixed(1)} ★
+                        </span>
+                      </div>
+                      <span className="font-sans text-zinc-500 text-[11px]">
+                        {modalProduct.reviewsCount ?? 64} verified buyer reviews
+                      </span>
+                    </div>
+
+                    <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs font-mono">
+                      <span className="text-zinc-500">Live Available Stock:</span>
+                      <span className="font-bold text-emerald-800">
+                        {modalProduct.availableStockMW} MW{" "}
+                        <span className="text-zinc-500 font-normal">
+                          ({modalProduct.palletsCount} plts)
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column (md:col-span-7) */}
+                <div className="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between gap-5">
+                  <div className="space-y-4">
+                    {/* 1. Title & Commercial Price Block */}
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <BrandBadge brand={modalProduct.brand} iconSize={20} />
+                        <span className="font-mono text-[10.5px] font-bold text-zinc-400 uppercase tracking-wider">
+                          {modalProduct.category}
+                        </span>
+                      </div>
+                      <h2 className="mt-1.5 font-display font-bold text-zinc-900 text-lg sm:text-xl leading-snug">
+                        {modalProduct.name}
+                      </h2>
+                    </div>
+
+                    {/* Horizontal Price Bar */}
+                    <div className="bg-emerald-50/70 border border-emerald-200/70 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2 shadow-2xs">
+                      <div>
+                        <span className="block font-mono text-[10px] text-emerald-800 uppercase tracking-wider">
+                          Spot Rate
+                        </span>
+                        <span className="font-mono font-black text-emerald-950 text-xl">
+                          {modalProduct.pricePerWatt ? (
+                            <>₹{modalProduct.pricePerWatt.toFixed(2)} / Wp</>
+                          ) : modalProduct.category === "STRUCTURES" ? (
+                            <>₹{modalProduct.unitPrice?.toLocaleString("en-IN")} / kit</>
+                          ) : (
+                            <>₹{modalProduct.unitPrice?.toLocaleString("en-IN")} / Unit</>
+                          )}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="font-mono text-[10.5px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                          Ex-Depot Escrow Locked
+                        </span>
+                        <span className="font-sans text-[11px] text-emerald-950 font-medium">
+                          Min. Order: {modalProduct.minOrderQuantity}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 2. Technical & Engineering Specifications (2x3 Grid) */}
+                    <div>
+                      <div className="flex items-center gap-1.5 mb-2.5">
+                        <Zap className="w-3.5 h-3.5 text-amber-500" />
+                        <h4 className="font-display font-bold text-zinc-950 text-xs uppercase tracking-wider">
+                          Technical &amp; Engineering Specifications
+                        </h4>
+                      </div>
+
+                      <motion.div
+                        variants={specGridVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 font-sans"
+                      >
+                        {getCategorySpecs(modalProduct).map((spec) => (
+                          <motion.div
+                            key={spec.label}
+                            variants={modalSpecVariants}
+                            className="bg-zinc-50 border border-zinc-200/70 rounded-lg p-3 flex flex-col justify-between"
+                          >
+                            <span className="block font-mono text-[10px] text-zinc-400 uppercase tracking-wider mb-1">
+                              {spec.label}
+                            </span>
+                            <span className="block font-bold text-zinc-900 text-xs leading-tight break-words">
+                              {spec.value}
+                            </span>
+                            {spec.sub && (
+                              <span className="block font-sans text-[10px] text-zinc-500 mt-1 leading-none">
+                                {spec.sub}
+                              </span>
+                            )}
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    </div>
+                  </div>
+
+                  {/* 3. Docked Action & Live Subtotal Bar */}
+                  <div className="pt-4 mt-auto border-t border-zinc-100 space-y-3">
+                    {/* Stepper & Live Calculated Subtotal */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-sans font-medium text-zinc-600 text-xs">
+                          Order Quantity:
+                        </span>
+                        <div className="flex items-center bg-zinc-50 p-0.5 border border-zinc-200 rounded-xl shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => setModalQty((prev) => Math.max(1, prev - 1))}
+                            className="flex justify-center items-center hover:bg-white rounded-lg w-7 h-7 font-bold text-zinc-700 transition-colors cursor-pointer active:scale-90"
+                            title="Decrease quantity"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <input
+                            type="number"
+                            min="1"
+                            max="9999"
+                            value={modalQty}
+                            onChange={(e) => {
+                              const parsed = parseInt(e.target.value, 10);
+                              if (!isNaN(parsed) && parsed > 0) {
+                                setModalQty(parsed);
+                              } else if (e.target.value === "") {
+                                setModalQty(1);
+                              }
+                            }}
+                            className="w-12 font-mono font-black text-zinc-950 text-xs text-center bg-transparent outline-hidden"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setModalQty((prev) => prev + 1)}
+                            className="flex justify-center items-center hover:bg-white rounded-lg w-7 h-7 font-bold text-zinc-700 transition-colors cursor-pointer active:scale-90"
+                            title="Increase quantity"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="block font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+                          Estimated Subtotal
+                        </span>
+                        <span className="font-mono font-black text-zinc-950 text-base sm:text-lg tabular-nums">
+                          <CountingNumber value={modalSubtotal} decimals={0} prefix="₹" duration={0.25} />
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons: Save to List & Add to Dispatch Cart */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleWatchlist(modalProduct.id, modalProduct.name)}
+                        className="flex-1 flex items-center justify-center gap-1.5 bg-white hover:bg-zinc-100 py-2.5 px-4 border border-zinc-200 rounded-xl font-semibold text-zinc-700 text-xs transition-colors cursor-pointer"
+                      >
+                        <Bookmark
+                          className={`w-3.5 h-3.5 ${
+                            watchlist.includes(modalProduct.id)
+                              ? "fill-emerald-600 text-emerald-600"
+                              : "text-zinc-500"
+                          }`}
+                        />
+                        <span>
+                          {watchlist.includes(modalProduct.id) ? "Saved to Watchlist" : "Save to List"}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCart((prev) => ({
+                            ...prev,
+                            [modalProduct.id]: (prev[modalProduct.id] || 0) + modalQty,
+                          }));
+                          toast.success(
+                            `Added ${modalQty} ${
+                              modalProduct.category === "STRUCTURES" ? "kits" : "units/pallets"
+                            } of ${modalProduct.name} to Dispatch Cart`
+                          );
+                          setModalProduct(null);
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 bg-[#047857] hover:bg-[#036549] shadow-xs py-2.5 px-4 rounded-xl font-display font-bold text-white text-xs sm:text-sm active:scale-[0.98] transition-all cursor-pointer"
+                      >
+                        <ShoppingCart className="w-4 h-4" />
+                        <span>Add to Dispatch Cart</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -992,135 +1538,410 @@ export default function MarketplacePage() {
       </AnimatePresence>
 
       {/* =========================================================================
-          SLIDE-OUT DISPATCH CART DRAWER
+          SLIDE-OUT DISPATCH CART DRAWER (FULL-HEIGHT DOCKED RIGHT DRAWER)
          ========================================================================= */}
       <AnimatePresence>
         {isCartOpen && (
-          <div className="z-50 fixed inset-0 flex justify-end">
+          <div className="z-50 fixed inset-0 overflow-hidden">
+            {/* Dark Backdrop */}
             <motion.div
+              key="cart-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsCartOpen(false)}
-              className="fixed inset-0 bg-zinc-950/50 backdrop-blur-xs"
+              onTouchMove={(e) => e.preventDefault()}
+              onWheel={(e) => e.preventDefault()}
+              className="fixed inset-0 bg-zinc-950/60 backdrop-blur-sm transition-opacity"
             />
 
+            {/* Docked Drawer Container */}
             <motion.div
+              key="cart-drawer"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 350, damping: 30 }}
-              className="z-10 relative flex flex-col bg-white shadow-2xl border-zinc-200 border-l w-full max-w-md h-full"
+              transition={{ type: "spring", stiffness: 380, damping: 36, mass: 0.8 }}
+              className="fixed inset-y-0 right-0 z-50 flex flex-col w-full max-w-[460px] bg-white border-l border-zinc-200 shadow-[-20px_0_50px_rgba(9,9,11,0.12)] h-full overflow-hidden"
             >
-              {/* Cart Drawer Header */}
-              <div className="flex justify-between items-center p-5 border-zinc-100 border-b">
-                <div className="flex items-center gap-2">
-                  <div className="flex justify-center items-center bg-emerald-100 rounded-xl w-8 h-8 text-emerald-800">
-                    <ShoppingCart className="w-4 h-4 text-emerald-700" />
+              {/* 1. STICKY HEADER */}
+              <div className="sticky top-0 z-20 bg-white border-b border-zinc-200/90 shrink-0">
+                {/* Top Row: Cart icon badge, title, subtitle, Clear All & Close button */}
+                <div className="flex justify-between items-center p-4 sm:p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex justify-center items-center bg-emerald-50 border border-emerald-200/60 rounded-xl w-10 h-10 text-[#047857] shrink-0 shadow-2xs">
+                      <ShoppingCart className="w-5 h-5 text-[#047857]" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-display font-extrabold text-zinc-950 text-base sm:text-lg tracking-tight">
+                          Dispatch Cart
+                        </h3>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+                          B2B
+                        </span>
+                      </div>
+                      <p className="font-sans text-xs text-zinc-500">
+                        {totalCartCount} item{totalCartCount !== 1 ? "s" : ""} pending purchase order
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-display font-extrabold text-zinc-950 text-base">
-                      Dispatch Cart
-                    </h3>
-                    <p className="font-sans text-[11px] text-zinc-500">
-                      {totalCartCount} items pending purchase order
-                    </p>
+
+                  <div className="flex items-center gap-2">
+                    {totalCartCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={clearCart}
+                        className="font-sans text-xs font-semibold text-zinc-400 hover:text-rose-600 transition-colors px-2.5 py-1 rounded-lg hover:bg-rose-50 cursor-pointer"
+                        title="Clear all cart items"
+                      >
+                        Clear All
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setIsCartOpen(false)}
+                      className="flex justify-center items-center bg-zinc-100 hover:bg-zinc-200 rounded-full w-8 h-8 text-zinc-600 hover:text-zinc-950 transition-colors cursor-pointer"
+                      aria-label="Close cart"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsCartOpen(false)}
-                  className="flex justify-center items-center bg-zinc-100 hover:bg-zinc-200 rounded-full w-8 h-8 text-zinc-600 cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                {/* Sub-bar: Compact B2B Load Summary Bar */}
+                <div className="px-4 sm:px-5 py-2.5 bg-zinc-50/90 border-t border-zinc-100 flex flex-col gap-1.5">
+                  <div className="flex justify-between items-center text-[11px] font-sans">
+                    <span className="text-zinc-600 font-medium flex items-center gap-1.5">
+                      <span>Truckload Load</span>
+                      <span className="font-mono font-bold text-zinc-900">
+                        {cartCapacityStats.totalPallets} / 24 plts
+                      </span>
+                    </span>
+                    <span className="font-mono font-extrabold text-[#047857]">
+                      {cartCapacityStats.totalKW >= 1000
+                        ? `${(cartCapacityStats.totalKW / 1000).toFixed(2)} MW Total`
+                        : `${cartCapacityStats.totalKW} kW Total`}
+                    </span>
+                  </div>
+                  {/* Thin #10B981 progress indicator */}
+                  <div className="w-full h-1 bg-zinc-200 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${cartCapacityStats.truckloadPercent}%` }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="h-full bg-[#10B981] rounded-full"
+                    />
+                  </div>
+                </div>
               </div>
 
-              {/* Cart Items List */}
-              <div className="flex-1 space-y-3 p-5 overflow-y-auto">
+              {/* 2. SCROLLABLE ITEM LIST with custom 4px scrollbar */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#D4D4D8] [&::-webkit-scrollbar-thumb]:rounded-full">
                 {Object.keys(cart).length === 0 ? (
-                  <div className="py-12 text-center">
-                    <ShoppingCart className="mx-auto mb-2 w-8 h-8 text-zinc-300" />
-                    <p className="font-sans text-zinc-500 text-xs">Your cart is empty.</p>
+                  <div className="py-20 text-center flex flex-col items-center justify-center">
+                    <div className="w-14 h-14 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-400 mb-3 shadow-inner">
+                      <ShoppingCart className="w-7 h-7" />
+                    </div>
+                    <h4 className="font-display font-bold text-zinc-900 text-sm">
+                      Your Dispatch Cart is empty
+                    </h4>
+                    <p className="font-sans text-zinc-500 text-xs mt-1 max-w-[240px]">
+                      Add equipment or pallet lots from the Spot Market to begin an escrow dispatch.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setIsCartOpen(false)}
+                      className="mt-5 inline-flex items-center gap-1.5 px-4 py-2 bg-[#047857] hover:bg-[#036549] text-white font-display font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer"
+                    >
+                      <Store className="w-3.5 h-3.5" />
+                      <span>Browse Spot Market</span>
+                    </button>
                   </div>
                 ) : (
-                  Object.entries(cart).map(([prodId, qty]) => {
-                    const prod = INITIAL_PRODUCTS.find((p) => p.id === prodId);
-                    if (!prod) return null;
+                  <motion.div
+                    variants={cartListVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-3"
+                  >
+                    <AnimatePresence mode="popLayout">
+                      {Object.entries(cart).map(([prodId, qty]) => {
+                        const prod = INITIAL_PRODUCTS.find((p) => p.id === prodId);
+                        if (!prod) return null;
 
-                    return (
-                      <div
-                        key={prodId}
-                        className="flex justify-between items-center gap-3 bg-zinc-50/80 p-3.5 border border-zinc-200/70 rounded-2xl"
-                      >
-                        <div className="min-w-0">
-                          <span className="font-mono font-bold text-[10px] text-zinc-500 uppercase">
-                            {prod.brand}
-                          </span>
-                          <h4 className="font-bold text-zinc-950 text-xs truncate">
-                            {prod.name}
-                          </h4>
-                          <span className="font-mono font-bold text-emerald-800 text-xs">
-                            {prod.pricePerWatt
-                              ? `₹${prod.pricePerWatt.toFixed(2)}/Wp`
-                              : `₹${prod.unitPrice?.toLocaleString()}`}
-                          </span>
-                        </div>
+                        const itemRate = prod.pricePerWatt;
+                        const itemWattage = prod.wattage || 580;
+                        const itemSubtotal = itemRate
+                          ? itemWattage * 36 * itemRate * qty
+                          : (prod.unitPrice || 50000) * qty;
 
-                        {/* Quantity Stepper */}
-                        <div className="flex items-center bg-white shadow-2xs p-0.5 border border-zinc-200 rounded-xl shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => decreaseCart(prod.id)}
-                            className="flex justify-center items-center hover:bg-zinc-100 rounded-lg w-6 h-6 font-bold text-zinc-700 transition-colors cursor-pointer"
+                        return (
+                          <motion.div
+                            key={prodId}
+                            layout
+                            variants={cartItemVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="flex items-center justify-between gap-3 bg-zinc-50/90 hover:bg-zinc-50 p-3.5 border border-zinc-200/75 hover:border-zinc-300 rounded-2xl transition-colors shadow-2xs group"
                           >
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <span className="w-6 font-mono font-bold text-zinc-950 text-xs text-center">
-                            {qty}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => increaseCart(prod.id)}
-                            className="flex justify-center items-center hover:bg-zinc-100 rounded-lg w-6 h-6 font-bold text-zinc-700 transition-colors cursor-pointer"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })
+                            {/* Left Thumbnail (44px x 44px rounded-lg #F4F4F5) */}
+                            <div className="w-[44px] h-[44px] rounded-lg bg-[#F4F4F5] border border-zinc-200/80 overflow-hidden shrink-0 flex items-center justify-center">
+                              {prod.imageUrl ? (
+                                <img
+                                  src={prod.imageUrl}
+                                  alt={prod.name}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              ) : (
+                                <Package className="w-5 h-5 text-zinc-400" />
+                              )}
+                            </div>
+
+                            {/* Middle Details */}
+                            <div className="min-w-0 flex-1">
+                              <span className="font-mono font-bold text-[10px] text-zinc-400 uppercase tracking-wider block">
+                                {prod.brand}
+                              </span>
+                              <h4
+                                className="font-bold text-zinc-950 text-xs truncate max-w-[170px] sm:max-w-[190px]"
+                                title={prod.name}
+                              >
+                                {prod.name}
+                              </h4>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="font-mono text-[11px] text-zinc-500">
+                                  {prod.pricePerWatt ? (
+                                    <>₹{prod.pricePerWatt.toFixed(2)}/Wp • {itemWattage}W</>
+                                  ) : (
+                                    <>₹{(prod.unitPrice || 0).toLocaleString("en-IN")}/Unit • {prod.capacityKW || 50}kW</>
+                                  )}
+                                </span>
+                              </div>
+                              <span className="font-mono font-bold text-zinc-900 text-xs tabular-nums block mt-0.5">
+                                ₹{Math.round(itemSubtotal).toLocaleString("en-IN")}
+                              </span>
+                            </div>
+
+                            {/* Interactive Stepper */}
+                            <div className="flex items-center bg-white shadow-2xs p-0.5 border border-zinc-200 rounded-xl shrink-0">
+                              {qty === 1 ? (
+                                <button
+                                  type="button"
+                                  onClick={() => decreaseCart(prod.id)}
+                                  className="flex justify-center items-center hover:bg-rose-50 rounded-lg w-7 h-7 text-rose-500 hover:text-rose-600 transition-colors cursor-pointer active:scale-90"
+                                  title="Remove item"
+                                  aria-label="Remove item"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => decreaseCart(prod.id)}
+                                  className="flex justify-center items-center hover:bg-zinc-100 rounded-lg w-7 h-7 font-bold text-zinc-700 transition-colors cursor-pointer active:scale-90"
+                                  title="Decrease quantity"
+                                  aria-label="Decrease quantity"
+                                >
+                                  <Minus className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+
+                              {/* Editable Quantity with PopLayout Odometer */}
+                              {editingCartId === prodId ? (
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="999"
+                                  value={editQtyValue}
+                                  autoFocus
+                                  onChange={(e) => setEditQtyValue(e.target.value)}
+                                  onBlur={() => {
+                                    const parsed = parseInt(editQtyValue, 10);
+                                    if (!isNaN(parsed) && parsed > 0) {
+                                      updateCartQuantity(prodId, parsed);
+                                    }
+                                    setEditingCartId(null);
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      const parsed = parseInt(editQtyValue, 10);
+                                      if (!isNaN(parsed) && parsed > 0) {
+                                        updateCartQuantity(prodId, parsed);
+                                      }
+                                      setEditingCartId(null);
+                                    } else if (e.key === "Escape") {
+                                      setEditingCartId(null);
+                                    }
+                                  }}
+                                  className="w-8 text-center font-mono font-black text-xs text-zinc-950 bg-emerald-50 border border-emerald-300 rounded px-0.5 py-0.5 outline-hidden"
+                                />
+                              ) : (
+                                <AnimatePresence mode="popLayout" initial={false}>
+                                  <motion.span
+                                    key={qty}
+                                    initial={{ y: 10, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: -10, opacity: 0 }}
+                                    transition={{ duration: 0.15 }}
+                                    onClick={() => {
+                                      setEditingCartId(prodId);
+                                      setEditQtyValue(String(qty));
+                                    }}
+                                    title="Click to type custom quantity"
+                                    className="w-7 font-mono font-black text-zinc-950 text-xs text-center cursor-pointer hover:bg-zinc-100 rounded py-0.5 select-none"
+                                  >
+                                    {qty}
+                                  </motion.span>
+                                </AnimatePresence>
+                              )}
+
+                              <button
+                                type="button"
+                                onClick={() => increaseCart(prod.id)}
+                                className="flex justify-center items-center hover:bg-zinc-100 rounded-lg w-7 h-7 font-bold text-zinc-700 transition-colors cursor-pointer active:scale-90"
+                                title="Increase quantity"
+                                aria-label="Increase quantity"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                  </motion.div>
                 )}
               </div>
 
-              {/* Cart Drawer Footer */}
+              {/* 3. GLASSMORPHIC STICKY FOOTER */}
               {Object.keys(cart).length > 0 && (
-                <div className="space-y-3 bg-zinc-50 p-5 border-zinc-100 border-t">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-sans text-zinc-500">Estimated Pallet Value:</span>
-                    <span className="font-mono font-black text-zinc-950 text-base">
-                      ₹{totalCartValue.toLocaleString("en-IN")}
-                    </span>
+                <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-zinc-200 p-5 space-y-3.5 shadow-[-10px_-10px_30px_rgba(0,0,0,0.03)] shrink-0">
+                  {/* Estimated Pallet Value + Accordion Chevron */}
+                  <div>
+                    <div className="flex justify-between items-center text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setIsBreakdownOpen((prev) => !prev)}
+                        className="flex items-center gap-1.5 font-sans font-semibold text-zinc-600 hover:text-zinc-950 transition-colors group cursor-pointer"
+                      >
+                        <span>Estimated Pallet Value</span>
+                        <motion.span
+                          animate={{ rotate: isBreakdownOpen ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="inline-flex text-zinc-400 group-hover:text-zinc-800"
+                        >
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        </motion.span>
+                      </button>
+
+                      <span className="font-mono font-black text-zinc-950 text-lg tabular-nums">
+                        <CountingNumber value={totalCartValue} decimals={0} prefix="₹" duration={0.3} />
+                      </span>
+                    </div>
+
+                    {/* Expandable Breakdown Accordion */}
+                    <AnimatePresence>
+                      {isBreakdownOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: "easeInOut" }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pt-2.5 mt-2.5 pb-1 space-y-2 border-t border-zinc-100 font-sans text-xs">
+                            <div className="flex justify-between text-zinc-500">
+                              <span>Base Equipment</span>
+                              <span className="font-mono font-bold text-zinc-800 tabular-nums">
+                                ₹{breakdownValues.baseEquipment.toLocaleString("en-IN")}
+                              </span>
+                            </div>
+                            <div className="flex justify-between text-zinc-500">
+                              <span>Freight & Palletization</span>
+                              <span className="font-mono font-bold text-zinc-800 tabular-nums">
+                                ₹{breakdownValues.freight.toLocaleString("en-IN")}
+                              </span>
+                            </div>
+                            <div className="flex justify-between text-zinc-500">
+                              <span>GST (Composite Solar 13.8%)</span>
+                              <span className="font-mono font-bold text-zinc-800 tabular-nums">
+                                ₹{breakdownValues.gst.toLocaleString("en-IN")}
+                              </span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
-                  <button
+                  {/* Proceed to Escrow Lock PO CTA Button */}
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={() => {
                       toast.success("Draft Purchase Order created with Escrow Lock!");
                       setIsCartOpen(false);
                     }}
-                    className="flex justify-center items-center gap-2 bg-emerald-700 hover:bg-emerald-800 shadow-md py-3 rounded-2xl w-full font-display font-bold text-white text-xs active:scale-[0.98] transition-all cursor-pointer"
+                    className="relative group overflow-hidden flex items-center justify-between bg-[#047857] hover:bg-[#036549] text-white px-5 py-3.5 rounded-2xl w-full shadow-lg hover:shadow-emerald-900/25 transition-all duration-200 cursor-pointer"
                   >
-                    <span>Proceed to Escrow Lock PO</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                    {/* Diagonal light sheen sweep */}
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-black/15 flex items-center justify-center">
+                        <Lock className="w-3.5 h-3.5 text-[#F59E0B]" />
+                      </div>
+                      <span className="font-display font-bold text-sm tracking-tight">
+                        Proceed to Escrow Lock PO
+                      </span>
+                    </div>
+
+                    <div className="flex items-center">
+                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </div>
+                  </motion.button>
                 </div>
               )}
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-    </div>
+
+      {/* =========================================================================
+          CIRCULAR FLOATING CART BUTTON (Appears upon scrolling away from top)
+         ========================================================================= */}
+      <AnimatePresence>
+        {showFloatingCart && (
+          <motion.button
+            key="floating-cart-btn"
+            type="button"
+            initial={{ opacity: 0, scale: 0.5, y: 24 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 24 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 360, damping: 24 }}
+            onClick={() => setIsCartOpen(true)}
+            className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-[#53BB90] hover:bg-emerald-600 text-white rounded-full shadow-xl hover:shadow-2xl hover:shadow-emerald-600/30 border-2 border-white cursor-pointer group"
+            title={`Dispatch Cart (${totalCartCount} items)`}
+            aria-label="Open Dispatch Cart"
+          >
+            <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:scale-110" />
+            {totalCartCount > 0 && (
+              <motion.span
+                key={totalCartCount}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-1 -right-1 flex items-center justify-center min-w-[22px] h-[22px] px-1 bg-zinc-950 text-white font-mono font-bold text-[10.5px] rounded-full border-2 border-white shadow-sm"
+              >
+                {totalCartCount}
+              </motion.span>
+            )}
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
