@@ -33,6 +33,10 @@ agent/
 *.md
 !README.md
 !readme.md
+frontend.md
+AGENTS.md
+about.md
+suryanexa-usp-pilot.md
 
 # Debug logs
 npm-debug.log*
